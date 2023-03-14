@@ -2,9 +2,11 @@
 
 **This addon is under development and is barely usable. Login doesn't work.**
 
-You can select Peacock or SkyShowtime in the addon settings
+You can select Peacock or SkyShowtime in the addon settings.
 
 In order to login you need to get the cookie from a web browser and copy it to `userdata/addon_data/plugin.video.skyott/peacocktv` with the name `cookie.conf`.
+
+After that you need to select a profile before trying to play a video. Playback will probably work on Android devices only.
 
 Skyshowtime doesn't work because I don't know the key to generate the header signatures.
 
