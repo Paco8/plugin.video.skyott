@@ -1,0 +1,6 @@
+<settings>
+    <category label="30001">
+        <setting id="platform_id" type="labelenum" label="Platform" values="skyshowtime|peacocktv" default="peacocktv"/>
+    </category>
+</settings>
+
