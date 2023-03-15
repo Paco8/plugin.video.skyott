@@ -134,6 +134,10 @@ class SkyShowtime(object):
       if data and 'userToken' in data:
         self.account['user_token'] = data['userToken']
 
+      # Search
+      data = self.cache.load_file('searchs.json')
+      self.search_list = json.loads(data) if data else []
+
     def get_art(self, images):
       def image_url(url):
         return url.replace('?language', '/400?language')
@@ -196,7 +200,11 @@ class SkyShowtime(object):
       t['info']['title'] = att['title']
       t['art'] = self.get_art(att['images'])
       t['info']['genre'] = att['genres']
-      if e['type'] == 'CATALOGUE/SEASON':
+      if e['type'] == 'CATALOGUE/SERIES':
+        t['type'] = 'series'
+        t['info']['mediatype'] = 'tvshow'
+        t['info']['plot'] = att.get('synopsisLong')
+      elif e['type'] == 'CATALOGUE/SEASON':
         t['type'] = 'season'
         t['info']['mediatype'] = 'season'
         t['info']['tvshowtitle'] = att['seriesName']
@@ -208,6 +216,7 @@ class SkyShowtime(object):
         t['info']['season'] = att['seasonNumber']
         t['info']['episode'] = att['episodeNumber']
       elif e['type'] == 'ASSET/PROGRAMME':
+        t['type'] = 'movie'
         t['info']['mediatype'] = 'movie'
         t['info']['year'] = e.get('year')
       if e['type'] in ['ASSET/PROGRAMME', 'ASSET/EPISODE']:
@@ -296,6 +305,10 @@ class SkyShowtime(object):
         return True, response.content
 
       return False, response.content
+
+    def delete_cookie(self):
+      cookie_filename = self.pldir + '/cookie.conf'
+      self.cache.remove_file(cookie_filename)
 
     def get_profiles(self):
       url = self.endpoints['profiles']
@@ -452,3 +465,26 @@ class SkyShowtime(object):
                'manifest_url': data['asset']['endpoints'][0]['url']})
       return res
 
+    def add_search(self, search_term):
+      self.search_list.append(search_term)
+      self.cache.save_json('searchs.json', self.search_list)
+
+    def delete_search(self, search_term):
+      self.search_list = [s for s in self.search_list if s != search_term]
+      self.cache.save_json('searchs.json', self.search_list)
+
+    def search_vod(self, search_term):
+      res = []
+      url = self.endpoints['search-vod'].format(search_term=search_term)
+      data = self.net.load_data(url)
+      #print_json(data)
+      if not 'results' in data: return None
+      res = []
+      for i in data['results']:
+        if 'uuid' in i:
+          url = self.endpoints['get-video-info-uuid'].format(uuid=i['uuid'])
+          #if i['uuidtype'] == 'series': LOG(url)
+          d = self.net.load_data(url)
+          t = self.parse_item(d[0])
+          res.append(t)
+      return res

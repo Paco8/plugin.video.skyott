@@ -163,16 +163,15 @@ def list_profiles(params):
 
 def search(params):
   search_term = params.get('search_term', None)
-  """
   if search_term:
     if sys.version_info[0] < 3:
       search_term = search_term.decode('utf-8')
     if params.get('name', None) == 'delete':
-      m.delete_search(search_term)
+      sky.delete_search(search_term)
       xbmc.executebuiltin("Container.Refresh")
     else:
-      url = m.get_search_url(search_term)
-      listing_hz(addon.getLocalizedString(30117), url)
+      videos = sky.search_vod(search_term)
+      add_videos(addon.getLocalizedString(30117), 'movies', videos)
     return
 
   if params.get('name', None) == 'new':
@@ -180,35 +179,29 @@ def search(params):
     if search_term:
       if sys.version_info[0] < 3:
         search_term = search_term.decode('utf-8')
-      m.add_search(search_term)
+      sky.add_search(search_term)
     xbmc.executebuiltin("Container.Refresh")
     return
 
   open_folder(addon.getLocalizedString(30113)) # Search
   add_menu_option(addon.getLocalizedString(30113), get_url(action='search', name='new')) # New search
 
-  for i in m.search_list:
+  for i in sky.search_list:
     remove_action = get_url(action='search', search_term=i, name='delete')
     cm = [(addon.getLocalizedString(30114), "RunPlugin(" + remove_action + ")")]
     add_menu_option(i.encode('utf-8'), get_url(action='search', search_term=i), cm)
 
   close_folder(cacheToDisc=False)
-  """
 
 def clear_session():
   LOG('clear_session')
-  """
-  m.cache.remove_file('access_token.conf')
-  m.cache.remove_file('account.json')
-  m.cache.remove_file('device_id.conf')
-  m.cache.remove_file('devices.json')
-  m.cache.remove_file('profile_id.conf')
-  m.cache.remove_file('tokens.json')
-  """
+  files = ['device_id.conf', 'localisation.json', 'profile_id.conf', 'token.json']
+  for f in files:
+    sky.cache.remove_file(sky.pldir +'/' + f)
 
 def logout():
   clear_session()
-  #m.cache.remove_file('auth.key')
+  sky.delete_cookie()
 
 def login():
   def ask_credentials(username=''):
@@ -256,7 +249,6 @@ def router(paramstring):
     elif params['action'] == 'logout':
       logout()
     elif params['action'] == 'wishlist':
-      # Wishlist
       add_videos(addon.getLocalizedString(30102), 'movies', sky.get_my_list())
     elif params['action'] == 'category':
       add_videos(params['name'], 'movies', sky.get_catalog(params['slug']))
@@ -266,8 +258,6 @@ def router(paramstring):
     elif params['action'] == 'series_catalog':
       name = addon.getLocalizedString(30106).encode('utf-8')
       add_videos(name, 'movies', sky.get_series_catalog())
-    elif params['action'] == 'movies':
-      pass
     elif params['action'] == 'series':
       add_videos(params['name'], 'seasons', sky.get_seasons(params['slug']))
     elif params['action'] == 'season':
@@ -285,7 +275,7 @@ def router(paramstring):
     if sky.logged:
       add_menu_option(addon.getLocalizedString(30102), get_url(action='wishlist')) # My list
 
-    #add_menu_option(addon.getLocalizedString(30112), get_url(action='search')) # Search
+    add_menu_option(addon.getLocalizedString(30112), get_url(action='search')) # Search
 
     if sky.logged:
       add_menu_option(addon.getLocalizedString(30180), get_url(action='profiles')) # Profiles

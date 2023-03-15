@@ -18,6 +18,7 @@ class Endpoints(object):
       'section': webclients + '/bff/sections/v1?partition_id=no-partition&template=sections&segment=First_30_Days_Paid&slug={slug}',
       'get-series': atom + '/adapter-calypso/v3/query/node?slug={slug}&represent=(items(items))',
       'get-video-info': atom + '/adapter-calypso/v3/query/node?slug={slug}',
+      'get-video-info-uuid': atom + '/adapter-calypso/v3/query/nodes/uuid/{uuid}?exclude=expired%2Cfuture%2Cshortform',
       'login': rango +'/signin/service/international',
       'profiles': webclients +'/bff/personas/v2',
       'select-profile': webclients + '/bff/personas/v2/{profile_id}?skipPinValidation=true',
@@ -27,4 +28,5 @@ class Endpoints(object):
       'me': ovp + '/auth/users/me',
       'tokens': ovp + '/auth/throttled/tokens',
       'playouts': ovp + '/video/playouts/vod',
+      'search-vod': 'https://suggest.disco.' + self.host + '/suggest/v1/stb/home/0/0/0?term={search_term}&limit=40&entitytype=programme&entitytype=series&contentFormat=longform',
     }
