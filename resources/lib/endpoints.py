@@ -29,4 +29,5 @@ class Endpoints(object):
       'tokens': ovp + '/auth/throttled/tokens',
       'playouts': ovp + '/video/playouts/vod',
       'search-vod': 'https://suggest.disco.' + self.host + '/suggest/v1/stb/home/0/0/0?term={search_term}&limit=40&entitytype=programme&entitytype=series&contentFormat=longform',
+      'menu': atom + '/adapter-calypso/v3/query/menu',
     }

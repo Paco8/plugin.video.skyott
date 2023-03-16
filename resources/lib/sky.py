@@ -58,7 +58,10 @@ class SkyShowtime(object):
       }
     }
 
-    account = {'username': None, 'password': None, 'device_id': None, 'profile_id': None, 'cookie': None, 'user_token': None}
+    account = {'username': None, 'password': None,
+               'device_id': None,
+               'profile_id': None, 'profile_type': None,
+               'cookie': None, 'user_token': None}
 
     def __init__(self, config_directory, platform='skyshowtime'):
       self.logged = False
@@ -87,7 +90,7 @@ class SkyShowtime(object):
       # Load cookie
       content = self.cache.load_file(self.pldir + '/cookie.conf')
       if content:
-        self.account['cookie'] = content.strip()
+        self.account['cookie'] = content.encode('utf-8').strip()
         self.logged = True
 
       # Load device_id
@@ -118,9 +121,13 @@ class SkyShowtime(object):
       #print_json(self.net.headers)
 
       # Load profile
-      content = self.cache.load_file(self.pldir + '/profile_id.conf')
+      content = self.cache.load_file(self.pldir + '/profile.json')
       if content:
-        self.account['profile_id'] = content
+        profile = json.loads(content)
+        self.account['profile_id'] = profile['id']
+        self.account['profile_type'] = profile['type']
+      else:
+        self.account['profile_id'], self.account['profile_type'] = self.select_default_profile()
 
       # Load user token
       token_filename = self.pldir + '/token.json'
@@ -166,12 +173,20 @@ class SkyShowtime(object):
       for e in data:
         t = {'info':{}, 'art':{}}
         t['id'] = e['id']
-        t['slug'] = e['slug']
+        t['slug'] = e.get('slug')
         t['info']['title'] = e['title']
         if e['type'] == 'CATALOGUE/COLLECTION':
           t['type'] = 'category'
           res.append(t)
-        elif e['type'] == 'ASSET/PROGRAMME':
+        elif e['type'] == 'CATALOGUE/LINK':
+          t['type'] = 'category'
+          if 'linkInfo' in e:
+            t['slug'] = e['linkInfo']['slug']
+            t['id'] = e['linkInfo']['nodeId']
+            res.append(t)
+          else:
+            LOG('link not supported: {} ({})'.format(t['slug'], e['linkId']))
+        elif e['type'] in ['ASSET/PROGRAMME', 'ASSET/SLE', 'ASSET/SHORTFORM/CLIP', 'ASSET/EPISODE']:
           t['type'] = 'movie'
           t['info']['mediatype'] = 'movie'
           t['info']['year'] = e.get('year')
@@ -180,6 +195,11 @@ class SkyShowtime(object):
           t['info']['plot'] = e.get('synopsisLong')
           t['art'] = self.get_art(e['images'])
           t['info']['genre'] = self.get_genres(e['genreList'])
+          if e['type'] == 'ASSET/EPISODE':
+            t['info']['mediatype'] = 'episode'
+            t['info']['tvshowtitle'] = e['seriesName']
+            t['info']['season'] = e['seasonNumber']
+            t['info']['episode'] = e['number']
           res.append(t)
         elif e['type'] == 'CATALOGUE/SERIES':
           t['type'] = 'series'
@@ -189,6 +209,8 @@ class SkyShowtime(object):
           t['art'] = self.get_art(e['images'])
           t['info']['genre'] = self.get_genres(e['genreList'])
           res.append(t)
+        else:
+          LOG('catalog type not supported: {}'.format(e['type']))
       return res
 
     def parse_item(self, data):
@@ -240,7 +262,12 @@ class SkyShowtime(object):
       url = self.endpoints['section'].format(slug=slug)
       LOG(url)
       data = self.net.load_data(url)
-      return self.parse_catalog(data['data']['rail']['items'])
+      #self.cache.save_json('catalog.json', data)
+      if 'rail' in data['data']:
+        items = data['data']['rail']['items']
+      else:
+        items = data['data']['group']['rails']
+      return self.parse_catalog(items)
 
     def get_movie_catalog(self):
       url = self.endpoints['section'].format(slug=self.platform['movies_slug'])
@@ -325,10 +352,23 @@ class SkyShowtime(object):
           res.append(p)
       return res
 
+    def select_default_profile(self):
+      profiles = self.get_profiles()
+      if len(profiles) > 0:
+        profile = profiles[0]
+        self.cache.save_json(self.pldir + '/profile.json', profile)
+        return profile['id'], profile['type']
+      return None, None
+
     def change_profile(self, id):
-      self.account['profile_id'] = id
-      self.cache.save_file(self.pldir + '/profile_id.conf', self.account['profile_id'])
-      self.cache.remove_file(self.pldir + '/token.json')
+      profiles = self.get_profiles()
+      for profile in profiles:
+        if profile['id'] == id:
+          self.cache.save_json(self.pldir + '/profile.json', profile)
+          self.cache.remove_file(self.pldir + '/token.json')
+          return
+      else:
+        LOG('profile {} not found'.format(id))
 
     def get_my_stuff_slug(self):
       url = self.endpoints['my-stuff'].format(slug='/my-stuff')
@@ -487,4 +527,42 @@ class SkyShowtime(object):
           d = self.net.load_data(url)
           t = self.parse_item(d[0])
           res.append(t)
+      return res
+
+    def get_main_menu(self):
+      def find_item(term, items):
+        for i in items:
+          #print(i['attributes']['alias'])
+          if i['attributes']['alias'] == term:
+            return i
+        return None
+
+      cache_filename = self.pldir + '/main_menu.json'
+      content = self.cache.load(cache_filename)
+      if content:
+        data = json.loads(content)
+      else:
+        url = self.endpoints['menu']
+        data = self.net.load_data(url)
+        self.cache.save_json(cache_filename, data)
+
+      res = []
+      if self.account['profile_type'] == 'Kid':
+        top_label = 'kidsTopNavWithIcons'
+        main_label = 'Kids'
+      else:
+        top_label = 'topNavWithIcons'
+        main_label = 'Main'
+      topnav = find_item(top_label, data['relationships']['items']['data'])
+      #print_json(topnav)
+      #self.cache.save_json('topnav.json', topnav)
+      if topnav:
+        main = find_item(main_label, topnav['relationships']['items']['data'])
+        if main:
+          for i in main['relationships']['items']['data']:
+            #print(i['attributes']['alias'])
+            att = i['attributes']
+            if att['alias'] not in ['Channels']:
+              t = {'id': att['alias'], 'title': att['title'], 'slug': att['uri'].replace('/watch','')}
+              res.append(t)
       return res

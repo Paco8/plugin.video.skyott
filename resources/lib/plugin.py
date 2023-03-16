@@ -269,11 +269,11 @@ def router(paramstring):
     open_folder(addon.getLocalizedString(30101)) # Menu
     xbmcplugin.setContent(_handle, 'files')
 
-    add_menu_option(addon.getLocalizedString(30105), get_url(action='movie_catalog')) # Movies
-    add_menu_option(addon.getLocalizedString(30106), get_url(action='series_catalog')) # Series
-
-    if sky.logged:
-      add_menu_option(addon.getLocalizedString(30102), get_url(action='wishlist')) # My list
+    for item in sky.get_main_menu():
+      if item['id'] == 'My Stuff' and sky.logged:
+        add_menu_option(item['title'], get_url(action='wishlist')) # My list
+      else:
+        add_menu_option(item['title'], get_url(action='category', name=item['title'], slug=item['slug']))
 
     add_menu_option(addon.getLocalizedString(30112), get_url(action='search')) # Search
 
