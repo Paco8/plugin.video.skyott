@@ -220,9 +220,23 @@ def login():
     else:
       show_notification(addon.getLocalizedString(30166)) # Failed
 
+def login_with_key():
+  filename = xbmcgui.Dialog().browseSingle(1, addon.getLocalizedString(30182), '', '.key')
+  if filename:
+    sky.import_key_file(filename)
+    clear_session()
+
+def export_key():
+  directory = xbmcgui.Dialog().browseSingle(0, addon.getLocalizedString(30185), '')
+  if directory:
+    sky.export_key_file(directory + 'skyott.key')
+
 def list_users():
   open_folder(addon.getLocalizedString(30160)) # Change user
   add_menu_option(addon.getLocalizedString(30183), get_url(action='login')) # Login with username
+  add_menu_option(addon.getLocalizedString(30181), get_url(action='login_with_key')) # Login with key
+  if sky.account['cookie']:
+    add_menu_option(addon.getLocalizedString(30184), get_url(action='export_key')) # Export key
   add_menu_option(addon.getLocalizedString(30150), get_url(action='logout')) # Close session
   close_folder()
 
@@ -244,6 +258,10 @@ def router(paramstring):
       list_profiles(params)
     elif params['action'] == 'login':
       login()
+    elif params['action'] == 'login_with_key':
+      login_with_key()
+    elif params['action'] == 'export_key':
+      export_key()
     elif params['action'] == 'user':
       list_users()
     elif params['action'] == 'logout':
@@ -270,8 +288,9 @@ def router(paramstring):
     xbmcplugin.setContent(_handle, 'files')
 
     for item in sky.get_main_menu():
-      if item['id'] == 'My Stuff' and sky.logged:
-        add_menu_option(item['title'], get_url(action='wishlist')) # My list
+      if item['id'] == 'My Stuff':
+        if sky.logged:
+          add_menu_option(item['title'], get_url(action='wishlist')) # My list
       else:
         add_menu_option(item['title'], get_url(action='category', name=item['title'], slug=item['slug']))
 
