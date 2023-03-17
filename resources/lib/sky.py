@@ -241,7 +241,7 @@ class SkyShowtime(object):
         t['type'] = 'movie'
         t['info']['mediatype'] = 'movie'
         t['info']['year'] = e.get('year')
-      if e['type'] in ['ASSET/PROGRAMME', 'ASSET/EPISODE']:
+      if e['type'] in ['ASSET/PROGRAMME', 'ASSET/EPISODE', 'ASSET/SLE', 'ASSET/SHORTFORM/CLIP']:
         t['info']['plot'] = att['synopsisLong']
         t['info']['duration'] = att['durationSeconds']
         t['info']['mpaa'] = att.get('ottCertificate')
