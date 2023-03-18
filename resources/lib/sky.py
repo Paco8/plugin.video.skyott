@@ -159,6 +159,8 @@ class SkyShowtime(object):
           art['poster'] = image_url(i['url'])
         elif i['type'] == 'landscape':
           art['fanart'] = image_url(i['url'])
+        elif i['type'] == 'titleLogo':
+          art['clearlogo'] = image_url(i['url'])
       return art
 
     def get_genres(self, genres):
@@ -247,7 +249,10 @@ class SkyShowtime(object):
         t['info']['mpaa'] = att.get('ottCertificate')
         t['content_id'] = att.get('nbcuId')
         if 'formats' in att:
-          t['content_id'] = att['formats']['HD']['contentId']
+          if 'HD' in att['formats']:
+            t['content_id'] = att['formats']['HD']['contentId']
+          elif 'SD' in att['formats']:
+            t['content_id'] = att['formats']['SD']['contentId']
         t['provider_variant_id'] = att.get('providerVariantId')
       return t
 
@@ -386,7 +391,7 @@ class SkyShowtime(object):
       data = self.net.load_data(url, headers)
       #print_json(data)
       #self.cache.save_json('my-list.json', data)
-      if 'rails' in data:
+      if 'rails' in data and len(data['rails']) > 0:
         rails = list(data["rails"].items())
         return self.parse_catalog(rails[0][1]['items'])
       return []
@@ -446,7 +451,7 @@ class SkyShowtime(object):
       data = self.net.post_data(url, post_data, headers)
       return data
 
-    def get_playback_info(self, content_id, provider_variant_id):
+    def get_playback_info(self, content_id, provider_variant_id, preferred_server=''):
       url = self.endpoints['playouts']
       headers = self.net.headers.copy()
       headers['Accept'] = 'application/vnd.playvod.v1+json'
@@ -499,10 +504,17 @@ class SkyShowtime(object):
 
       res = {'response': data}
       if 'protection' in data:
+        manifest_url = None
+        for i in data['asset']['endpoints']:
+          if not manifest_url:
+            manifest_url = i['url']
+          if i['cdn'].lower() == preferred_server.lower():
+            manifest_url = i['url']
+            break
         res.update(
               {'license_url': data['protection']['licenceAcquisitionUrl'],
                'license_token': data['protection']['licenceToken'],
-               'manifest_url': data['asset']['endpoints'][0]['url']})
+               'manifest_url': manifest_url})
       return res
 
     def add_search(self, search_term):
@@ -562,8 +574,13 @@ class SkyShowtime(object):
           for i in main['relationships']['items']['data']:
             #print(i['attributes']['alias'])
             att = i['attributes']
+            try:
+              rel = i['relationships']
+              icon = rel['images']['data'][0]['attributes']['url']
+            except:
+              icon = None
             if att['alias'] not in ['Channels']:
-              t = {'id': att['alias'], 'title': att['title'], 'slug': att['uri'].replace('/watch','')}
+              t = {'id': att['alias'], 'title': att['title'], 'slug': att['uri'].replace('/watch',''), 'icon': icon}
               res.append(t)
       return res
 

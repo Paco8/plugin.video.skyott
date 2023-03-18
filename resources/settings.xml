@@ -1,6 +1,7 @@
 <settings>
     <category label="30001">
         <setting id="platform_id" type="labelenum" label="Platform" values="skyshowtime|peacocktv" default="peacocktv"/>
+        <setting id="preferred_server" type="labelenum" label="Server" values="Auto|Limelight|Cloudfront" default='Auto'/>
     </category>
 </settings>
 

@@ -42,17 +42,21 @@ def get_url(**kwargs):
 def play(slug):
   LOG('play - slug: {}'.format(slug))
 
-  data = sky.get_video_info(slug)
-  LOG('video info: {}'.format(data))
-  if not 'content_id' in data:
+  info = sky.get_video_info(slug)
+  LOG('video info: {}'.format(info))
+  if not 'content_id' in info:
     show_notification('No content id')
     return
 
-  data = sky.get_playback_info(data['content_id'], data['provider_variant_id'])
+  data = sky.get_playback_info(info['content_id'], info['provider_variant_id'], addon.getSetting('preferred_server'))
   LOG('playback info: {}'.format(data))
   if not data.get('manifest_url'):
-    show_notification('No playback url')
+    if 'errorCode' in data['response']:
+      show_notification(data['response']['description'])
+    else:
+      show_notification('No playback url')
     return
+  #data['manifest_url'] = 'https://livesim.dashif.org/livesim/chunkdur_1/ato_7/testpic4_8s/Manifest.mpd'
 
   import inputstreamhelper
   is_helper = inputstreamhelper.Helper('mpd', drm='com.widevine.alpha')
@@ -82,6 +86,12 @@ def play(slug):
     play_item.setProperty('inputstream', 'inputstream.adaptive')
 
   play_item.setMimeType('application/dash+xml')
+  try:
+    play_item.setInfo('video', info['info'])
+    play_item.setArt(info['art'])
+  except:
+    pass
+
   play_item.setContentLookup(False)
   xbmcplugin.setResolvedUrl(_handle, True, listitem=play_item)
 
@@ -292,7 +302,9 @@ def router(paramstring):
         if sky.logged:
           add_menu_option(item['title'], get_url(action='wishlist')) # My list
       else:
-        add_menu_option(item['title'], get_url(action='category', name=item['title'], slug=item['slug']))
+        art = None
+        #if item.get('icon'): art={'icon': item['icon']}
+        add_menu_option(item['title'], get_url(action='category', name=item['title'], slug=item['slug']), art=art)
 
     add_menu_option(addon.getLocalizedString(30112), get_url(action='search')) # Search
 
