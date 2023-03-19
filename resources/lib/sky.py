@@ -11,7 +11,7 @@ import io
 import os
 import time
 #import re
-#from datetime import datetime
+from datetime import datetime
 
 from .log import LOG, print_json
 from .network import Network
@@ -150,17 +150,20 @@ class SkyShowtime(object):
         return url.replace('?language', '/400?language')
 
       art = {'icon': None, 'poster': None, 'fanart': None}
+      title34 = nontitle34 = None
       for i in images:
         if i['type'] == 'titleArt34':
-          art['poster'] = image_url(i['url'])
-        elif i['type'] == 'nonTitleArt34' and not art['poster']:
-          art['poster'] = image_url(i['url'])
-        elif i['type'] == 'titleArt169' and not art['poster']:
+          title34 = image_url(i['url'])
+        elif i['type'] == 'nonTitleArt34':
+          nontitle34 = image_url(i['url'])
+        elif i['type'] == 'titleArt169':
           art['poster'] = image_url(i['url'])
         elif i['type'] == 'landscape':
           art['fanart'] = image_url(i['url'])
         elif i['type'] == 'titleLogo':
           art['clearlogo'] = image_url(i['url'])
+        if title34 and not art['poster']: art['poster'] = title34
+        if nontitle34 and not art['poster']: art['poster'] = nontitle34
       return art
 
     def get_genres(self, genres):
@@ -451,13 +454,41 @@ class SkyShowtime(object):
       data = self.net.post_data(url, post_data, headers)
       return data
 
-    def get_playback_info(self, content_id, provider_variant_id, preferred_server=''):
-      url = self.endpoints['playouts']
+    def request_playback_tokens(self, url, post_data, content_type, preferred_server=''):
       headers = self.net.headers.copy()
-      headers['Accept'] = 'application/vnd.playvod.v1+json'
-      headers['Content-Type'] = 'application/vnd.playvod.v1+json'
+      headers['Accept'] = content_type
+      headers['Content-Type'] = content_type
       if self.account['user_token']:
         headers['x-skyott-usertoken'] = self.account['user_token']
+      post_data = json.dumps(post_data)
+      sig_header = calculate_signature('POST', url, headers, post_data)
+      headers.update(sig_header)
+      #print_json(headers)
+
+      response = self.net.session.post(url, headers=headers, data=post_data)
+      content = response.content.decode('utf-8')
+      LOG(content)
+      data = json.loads(content)
+      #print_json(data)
+      #self.cache.save_json('playback.json', data)
+
+      res = {'response': data}
+      if 'protection' in data:
+        manifest_url = None
+        for i in data['asset']['endpoints']:
+          if not manifest_url:
+            manifest_url = i['url']
+          if i['cdn'].lower() == preferred_server.lower():
+            manifest_url = i['url']
+            break
+        res.update(
+              {'license_url': data['protection']['licenceAcquisitionUrl'],
+               'license_token': data['protection']['licenceToken'],
+               'manifest_url': manifest_url})
+      return res
+
+    def get_playback_info(self, content_id, provider_variant_id, preferred_server=''):
+      url = self.endpoints['playouts']
       post_data = {
         "device": {
            "capabilities": [
@@ -490,32 +521,41 @@ class SkyShowtime(object):
         "parentalControlPin": "null",
         "personaParentalControlRating": "9"
       }
-      post_data = json.dumps(post_data)
-      sig_header = calculate_signature('POST', url, headers, post_data)
-      headers.update(sig_header)
-      #print_json(headers)
+      return self.request_playback_tokens(url, post_data, 'application/vnd.playvod.v1+json', preferred_server)
 
-      response = self.net.session.post(url, headers=headers, data=post_data)
-      content = response.content.decode('utf-8')
-      LOG(content)
-      data = json.loads(content)
-      #print_json(data)
-      #self.cache.save_json('playback.json', data)
-
-      res = {'response': data}
-      if 'protection' in data:
-        manifest_url = None
-        for i in data['asset']['endpoints']:
-          if not manifest_url:
-            manifest_url = i['url']
-          if i['cdn'].lower() == preferred_server.lower():
-            manifest_url = i['url']
-            break
-        res.update(
-              {'license_url': data['protection']['licenceAcquisitionUrl'],
-               'license_token': data['protection']['licenceToken'],
-               'manifest_url': manifest_url})
-      return res
+    def get_live_playback_info(self, service_key, preferred_server=''):
+      url = self.endpoints['playouts-live']
+      post_data = {
+        "serviceKey": service_key,
+        "device": {
+          "capabilities": [
+            {
+                "protection": "WIDEVINE",
+                "container": "ISOBMFF",
+                "transport": "DASH",
+                "acodec": "AAC",
+                "vcodec": "H264"
+            },
+            {
+                "protection": "NONE",
+                "container": "ISOBMFF",
+                "transport": "DASH",
+                "acodec": "AAC",
+                "vcodec": "H264"
+            }
+          ],
+          "maxVideoFormat": "HD",
+          "model": "PC",
+          "hdcpEnabled": "true"
+        },
+        "client": {
+          "thirdParties": ["FREEWHEEL"],
+          "timeShiftEnabled": "false"
+        },
+        "parentalControlPin": "null",
+        "personaParentalControlRating": "9"
+      }
+      return self.request_playback_tokens(url, post_data, 'application/vnd.playlive.v1+json', preferred_server)
 
     def add_search(self, search_term):
       self.search_list.append(search_term)
@@ -549,7 +589,7 @@ class SkyShowtime(object):
             return i
         return None
 
-      cache_filename = self.pldir + '/main_menu.json'
+      cache_filename = 'cache/main_menu.json'
       content = self.cache.load(cache_filename)
       if content:
         data = json.loads(content)
@@ -579,9 +619,49 @@ class SkyShowtime(object):
               icon = rel['images']['data'][0]['attributes']['url']
             except:
               icon = None
-            if att['alias'] not in ['Channels']:
-              t = {'id': att['alias'], 'title': att['title'], 'slug': att['uri'].replace('/watch',''), 'icon': icon}
-              res.append(t)
+            t = {'id': att['alias'], 'title': att['title'], 'slug': att['uri'].replace('/watch',''), 'icon': icon}
+            res.append(t)
+      return res
+
+    def download_epg(self):
+      cache_filename = 'cache/epg.json'
+      content = self.cache.load(cache_filename, 60)
+      if content:
+        data = json.loads(content)
+        return data
+
+      if sys.version_info[0] >= 3:
+        from urllib.parse import quote
+      else:
+        from urllib import quote
+      from dateutil import tz
+      now = datetime.now(tz.tzlocal())
+      now = now.replace(minute=0, second=0, microsecond=0)
+      date = now.strftime('%Y-%m-%dT%H:%M%z')
+      date = date[:-2] + ':' + date[-2:]
+      url = self.endpoints['epg'].format(start_time=quote(date))
+      #print(url)
+      data = self.net.load_data(url)
+      self.cache.save_json(cache_filename, data)
+      return data
+
+    def get_channels(self):
+      epg = self.download_epg()
+      res = []
+      for c in epg['channels']:
+        t = {'info': {}, 'art': {}}
+        t['type'] = 'movie'
+        t['stream_type'] = 'tv'
+        t['info']['mediatype'] = 'movie'
+        t['dial'] = str(c['rank'])
+        t['info']['title'] = t['dial'] +'. ' + c['name']
+        t['channel_name'] = c['name']
+        t['id'] = c['id']
+        t['service_key'] = c['serviceKey']
+        t['info']['playcount'] = 1 # Set as watched
+        if 'images' in c:
+          t['art'] = self.get_art(c['images'])
+        res.append(t)
       return res
 
     def import_key_file(self, filename):

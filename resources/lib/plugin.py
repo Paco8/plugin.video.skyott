@@ -39,16 +39,25 @@ def get_url(**kwargs):
       kwargs[key] = value.encode('utf-8')
   return '{0}?{1}'.format(_url, urlencode(kwargs))
 
-def play(slug):
-  LOG('play - slug: {}'.format(slug))
+def play(params):
+  slug = params.get('slug')
+  service_key = params.get('service_key')
 
-  info = sky.get_video_info(slug)
-  LOG('video info: {}'.format(info))
-  if not 'content_id' in info:
-    show_notification('No content id')
-    return
+  LOG('play - slug: {} service_key: {}'.format(slug, service_key))
 
-  data = sky.get_playback_info(info['content_id'], info['provider_variant_id'], addon.getSetting('preferred_server'))
+  if slug:
+    info = sky.get_video_info(slug)
+    LOG('video info: {}'.format(info))
+    if not 'content_id' in info:
+      show_notification('No content id')
+      return
+
+  preferred_server = addon.getSetting('preferred_server')
+  if slug:
+    data = sky.get_playback_info(info['content_id'], info['provider_variant_id'], preferred_server)
+  else:
+    data = sky.get_live_playback_info(service_key, preferred_server)
+
   LOG('playback info: {}'.format(data))
   if not data.get('manifest_url'):
     if 'errorCode' in data['response']:
@@ -125,7 +134,10 @@ def add_videos(category, ctype, videos, ref=None, url_next=None, url_prev=None):
       list_item.setProperty('IsPlayable', 'true')
       list_item.setInfo('video', t['info'])
       list_item.setArt(t['art'])
-      url = get_url(action='play', slug=t['slug'])
+      if t.get('stream_type') == 'tv':
+        url = get_url(action='play', service_key=t['service_key'])
+      else:
+        url = get_url(action='play', slug=t['slug'])
       xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
     elif t['type'] == 'series':
       list_item = xbmcgui.ListItem(label = title_name)
@@ -263,7 +275,7 @@ def router(paramstring):
   LOG('params: {}'.format(params))
   if params:
     if params['action'] == 'play':
-      play(params['slug'])
+      play(params)
     elif params['action'] == 'profiles':
       list_profiles(params)
     elif params['action'] == 'login':
@@ -292,6 +304,8 @@ def router(paramstring):
       add_videos(params['name'], 'episodes', sky.get_episodes(params['slug']))
     elif params['action'] == 'search':
       search(params)
+    elif params['action'] == 'tv':
+      add_videos(addon.getLocalizedString(30104), 'movies', sky.get_channels())
   else:
     # Main
     open_folder(addon.getLocalizedString(30101)) # Menu
@@ -301,6 +315,8 @@ def router(paramstring):
       if item['id'] == 'My Stuff':
         if sky.logged:
           add_menu_option(item['title'], get_url(action='wishlist')) # My list
+      elif item['id'] == 'Channels':
+        add_menu_option(item['title'], get_url(action='tv')) # TV
       else:
         art = None
         #if item.get('icon'): art={'icon': item['icon']}
