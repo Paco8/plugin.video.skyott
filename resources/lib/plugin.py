@@ -305,7 +305,7 @@ def router(paramstring):
     elif params['action'] == 'search':
       search(params)
     elif params['action'] == 'tv':
-      add_videos(addon.getLocalizedString(30104), 'movies', sky.get_channels())
+      add_videos(addon.getLocalizedString(30104), 'movies', sky.get_channels_with_epg())
   else:
     # Main
     open_folder(addon.getLocalizedString(30101)) # Menu

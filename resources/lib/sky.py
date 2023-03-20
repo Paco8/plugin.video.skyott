@@ -18,6 +18,7 @@ from .network import Network
 from .cache import Cache
 from .endpoints import Endpoints
 from .signature import calculate_signature
+from .timeconv import timestamp2str
 
 class SkyShowtime(object):
 
@@ -216,6 +217,8 @@ class SkyShowtime(object):
           res.append(t)
         else:
           LOG('catalog type not supported: {}'.format(e['type']))
+        if 'displayStartTime' in e:
+          t['info']['title'] = '[COLOR yellow]{}[/COLOR] - {}'.format(timestamp2str(e['displayStartTime']/1000, '%a %d %H:%M'), t['info']['title'])
       return res
 
     def parse_item(self, data):
@@ -663,6 +666,60 @@ class SkyShowtime(object):
           t['art'] = self.get_art(c['images'])
         res.append(t)
       return res
+
+    def get_channels_with_epg(self):
+      now = time.time()
+      channels = self.get_channels()
+      epg = self.get_epg()
+      for ch in channels:
+        p = self.find_program_epg(epg, ch['service_key'], now)
+        #print_json(p)
+        if p:
+          ch['info']['plot'] = p['info']['plot']
+          ch['info']['title'] += ' - [COLOR yellow]' + p['info']['title'] + '[/COLOR]'
+          ch['info']['duration'] = p['info']['duration']
+          if p['art']['poster']: ch['art']['poster'] = p['art']['poster']
+      return channels
+
+    def get_epg(self):
+      def find_image(data):
+        url = None
+        for label in ['16-9', 'scene169', 'landscape']:
+          url = data.get(label)
+          if url: break
+        if url:
+          url = url.replace('?', '/400?')
+        return url
+
+      epg = self.download_epg()
+      res = {}
+      for c in epg['channels']:
+        id = c['serviceKey']
+        res[id] = []
+        for i in c['scheduleItems']:
+          #print_json(i)
+          t = {'info': {}, 'art': {'poster': None}}
+          t['start'] = i['startTimeUTC']
+          t['end'] = t['start'] + i['durationSeconds']
+          t['start_str'] = timestamp2str(t['start'])
+          t['end_str'] = timestamp2str(t['end'])
+          t['date_str'] = timestamp2str(t['start'], '%a %d %H:%M')
+          t['info']['title'] = i['data']['title']
+          t['info']['plot'] = i['data'].get('description')
+          t['info']['duration'] = i['durationSeconds']
+          if 'images' in i['data']:
+            t['art']['poster'] = find_image(i['data']['images'])
+          res[id].append(t)
+      return res
+
+    def find_program_epg(self, epg, service_key, timestamp = None):
+      id = service_key
+      if not timestamp: timestamp = time.time()
+      for p in epg[id]:
+        #print(p)
+        if (p['start'] <= timestamp) and (timestamp <= p['end']):
+          return p
+      return None
 
     def import_key_file(self, filename):
       if sys.version_info[0] > 2:
