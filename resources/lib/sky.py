@@ -739,3 +739,8 @@ class SkyShowtime(object):
       with io.open(filename, 'w', encoding='utf-8') as f:
         f.write(json.dumps(data, ensure_ascii=False))
 
+    def install_cookie_file(self, filename):
+      import shutil
+      if sys.version_info[0] > 2:
+        filename = bytes(filename, 'utf-8')
+      shutil.copyfile(filename, self.cache.config_directory + self.pldir + '/cookie.conf')

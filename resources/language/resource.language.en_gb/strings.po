@@ -253,6 +253,14 @@ msgctxt "#30185"
 msgid "Select a folder to save the key file"
 msgstr ""
 
+msgctxt "#30186"
+msgid "Login with a cookie file"
+msgstr ""
+
+msgctxt "#30187"
+msgid "Select the cookie file"
+msgstr ""
+
 msgctxt "#30200"
 msgid "Error"
 msgstr ""

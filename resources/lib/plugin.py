@@ -248,6 +248,12 @@ def login_with_key():
     sky.import_key_file(filename)
     clear_session()
 
+def login_with_cookie():
+  filename = xbmcgui.Dialog().browseSingle(1, addon.getLocalizedString(30187), '', '.txt|.conf')
+  if filename:
+    sky.install_cookie_file(filename)
+    clear_session()
+
 def export_key():
   directory = xbmcgui.Dialog().browseSingle(0, addon.getLocalizedString(30185), '')
   if directory:
@@ -255,8 +261,9 @@ def export_key():
 
 def list_users():
   open_folder(addon.getLocalizedString(30160)) # Change user
-  add_menu_option(addon.getLocalizedString(30183), get_url(action='login')) # Login with username
-  add_menu_option(addon.getLocalizedString(30181), get_url(action='login_with_key')) # Login with key
+  #add_menu_option(addon.getLocalizedString(30183), get_url(action='login', method='credentials')) # Login with username
+  add_menu_option(addon.getLocalizedString(30181), get_url(action='login', method='key')) # Login with key
+  add_menu_option(addon.getLocalizedString(30186), get_url(action='login', method='cookie')) # Login with cookie
   if sky.account['cookie']:
     add_menu_option(addon.getLocalizedString(30184), get_url(action='export_key')) # Export key
   add_menu_option(addon.getLocalizedString(30150), get_url(action='logout')) # Close session
@@ -279,9 +286,12 @@ def router(paramstring):
     elif params['action'] == 'profiles':
       list_profiles(params)
     elif params['action'] == 'login':
-      login()
-    elif params['action'] == 'login_with_key':
-      login_with_key()
+      if params['method'] == 'key':
+        login_with_key()
+      elif params['method'] == 'cookie':
+        login_with_cookie()
+      else:
+        login()
     elif params['action'] == 'export_key':
       export_key()
     elif params['action'] == 'user':
