@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.skyott"
        name="Peacock"
-       version="0.0.14"
+       version="0.1.0"
        provider-name="Paco8">
   <requires>
   <!--- <import addon="xbmc.python" version="2.25.0"/> -->
@@ -20,8 +20,8 @@
     <summary lang="en_GB">Peacock/SkyShowtime</summary>
     <description lang="en_GB">Watch SkyShowtime and Peacock TV in Kodi. Requires a subscription.</description>
     <description lang="es_ES">Vea SkyShowtime y Peacock TV en Kodi. Se necesita estar abonado.</description>
-    <disclaimer lang="en_GB">This addon is not officially commissioned/supported by SkyShowtime/Peacock. All product names, logos, and trademarks mentioned in this project are property of their respective owners.</disclaimer>
-    <disclaimer lang="es_ES">Este addon no ha sido realizado ni apoyado por SkyShowtime/Peacock Todos los nombres de productos, logotipos y marcas registradas mencionados en este proyecto son propiedad de sus respectivos dueños.</disclaimer>
+    <disclaimer lang="en_GB">This addon is not officially authorized or supported by Peacock or SkyShowtime. Any product names, logos, and trademarks mentioned in this project are the property of their respective owners.</disclaimer>
+    <disclaimer lang="es_ES">Este addon no está oficialmente autorizado ni respaldado por Peacock ni por SkyShowtime. Cualquier nombre de producto, logotipo y marca comercial mencionados en este proyecto son propiedad de sus respectivos propietarios.</disclaimer>
     <platform>all</platform>
     <license>LGPL-2.1-or-later</license>
     <website></website>

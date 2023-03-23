@@ -27,8 +27,6 @@ class SkyShowtime(object):
          'name': 'SkyShowtime',
          'host': 'skyshowtime.com',
          'config_dir': 'skyshowtime',
-         'movies_slug': '/movies/highlights',
-         'series_slug': '/entertainment/highlights',
          'headers': {
            'x-skyott-activeterritory': 'ES',
            'x-skyott-client-version': '4.3.12',
@@ -44,8 +42,6 @@ class SkyShowtime(object):
          'name': 'PeacockTV',
          'host': 'peacocktv.com',
          'config_dir': 'peacocktv',
-         'movies_slug': '/movies/highlights',
-         'series_slug': '/tv/highlights',
          'headers': {
            'x-skyott-activeterritory': 'US',
            'x-skyott-client-version': '4.3.12',
@@ -150,7 +146,7 @@ class SkyShowtime(object):
       def image_url(url):
         return url.replace('?language', '/400?language')
 
-      art = {'icon': None, 'poster': None, 'fanart': None}
+      art = {'icon': None, 'poster': None, 'fanart': None, 'thumb': None}
       title34 = nontitle34 = None
       for i in images:
         if i['type'] == 'titleArt34':
@@ -163,8 +159,11 @@ class SkyShowtime(object):
           art['fanart'] = image_url(i['url'])
         elif i['type'] == 'titleLogo':
           art['clearlogo'] = image_url(i['url'])
+        elif i['type'] == 'scene169':
+          art['thumb'] = image_url(i['url'])
         if title34 and not art['poster']: art['poster'] = title34
         if nontitle34 and not art['poster']: art['poster'] = nontitle34
+        if not art['thumb']: art['thumb'] = art['poster']
       return art
 
     def get_genres(self, genres):
@@ -294,6 +293,7 @@ class SkyShowtime(object):
       url = self.endpoints['get-series'].format(slug=slug)
       #LOG(url)
       data = self.net.load_data(url)
+      #self.cache.save_json('series.json', data)
       return self.parse_items(data['relationships']['items']['data'])
 
     def get_seasons(self, slug):
@@ -417,7 +417,8 @@ class SkyShowtime(object):
       headers = self.net.headers.copy()
       headers['Accept'] = 'application/vnd.userinfo.v2+json'
       headers['Content-Type'] = 'application/vnd.userinfo.v2+json'
-      headers['x-skyott-usertoken'] = self.account['user_token']
+      if self.account['user_token']:
+        headers['x-skyott-usertoken'] = self.account['user_token']
       sig_header = calculate_signature('GET', url, headers)
       headers.update(sig_header)
       data = self.net.load_data(url, headers)
@@ -501,14 +502,14 @@ class SkyShowtime(object):
                 "transport": "DASH",
                 "acodec": "AAC",
                 "vcodec": "H264"
-            },
-            {
+             },
+             {
                 "protection": "NONE",
                 "container": "ISOBMFF",
                 "transport": "DASH",
                 "acodec": "AAC",
                 "vcodec": "H264"
-            }
+             }
           ],
           "maxVideoFormat": "HD",
           "model": "PC",
@@ -592,7 +593,7 @@ class SkyShowtime(object):
             return i
         return None
 
-      cache_filename = 'cache/main_menu.json'
+      cache_filename = self.pldir +'/menu.json'
       content = self.cache.load(cache_filename)
       if content:
         data = json.loads(content)
@@ -652,7 +653,8 @@ class SkyShowtime(object):
       epg = self.download_epg()
       res = []
       for c in epg['channels']:
-        t = {'info': {}, 'art': {}}
+        t = {'info': {}}
+        t['art'] = {'icon': None, 'poster': None, 'fanart': None, 'thumb': None}
         t['type'] = 'movie'
         t['stream_type'] = 'tv'
         t['info']['mediatype'] = 'movie'
@@ -664,6 +666,7 @@ class SkyShowtime(object):
         t['info']['playcount'] = 1 # Set as watched
         if 'images' in c:
           t['art'] = self.get_art(c['images'])
+        t['channel_type'] = c['type']
         res.append(t)
       return res
 
@@ -679,6 +682,9 @@ class SkyShowtime(object):
           ch['info']['title'] += ' - [COLOR yellow]' + p['info']['title'] + '[/COLOR]'
           ch['info']['duration'] = p['info']['duration']
           if p['art']['poster']: ch['art']['poster'] = p['art']['poster']
+          if p['content_id'] and p['provider_variant_id']:
+            ch['content_id'] = p['content_id']
+            ch['provider_variant_id'] = p['provider_variant_id']
       return channels
 
     def get_epg(self):
@@ -709,6 +715,8 @@ class SkyShowtime(object):
           t['info']['duration'] = i['durationSeconds']
           if 'images' in i['data']:
             t['art']['poster'] = find_image(i['data']['images'])
+          t['content_id'] = i['data'].get('contentId')
+          t['provider_variant_id'] = i['data'].get('providerVariantId')
           res[id].append(t)
       return res
 

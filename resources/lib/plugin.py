@@ -56,7 +56,10 @@ def play(params):
   if slug:
     data = sky.get_playback_info(info['content_id'], info['provider_variant_id'], preferred_server)
   else:
-    data = sky.get_live_playback_info(service_key, preferred_server)
+    if params.get('content_id') and params.get('provider_variant_id'):
+      data = sky.get_playback_info(params['content_id'], params['provider_variant_id'], preferred_server)
+    else:
+      data = sky.get_live_playback_info(service_key, preferred_server)
 
   LOG('playback info: {}'.format(data))
   if not data.get('manifest_url'):
@@ -129,6 +132,14 @@ def add_videos(category, ctype, videos, ref=None, url_next=None, url_prev=None):
     #LOG("t: {}".format(t))
     title_name = t['info']['title']
     if not 'type' in t: continue
+
+    # Fix art
+    if 'mediatype' in t['info'] and 'art' in t:
+      if t['info']['mediatype'] != 'episode':
+        t['art']['thumb'] = t['art'].get('poster')
+      if t['info']['mediatype'] == 'episode':
+        t['art']['fanart'] = None
+
     if t['type'] == 'movie':
       list_item = xbmcgui.ListItem(label = title_name)
       list_item.setProperty('IsPlayable', 'true')
@@ -136,6 +147,8 @@ def add_videos(category, ctype, videos, ref=None, url_next=None, url_prev=None):
       list_item.setArt(t['art'])
       if t.get('stream_type') == 'tv':
         url = get_url(action='play', service_key=t['service_key'])
+        if 'content_id' in t and 'provider_variant_id' in t:
+          url += '&content_id={}&provider_variant_id={}'.format(t['content_id'], t['provider_variant_id'])
       else:
         url = get_url(action='play', slug=t['slug'])
       xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
@@ -345,7 +358,7 @@ def router(paramstring):
 def run():
   global sky
   LOG('profile_dir: {}'.format(profile_dir))
-  platform_id = addon.getSetting('platform_id')
+  platform_id = addon.getSetting('platform_id').lower()
   LOG('platform_id: {}'.format(platform_id))
   sky = SkyShowtime(profile_dir, platform_id)
 
