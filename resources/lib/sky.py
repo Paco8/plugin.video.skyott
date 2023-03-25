@@ -101,25 +101,6 @@ class SkyShowtime(object):
         self.platform['device_id'] = self.create_device_id()
         self.cache.save_file(self.pldir + '/device_id.conf', self.platform['device_id'])
 
-      # Load localisation
-      localisation_filename = self.pldir + '/localisation.json'
-      content = self.cache.load_file(localisation_filename)
-      if content:
-        extra_headers = json.loads(content)
-      else:
-        extra_headers = self.get_localisation()
-        if 'headers' in extra_headers:
-          self.cache.save_json(localisation_filename, data)
-      if extra_headers and 'headers' in extra_headers:
-        h = extra_headers['headers']
-        self.platform['headers'].update({
-             'x-skyott-activeterritory': h.get('x-skyott-activeterritory'),
-             'x-skyott-language': h.get('x-skyott-language'),
-             'x-skyott-territory': h.get('x-skyott-territory'),
-        })
-      self.net.headers.update(self.platform['headers'])
-      #print_json(self.net.headers)
-
       # Load profile
       content = self.cache.load_file(self.pldir + '/profile.json')
       if content:
@@ -140,6 +121,25 @@ class SkyShowtime(object):
           self.cache.save_json(token_filename, data)
       if data and 'userToken' in data:
         self.account['user_token'] = data['userToken']
+
+      # Load localisation
+      localisation_filename = self.pldir + '/localisation.json'
+      content = self.cache.load_file(localisation_filename)
+      if content:
+        extra_headers = json.loads(content)
+      else:
+        extra_headers = self.get_localisation()
+        if 'headers' in extra_headers:
+          self.cache.save_json(localisation_filename, data)
+      if extra_headers and 'headers' in extra_headers:
+        h = extra_headers['headers']
+        self.platform['headers'].update({
+             'x-skyott-activeterritory': h.get('x-skyott-activeterritory'),
+             'x-skyott-language': h.get('x-skyott-language'),
+             'x-skyott-territory': h.get('x-skyott-territory'),
+        })
+      self.net.headers.update(self.platform['headers'])
+      #print_json(self.net.headers)
 
       # Search
       data = self.cache.load_file('searchs.json')
@@ -409,10 +409,14 @@ class SkyShowtime(object):
       url = self.endpoints['localisation']
       headers = self.net.headers.copy()
       headers['Accept'] = 'application/vnd.localisationinfo.v1+json'
-      headers['cookie'] = self.account['cookie']
+      #headers['cookie'] = self.account['cookie']
+      headers['x-skyott-provider'] = self.platform['headers']['x-skyott-provider']
+      headers['x-skyott-proposition'] = self.platform['headers']['x-skyott-proposition']
       sig_header = self.sig.calculate_signature('GET', url, headers)
       headers.update(sig_header)
+      print_json(headers)
       data = self.net.load_data(url, headers)
+      LOG('get_localisation: data: {}'.format(data))
       return data
 
     def get_me(self):
@@ -459,6 +463,7 @@ class SkyShowtime(object):
       sig_header = self.sig.calculate_signature('POST', url, headers, post_data)
       headers.update(sig_header)
       data = self.net.post_data(url, post_data, headers)
+      LOG('get_tokens: data: {}'.format(data))
       return data
 
     def request_playback_tokens(self, url, post_data, content_type, preferred_server=''):
