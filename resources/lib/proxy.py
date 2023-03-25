@@ -36,8 +36,8 @@ import xbmcaddon
 
 from .b64 import encode_base64
 from .log import LOG
-from .addon import profile_dir
-from .signature import calculate_signature
+from .addon import profile_dir, addon
+from .signature import Signature
 
 session = requests.Session()
 
@@ -92,7 +92,10 @@ class RequestHandler(BaseHTTPRequestHandler):
 
             path="/" + url.split("://", 1)[1].split("/", 1)[1]
             LOG(path)
-            sig_header = calculate_signature('POST', path, {}, isa_data)
+
+            platform_id = addon.getSetting('platform_id').lower()
+            sig = Signature(platform_id)
+            sig_header = sig.calculate_signature('POST', path, {}, isa_data)
             headers.update(sig_header)
 
             LOG('headers: {}'.format(headers))

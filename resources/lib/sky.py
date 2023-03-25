@@ -17,7 +17,7 @@ from .log import LOG, print_json
 from .network import Network
 from .cache import Cache
 from .endpoints import Endpoints
-from .signature import calculate_signature
+from .signature import Signature
 from .timeconv import timestamp2str
 
 class SkyShowtime(object):
@@ -67,6 +67,9 @@ class SkyShowtime(object):
       self.pldir = self.platform['config_dir']
       if not os.path.exists(config_directory + self.pldir):
         os.makedirs(config_directory + self.pldir)
+
+      # Signature
+      self.sig = Signature(platform)
 
       # Network
       default_headers = {
@@ -392,7 +395,7 @@ class SkyShowtime(object):
       headers = self.net.headers.copy()
       if self.account['user_token']:
         headers['x-skyott-usertoken'] = self.account['user_token']
-      sig_header = calculate_signature('GET', url, headers)
+      sig_header = self.sig.calculate_signature('GET', url, headers)
       headers.update(sig_header)
       data = self.net.load_data(url, headers)
       #print_json(data)
@@ -407,7 +410,7 @@ class SkyShowtime(object):
       headers = self.net.headers.copy()
       headers['Accept'] = 'application/vnd.localisationinfo.v1+json'
       headers['cookie'] = self.account['cookie']
-      sig_header = calculate_signature('GET', url, headers)
+      sig_header = self.sig.calculate_signature('GET', url, headers)
       headers.update(sig_header)
       data = self.net.load_data(url, headers)
       return data
@@ -419,7 +422,7 @@ class SkyShowtime(object):
       headers['Content-Type'] = 'application/vnd.userinfo.v2+json'
       if self.account['user_token']:
         headers['x-skyott-usertoken'] = self.account['user_token']
-      sig_header = calculate_signature('GET', url, headers)
+      sig_header = self.sig.calculate_signature('GET', url, headers)
       headers.update(sig_header)
       data = self.net.load_data(url, headers)
       return data
@@ -453,7 +456,7 @@ class SkyShowtime(object):
         }
       }
       post_data = json.dumps(post_data)
-      sig_header = calculate_signature('POST', url, headers, post_data)
+      sig_header = self.sig.calculate_signature('POST', url, headers, post_data)
       headers.update(sig_header)
       data = self.net.post_data(url, post_data, headers)
       return data
@@ -465,7 +468,7 @@ class SkyShowtime(object):
       if self.account['user_token']:
         headers['x-skyott-usertoken'] = self.account['user_token']
       post_data = json.dumps(post_data)
-      sig_header = calculate_signature('POST', url, headers, post_data)
+      sig_header = self.sig.calculate_signature('POST', url, headers, post_data)
       headers.update(sig_header)
       #print_json(headers)
 
@@ -485,6 +488,7 @@ class SkyShowtime(object):
           if i['cdn'].lower() == preferred_server.lower():
             manifest_url = i['url']
             break
+        if manifest_url: manifest_url += '&audio=all&subtitle=all&forcedNarrative=true&trickplay=true'
         res.update(
               {'license_url': data['protection']['licenceAcquisitionUrl'],
                'license_token': data['protection']['licenceToken'],
