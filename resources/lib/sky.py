@@ -110,6 +110,25 @@ class SkyShowtime(object):
       else:
         self.account['profile_id'], self.account['profile_type'] = self.select_default_profile()
 
+      # Load localisation
+      localisation_filename = self.pldir + '/localisation.json'
+      content = self.cache.load_file(localisation_filename)
+      if content:
+        extra_headers = json.loads(content)
+      else:
+        extra_headers = self.get_localisation()
+        if 'headers' in extra_headers:
+          self.cache.save_json(localisation_filename, extra_headers)
+      if extra_headers and 'headers' in extra_headers:
+        h = extra_headers['headers']
+        self.platform['headers'].update({
+             'x-skyott-activeterritory': h.get('x-skyott-activeterritory'),
+             'x-skyott-language': h.get('x-skyott-language'),
+             'x-skyott-territory': h.get('x-skyott-territory'),
+        })
+      self.net.headers.update(self.platform['headers'])
+      #print_json(self.net.headers)
+
       # Load user token
       token_filename = self.pldir + '/token.json'
       content = self.cache.load(token_filename, 60)
@@ -121,25 +140,6 @@ class SkyShowtime(object):
           self.cache.save_json(token_filename, data)
       if data and 'userToken' in data:
         self.account['user_token'] = data['userToken']
-
-      # Load localisation
-      localisation_filename = self.pldir + '/localisation.json'
-      content = self.cache.load_file(localisation_filename)
-      if content:
-        extra_headers = json.loads(content)
-      else:
-        extra_headers = self.get_localisation()
-        if 'headers' in extra_headers:
-          self.cache.save_json(localisation_filename, data)
-      if extra_headers and 'headers' in extra_headers:
-        h = extra_headers['headers']
-        self.platform['headers'].update({
-             'x-skyott-activeterritory': h.get('x-skyott-activeterritory'),
-             'x-skyott-language': h.get('x-skyott-language'),
-             'x-skyott-territory': h.get('x-skyott-territory'),
-        })
-      self.net.headers.update(self.platform['headers'])
-      #print_json(self.net.headers)
 
       # Search
       data = self.cache.load_file('searchs.json')
