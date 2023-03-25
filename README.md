@@ -9,6 +9,9 @@
 
 My intention was to develop an addon for Skyshowtime, but since I don't know how to generate the header signatures and Peacock uses the same API (and in this case the key for the header signatures is known), I ended up creating an addon for Peacock. I'm not even subscribed to Peacock, I created an account and fortunately they allow to play some videos without a subscription.
 
+## Select the streaming service
+Open the settings of the addon and select whether to use PeacockTV or SkyShowtime.
+
 ## How to get the cookie ##
 This tool can extract automatically the cookie from a web browser:
 https://github.com/Paco8/SkyExtractCookie
