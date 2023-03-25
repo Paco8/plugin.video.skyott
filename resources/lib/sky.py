@@ -101,15 +101,6 @@ class SkyShowtime(object):
         self.platform['device_id'] = self.create_device_id()
         self.cache.save_file(self.pldir + '/device_id.conf', self.platform['device_id'])
 
-      # Load profile
-      content = self.cache.load_file(self.pldir + '/profile.json')
-      if content:
-        profile = json.loads(content)
-        self.account['profile_id'] = profile['id']
-        self.account['profile_type'] = profile['type']
-      else:
-        self.account['profile_id'], self.account['profile_type'] = self.select_default_profile()
-
       # Load localisation
       localisation_filename = self.pldir + '/localisation.json'
       content = self.cache.load_file(localisation_filename)
@@ -128,6 +119,15 @@ class SkyShowtime(object):
         })
       self.net.headers.update(self.platform['headers'])
       #print_json(self.net.headers)
+
+      # Load profile
+      content = self.cache.load_file(self.pldir + '/profile.json')
+      if content:
+        profile = json.loads(content)
+        self.account['profile_id'] = profile['id']
+        self.account['profile_type'] = profile['type']
+      else:
+        self.account['profile_id'], self.account['profile_type'] = self.select_default_profile()
 
       # Load user token
       token_filename = self.pldir + '/token.json'
@@ -761,3 +761,8 @@ class SkyShowtime(object):
       if sys.version_info[0] > 2:
         filename = bytes(filename, 'utf-8')
       shutil.copyfile(filename, self.cache.config_directory + self.pldir + '/cookie.conf')
+
+    def clear_session(self):
+      files = ['device_id.conf', 'localisation.json', 'profile.json', 'token.json', 'menu.json']
+      for f in files:
+        self.cache.remove_file(self.pldir +'/'+ f)

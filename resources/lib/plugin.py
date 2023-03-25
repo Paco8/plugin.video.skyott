@@ -230,9 +230,7 @@ def search(params):
 
 def clear_session():
   LOG('clear_session')
-  files = ['device_id.conf', 'localisation.json', 'profile_id.conf', 'token.json']
-  for f in files:
-    sky.cache.remove_file(sky.pldir +'/' + f)
+  sky.clear_session()
 
 def logout():
   clear_session()
