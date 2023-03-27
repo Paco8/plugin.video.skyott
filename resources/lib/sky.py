@@ -518,7 +518,7 @@ class SkyShowtime(object):
                 "transport": "DASH",
                 "acodec": "AAC",
                 "vcodec": "H264"
-             },
+             }
           ],
           "maxVideoFormat": "HD",
           "model": "PC",
@@ -537,7 +537,9 @@ class SkyShowtime(object):
       }
 
       if uhd:
-        post_data['device']['capabilities'][0]['vcodec'] = 'H265'
+        post_data['device']['capabilities'].append(
+          {"protection": "WIDEVINE", "container": "ISOBMFF", "transport": "DASH","acodec": "AAC", "vcodec": "H265"}
+        )
         post_data['device']['maxVideoFormat'] = 'UHD'
         post_data['device']['supportedColourSpaces'] = ["DolbyVision", "HDR10", "SDR"]
 
