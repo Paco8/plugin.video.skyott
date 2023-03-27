@@ -81,6 +81,18 @@ msgctxt "#30024"
 msgid "Try to fix error 4027"
 msgstr "Intentar solucionar el error 4027"
 
+msgctxt "#30031"
+msgid "Streaming service"
+msgstr "Plataforma"
+
+msgctxt "#30032"
+msgid "Preferred server"
+msgstr "Servidor preferido"
+
+msgctxt "#30033"
+msgid "Enable 4K"
+msgstr "Habilitar 4K"
+
 msgctxt "#30101"
 msgid "Menu"
 msgstr "Menú"

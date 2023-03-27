@@ -500,7 +500,7 @@ class SkyShowtime(object):
                'manifest_url': manifest_url})
       return res
 
-    def get_playback_info(self, content_id, provider_variant_id, preferred_server=''):
+    def get_playback_info(self, content_id, provider_variant_id, preferred_server='', uhd=False):
       url = self.endpoints['playouts']
       post_data = {
         "device": {
@@ -518,11 +518,12 @@ class SkyShowtime(object):
                 "transport": "DASH",
                 "acodec": "AAC",
                 "vcodec": "H264"
-             }
+             },
           ],
           "maxVideoFormat": "HD",
           "model": "PC",
           "hdcpEnabled": "true",
+          "supportedColourSpaces": ["SDR"],
         },
         "client": {
           "thirdParties": [
@@ -534,6 +535,13 @@ class SkyShowtime(object):
         "parentalControlPin": "null",
         "personaParentalControlRating": "9"
       }
+
+      if uhd:
+        post_data['device']['capabilities'][0]['vcodec'] = 'H265'
+        post_data['device']['maxVideoFormat'] = 'UHD'
+        post_data['device']['supportedColourSpaces'] = ["DolbyVision", "HDR10", "SDR"]
+
+      #print_json(post_data)
       return self.request_playback_tokens(url, post_data, 'application/vnd.playvod.v1+json', preferred_server)
 
     def get_live_playback_info(self, service_key, preferred_server=''):

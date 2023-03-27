@@ -53,8 +53,9 @@ def play(params):
       return
 
   preferred_server = addon.getSetting('preferred_server')
+  enable_uhd = addon.getSettingBool('uhd')
   if slug:
-    data = sky.get_playback_info(info['content_id'], info['provider_variant_id'], preferred_server)
+    data = sky.get_playback_info(info['content_id'], info['provider_variant_id'], preferred_server, uhd=enable_uhd)
   else:
     if params.get('content_id') and params.get('provider_variant_id'):
       data = sky.get_playback_info(params['content_id'], params['provider_variant_id'], preferred_server)
