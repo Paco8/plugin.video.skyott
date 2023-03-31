@@ -21,7 +21,7 @@ class Endpoints(object):
       'get-video-info-uuid': atom + '/adapter-calypso/v3/query/nodes/uuid/{uuid}?exclude=expired%2Cfuture%2Cshortform',
       'login': rango +'/signin/service/international',
       'profiles': webclients +'/bff/personas/v2',
-      'select-profile': webclients + '/bff/personas/v2/{profile_id}?skipPinValidation=true',
+      'get-profile-info': webclients + '/bff/personas/v2/{profile_id}?skipPinValidation=true',
       'my-stuff': webclients + '/bff/sections/v1?partition_id=no-partition&template=sections&segment=default&slug=%2Fmy-stuff',
       'my-list': webclients + '/bff/sections/v1/personalised?partition_id=no-partition&template=sections&segment=default&slug={slug}&filter=byw&filter=pg&filter=wl&filter=cw',
       'localisation': ovp + '/ls/localisation',

@@ -31,7 +31,7 @@ class SkyShowtime(object):
            'x-skyott-activeterritory': 'ES',
            'x-skyott-client-version': '4.3.12',
            'x-skyott-device': 'COMPUTER',
-           'x-skyott-language': 'es-ES',
+           'x-skyott-language': 'en-US',
            'x-skyott-platform': 'PC',
            'x-skyott-proposition': 'SKYSHOWTIME',
            'x-skyott-provider': 'SKYSHOWTIME',
@@ -128,6 +128,18 @@ class SkyShowtime(object):
         self.account['profile_type'] = profile['type']
       else:
         self.account['profile_id'], self.account['profile_type'] = self.select_default_profile()
+
+      if self.account['profile_id']:
+         profile_info_filename = self.pldir + '/profile_info.json'
+         content = self.cache.load_file(profile_info_filename)
+         if content:
+           data = json.loads(content)
+         else:
+           data = self.get_profile_info(self.account['profile_id'])
+           self.cache.save_json(profile_info_filename, data)
+         if 'persona' in data and 'displayLanguage' in data['persona']:
+           self.platform['headers']['x-skyott-language'] = data['persona']['displayLanguage']
+           self.net.headers.update(self.platform['headers'])
 
       # Load user token
       token_filename = self.pldir + '/token.json'
@@ -339,7 +351,7 @@ class SkyShowtime(object):
       #print_json(data)
       if data.get('properties', []).get('eventType') == 'success':
         device_id = data['properties']['data']['deviceid']
-        self.account['device_id'] = device_id
+        #self.account['device_id'] = device_id
         self.account['cookie'] += '; deviceid=' + device_id
         cookie_filename = self.pldir + '/cookie.conf'
         self.cache.save_file(cookie_filename, self.account['cookie'])
@@ -379,7 +391,9 @@ class SkyShowtime(object):
       for profile in profiles:
         if profile['id'] == id:
           self.cache.save_json(self.pldir + '/profile.json', profile)
-          self.cache.remove_file(self.pldir + '/token.json')
+          files = ['profile_info.json', 'token.json', 'menu.json']
+          for f in files:
+            self.cache.remove_file(self.pldir +'/'+ f)
           return
       else:
         LOG('profile {} not found'.format(id))
@@ -414,7 +428,8 @@ class SkyShowtime(object):
       headers['x-skyott-proposition'] = self.platform['headers']['x-skyott-proposition']
       sig_header = self.sig.calculate_signature('GET', url, headers)
       headers.update(sig_header)
-      print_json(headers)
+      #print_json(headers)
+      LOG(headers)
       data = self.net.load_data(url, headers)
       LOG('get_localisation: data: {}'.format(data))
       return data
@@ -426,6 +441,17 @@ class SkyShowtime(object):
       headers['Content-Type'] = 'application/vnd.userinfo.v2+json'
       if self.account['user_token']:
         headers['x-skyott-usertoken'] = self.account['user_token']
+      sig_header = self.sig.calculate_signature('GET', url, headers)
+      headers.update(sig_header)
+      data = self.net.load_data(url, headers)
+      #self.cache.save_json('me.json', data)
+      return data
+
+    def get_profile_info(self, profile_id):
+      url = self.endpoints['get-profile-info'].format(profile_id=profile_id)
+      headers = self.net.headers.copy()
+      headers['Content-Type'] = 'application/json'
+      headers['cookie'] = self.account['cookie']
       sig_header = self.sig.calculate_signature('GET', url, headers)
       headers.update(sig_header)
       data = self.net.load_data(url, headers)
@@ -773,6 +799,6 @@ class SkyShowtime(object):
       shutil.copyfile(filename, self.cache.config_directory + self.pldir + '/cookie.conf')
 
     def clear_session(self):
-      files = ['device_id.conf', 'localisation.json', 'profile.json', 'token.json', 'menu.json']
+      files = ['device_id.conf', 'localisation.json', 'profile.json', 'profile_info.json', 'token.json', 'menu.json']
       for f in files:
         self.cache.remove_file(self.pldir +'/'+ f)
