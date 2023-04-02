@@ -17,6 +17,9 @@ Open the settings of the addon and select whether to use PeacockTV or SkyShowtim
 ## How to get the cookie ##
 This application for Androd can extract automatically the cookie:
 https://github.com/Paco8/SkyExtractCookieAndroid
+<br>
+There's also available a version for PC:
+https://github.com/Paco8/SkyExtractCookie
 
 ## How to get the cookie manually
 If the above tool doesn't work for you, you can try to get it manually:
