@@ -15,7 +15,7 @@ My intention was to develop an addon for Skyshowtime, but since I don't know how
 Open the settings of the addon and select whether to use PeacockTV or SkyShowtime.
 
 ## How to get the cookie ##
-This application for Androd can extract automatically the cookie:
+This application for Android can extract automatically the cookie:
 https://github.com/Paco8/SkyExtractCookieAndroid
 <br>
 There's also available a version for PC:
