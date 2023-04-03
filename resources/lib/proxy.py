@@ -68,8 +68,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_response(404)
             self.end_headers()
             return
-        #try:
-        if True:
+        try:
             pos = path.find('?')
             path = path[pos+1:]
             params = dict(parse_qsl(path))
@@ -112,9 +111,9 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.send_response(response.status_code)
             self.end_headers()
             self.wfile.write(license_data)
-        #except Exception:
-        #    self.send_response(500)
-        #    self.end_headers()
+        except Exception:
+            self.send_response(500)
+            self.end_headers()
 
 
 HOST = '127.0.0.1'
