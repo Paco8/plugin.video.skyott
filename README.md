@@ -6,10 +6,8 @@
 **This addon is under development and not all may work correctly.**
 
 ## Important notes: ##
-- Login by entering username and password is not possible yet. It's necessary to get the cookie from a web browser. You'll find below some methods to do it.
+- Login by entering username and password is not possible yet. It's necessary to get a cookie from a web browser. You'll find below some methods to do it.
 - Due to the DRM this platform use, playback only works on Android devices.
-
-My intention was to develop an addon for Skyshowtime, but since I don't know how to generate the header signatures and Peacock uses the same API (and in this case the key for the header signatures is known), I ended up creating an addon for Peacock. I'm not even subscribed to Peacock, I created an account and fortunately they allow to play some videos without a subscription.
 
 ## Select the streaming service
 Open the settings of the addon and select whether to use PeacockTV or SkyShowtime.
@@ -18,11 +16,11 @@ Open the settings of the addon and select whether to use PeacockTV or SkyShowtim
 This application for Android can extract automatically the cookie:
 https://github.com/Paco8/SkyExtractCookieAndroid
 <br>
-There's also available a version for PC:
+There's also a similar application for PC:
 https://github.com/Paco8/SkyExtractCookie
 
 ## How to get the cookie manually
-If the above tool doesn't work for you, you can try to get it manually:
+If the above tools don't work for you, you can try to get it manually:
 - In Chrome open the development tools (Ctrl + Shift + I).
 - Select the **Network** tab.
 - In the field in the top left (the filter) type `watch/home`.
