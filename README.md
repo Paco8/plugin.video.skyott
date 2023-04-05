@@ -10,6 +10,10 @@
 -  Logging in by entering a username and password is not possible yet. For the moment it's necessary to get a cookie from a web browser. You'll find below some methods to do it.
 - Playback is only supported on Android devices (including firesticks) due to DRM restrictions.
 
+## Installation
+You can download the package from the [Releases page](https://github.com/Paco8/plugin.video.skyott/releases)
+or better, you can install it from [this repository](https://github.com/Paco8/kodi-repo/raw/master/mini-repo/repository.addons.paco8/repository.addons.paco8-1.0.0.zip).
+
 ## Select the streaming service
 Open the settings of the addon and select whether to use PeacockTV or SkyShowtime.
 
