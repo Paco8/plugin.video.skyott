@@ -511,7 +511,7 @@ class SkyShowtime(object):
       #self.cache.save_json('playback.json', data)
 
       res = {'response': data}
-      if 'protection' in data:
+      if 'asset' in data:
         manifest_url = None
         for i in data['asset']['endpoints']:
           if not manifest_url:
@@ -519,11 +519,12 @@ class SkyShowtime(object):
           if i['cdn'].lower() == preferred_server.lower():
             manifest_url = i['url']
             break
-        if manifest_url: manifest_url += '&audio=all&subtitle=all&forcedNarrative=true&trickplay=true'
-        res.update(
-              {'license_url': data['protection']['licenceAcquisitionUrl'],
-               'license_token': data['protection']['licenceToken'],
-               'manifest_url': manifest_url})
+        if manifest_url and self.platform['name'] == 'SkyShowtime':
+          manifest_url += '&audio=all&subtitle=all&forcedNarrative=true&trickplay=true'
+        res['manifest_url'] = manifest_url
+      if 'protection' in data:
+        res['license_url'] = data['protection']['licenceAcquisitionUrl']
+        res['license_token'] = data['protection']['licenceToken']
       return res
 
     def get_playback_info(self, content_id, provider_variant_id, preferred_server='', uhd=False):

@@ -63,7 +63,7 @@ def play(params):
       data = sky.get_live_playback_info(service_key, preferred_server)
 
   LOG('playback info: {}'.format(data))
-  if not data.get('manifest_url'):
+  if not 'manifest_url' in data:
     if 'errorCode' in data['response']:
       show_notification(data['response']['description'])
     else:
@@ -90,9 +90,10 @@ def play(params):
   play_item = xbmcgui.ListItem(path=url)
   play_item.setProperty('inputstream.adaptive.manifest_type', 'mpd')
   play_item.setProperty('inputstream.adaptive.license_type', 'com.widevine.alpha')
-  license_url = '{}/license?url={}||R{{SSM}}|'.format(proxy, quote_plus(data['license_url']))
-  LOG('license_url: {}'.format(license_url))
-  play_item.setProperty('inputstream.adaptive.license_key', license_url)
+  if 'license_url' in data:
+    license_url = '{}/license?url={}||R{{SSM}}|'.format(proxy, quote_plus(data['license_url']))
+    LOG('license_url: {}'.format(license_url))
+    play_item.setProperty('inputstream.adaptive.license_key', license_url)
   #play_item.setProperty('inputstream.adaptive.stream_headers', 'User-Agent=Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0')
   #play_item.setProperty('inputstream.adaptive.server_certificate', certificate)
   #play_item.setProperty('inputstream.adaptive.license_flags', 'persistent_storage')
