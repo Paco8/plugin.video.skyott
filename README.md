@@ -37,5 +37,20 @@ If the above tools don't work for you, you can try to get it manually:
 - Paste the cookie in a text editor and save the file with the name "cookie.conf".
 - Copy the file anywhere in the Android device (for example the Download folder). Then go to the Accounts option in the addon and select "Login with a cookie file" and select the file you previously copied to the device.
 
+## Settings
+### Main
+- **Streaming service**: Select PeacockTV or SkyShowtime.
+- **Preferred server**: Videos are hosted in different servers. You can choose the one which works better for you.
+- **Enable 4K**: Enables 4K content. Playback may not work on non 4K devices.
+- **Improved subtitles**: Subtitles will be downloaded prior to playback and converted to the more customizable SSA/ASS format.
+- **Improved subtitles settings**: Opens a new configuration window that allows you to customize the appearance of subtitles.
+- **Use only for these languages**: Only the subtitles for the specified languages (two letter language codes, separated by spaces) will be downloaded. For example: `es en pl` will download subtitles in Spanish, English and Polish.
+- **Configure InputStream Adaptive**: Opens the settings of InputStream Adaptive.
+### Proxy
+- **Manifest alteration**: Allows the addon to perform some changes in the manifest.
+- **Fix audio and subtitle language names**: Versions 18 and 19 of Kodi don't support language codes that include a country code (such as `es-ES`). As a workaround, this option removes the country code.
+- **Exclude DD+ audio tracks**: The addon will remove any audio tracks in DD+ format.
+- **Exclude AAC audio tracks**: The addon will remove any audio tracks in AAC format.
+
 ## Donation
 If you find this addon useful there's now the possibility to **[buy me a coffee](https://www.buymeacoffee.com/paco8.addons)**.

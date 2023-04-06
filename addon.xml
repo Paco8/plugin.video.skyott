@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.skyott"
        name="Peacock"
-       version="0.2.0"
+       version="0.2.4"
        provider-name="Paco8">
   <requires>
   <!--- <import addon="xbmc.python" version="2.25.0"/> -->
   <import addon="script.module.requests"/>
   <import addon="script.module.inputstreamhelper" version="0.5.2" />
-  <!-- <import addon="script.module.pytz"/> -->
   <import addon="script.module.dateutil"/>
-  <!-- <import addon="script.module.ttml2ssa" version="0.1.16" /> -->
+  <import addon="script.module.ttml2ssa" version="0.1.16" />
   </requires>
   <extension point="xbmc.python.pluginsource" library="default.py">
   <provides>video</provides>

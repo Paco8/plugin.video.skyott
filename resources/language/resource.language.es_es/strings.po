@@ -93,6 +93,22 @@ msgctxt "#30033"
 msgid "Enable 4K"
 msgstr "Habilitar 4K"
 
+msgctxt "#30034"
+msgid "Fix audio and subtitle language names"
+msgstr "Arreglar los nombres de idiomas"
+
+msgctxt "#30035"
+msgid "Exclude DD+ audio tracks"
+msgstr "Excluir audio DD+"
+
+msgctxt "#30036"
+msgid "Exclude AAC audio tracks"
+msgstr "Excluir audio AAC"
+
+msgctxt "#30040"
+msgid "Use only for these languages (e.g.: es en pt):"
+msgstr "Usar solo para estos idiomas (ej: es en pt):"
+
 msgctxt "#30101"
 msgid "Menu"
 msgstr "Menú"

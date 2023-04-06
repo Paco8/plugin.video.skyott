@@ -69,7 +69,6 @@ def play(params):
     else:
       show_notification('No playback url')
     return
-  #data['manifest_url'] = 'https://livesim.dashif.org/livesim/chunkdur_1/ato_7/testpic4_8s/Manifest.mpd'
 
   import inputstreamhelper
   is_helper = inputstreamhelper.Helper('mpd', drm='com.widevine.alpha')
@@ -82,7 +81,13 @@ def play(params):
     show_notification('Proxy is not running')
     return
 
-  play_item = xbmcgui.ListItem(path=data['manifest_url'])
+  url = data['manifest_url']
+  if addon.getSettingBool('manifest_modification'):
+    url = '{}/?manifest={}'.format(proxy, url)
+
+  #url = 'http://ftp.itec.aau.at/datasets/DASHDataset2014/BigBuckBunny/10sec/BigBuckBunny_10s_onDemand_2014_05_09.mpd'
+
+  play_item = xbmcgui.ListItem(path=url)
   play_item.setProperty('inputstream.adaptive.manifest_type', 'mpd')
   play_item.setProperty('inputstream.adaptive.license_type', 'com.widevine.alpha')
   license_url = '{}/license?url={}||R{{SSM}}|'.format(proxy, quote_plus(data['license_url']))
@@ -104,6 +109,48 @@ def play(params):
     play_item.setArt(info['art'])
   except:
     pass
+
+  if addon.getSettingBool('use_ttml2ssa') and slug:
+    # Convert subtitles
+    from .parsemanifest import extract_tracks
+    from ttml2ssa import Ttml2SsaAddon
+    ttml = Ttml2SsaAddon()
+    subtype = ttml.subtitle_type()
+
+    subfolder = profile_dir + 'subtitles/'
+    if not os.path.exists(subfolder):
+      os.makedirs(subfolder)
+
+    response = sky.net.session.get(data['manifest_url'], allow_redirects=True)
+    content = response.content.decode('utf-8')
+    #LOG(content)
+    baseurl = os.path.dirname(response.url)
+
+    subpaths = []
+    tracks = extract_tracks(content)
+    filter_list = addon.getSetting('ttml2ssa_filter').lower().split()
+    subtracks = [t for t in tracks['subs'] if len(filter_list) == 0 or t['lang'][:2] in filter_list]
+    for t in subtracks:
+      suburl = baseurl +'/'+ t['baseurl']
+      LOG('suburl: {}'.format(suburl))
+      filename = subfolder + t['lang'][:2]
+      if t['value'] == 'caption': filename += ' [CC]'
+      elif t['value'] == 'forced-subtitle': filename += '.forced'
+      LOG('filename: {}'.format(filename))
+      content = sky.net.load_url(suburl)
+      #LOG(content.encode('utf-8'))
+      ttml.parse_vtt_from_string(content)
+      if subtype != 'srt':
+        filename_ssa = filename + '.ssa'
+        ttml.write2file(filename_ssa)
+        subpaths.append(filename_ssa)
+      if subtype != 'ssa':
+        filename_srt = filename
+        if (subtype == 'both'): filename_srt += '.SRT'
+        filename_srt += '.srt'
+        ttml.write2file(filename_srt)
+        subpaths.append(filename_srt)
+    play_item.setSubtitles(subpaths)
 
   play_item.setContentLookup(False)
   xbmcplugin.setResolvedUrl(_handle, True, listitem=play_item)
@@ -333,20 +380,18 @@ def router(paramstring):
     open_folder(addon.getLocalizedString(30101)) # Menu
     xbmcplugin.setContent(_handle, 'files')
 
-    for item in sky.get_main_menu():
-      if item['id'] == 'My Stuff':
-        if sky.logged:
-          add_menu_option(item['title'], get_url(action='wishlist')) # My list
-      elif item['id'] == 'Channels':
-        add_menu_option(item['title'], get_url(action='tv')) # TV
-      else:
-        art = None
-        #if item.get('icon'): art={'icon': item['icon']}
-        add_menu_option(item['title'], get_url(action='category', name=item['title'], slug=item['slug']), art=art)
-
-    add_menu_option(addon.getLocalizedString(30112), get_url(action='search')) # Search
-
     if sky.logged:
+      for item in sky.get_main_menu():
+        if item['id'] == 'My Stuff':
+          add_menu_option(item['title'], get_url(action='wishlist')) # My list
+        elif item['id'] == 'Channels':
+          add_menu_option(item['title'], get_url(action='tv')) # TV
+        else:
+          art = None
+          #if item.get('icon'): art={'icon': item['icon']}
+          add_menu_option(item['title'], get_url(action='category', name=item['title'], slug=item['slug']), art=art)
+
+      add_menu_option(addon.getLocalizedString(30112), get_url(action='search')) # Search
       add_menu_option(addon.getLocalizedString(30180), get_url(action='profiles')) # Profiles
       #add_menu_option(addon.getLocalizedString(30108), get_url(action='devices')) # Devices
 
