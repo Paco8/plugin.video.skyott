@@ -14,6 +14,10 @@ class Endpoints(object):
     atom = 'https://atom.' + self.host
     rango = 'https://rango.id.' + self.host
     ovp = 'https://ovp.' + self.host
+    if host == 'skyshowtime.com':
+      mytv = 'https://mytv.clients.skyshowtime.com'
+    else:
+      mytv = 'https://sas.peacocktv.com/mytv'
     self.endpoints = {
       'section': webclients + '/bff/sections/v1?partition_id=no-partition&template=sections&segment=First_30_Days_Paid&slug={slug}',
       'get-series': atom + '/adapter-calypso/v3/query/node?slug={slug}&represent=(items(items))',
@@ -32,4 +36,5 @@ class Endpoints(object):
       'menu': atom + '/adapter-calypso/v3/query/menu',
       'epg': webclients + '/bff/channel_guide?startTime={start_time}&contentSegments=Free',
       'playouts-live': ovp + '/video/playouts/live',
+      'to-watchlist': mytv + '/watchlist/{uuid}',
     }

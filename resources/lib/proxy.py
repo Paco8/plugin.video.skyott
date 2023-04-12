@@ -55,49 +55,52 @@ class RequestHandler(BaseHTTPRequestHandler):
         """Handle http get requests, used for manifest"""
         path = self.path  # Path with parameters received from request e.g. "/manifest?id=234324"
         print('HTTP GET Request received to {}'.format(path))
-        #try:
-        if True:
-          if 'manifest' in path:
+
+        if 'manifest' in path:
             pos = path.find('=')
             url = path[pos+1:]
             LOG('url: {}'.format(url))
-            response = session.get(url, allow_redirects=True)
-            LOG('headers: {}'.format(response.headers))
-            baseurl = os.path.dirname(response.url)
-            LOG('baseurl: {}'.format(baseurl))
-            content = response.content.decode('utf-8')
-            pos = content.find('<Period')
-            if pos > -1:
-              content = content[:pos] + '<BaseURL>' + baseurl + '/</BaseURL>' + content[pos:]
+            try:
+                response = session.get(url, allow_redirects=True)
+                LOG('headers: {}'.format(response.headers))
+                baseurl = os.path.dirname(response.url)
+                LOG('baseurl: {}'.format(baseurl))
+                content = response.content.decode('utf-8')
+                pos = content.find('<Period')
+                if pos > -1:
+                  content = content[:pos] + '<BaseURL>' + baseurl + '/</BaseURL>' + content[pos:]
 
-            tracks = extract_tracks(content)
-            if addon.getSettingBool('delete_ec3_audio'):
-              for track in tracks['audios']:
-                if 'ec-3' in track['codecs']:
-                  content = content.replace(track['orig'], '<!-- Deleted ec-3 audio track {} -->\n'.format(track['lang']))
+                tracks = extract_tracks(content)
+                if addon.getSettingBool('delete_ec3_audio'):
+                  for track in tracks['audios']:
+                    if 'ec-3' in track['codecs']:
+                      content = content.replace(track['orig'], '<!-- Deleted ec-3 audio track {} -->\n'.format(track['lang']))
 
-            if addon.getSettingBool('delete_mp4a_audio'):
-              for track in tracks['audios']:
-                if 'mp4a' in track['codecs']:
-                  content = content.replace(track['orig'], '<!-- Deleted mp4a audio track {} -->\n'.format(track['lang']))
+                if addon.getSettingBool('delete_mp4a_audio'):
+                  for track in tracks['audios']:
+                    if 'mp4a' in track['codecs']:
+                      content = content.replace(track['orig'], '<!-- Deleted mp4a audio track {} -->\n'.format(track['lang']))
 
-            if addon.getSettingBool('fix_languages'):
-              for track_type in ('subs', 'audios'):
-                for track in tracks[track_type]:
-                  content = content.replace(track['orig'], track['mod'])
+                if addon.getSettingBool('fix_languages'):
+                  for track_type in ('subs', 'audios'):
+                    for track in tracks[track_type]:
+                      content = content.replace(track['orig'], track['mod'])
 
-            LOG('content: {}'.format(content))
-            self.send_response(200)
-            self.send_header('Content-type', 'application/xml')
-            #self.send_header('Content-type', 'text/plain')
-            self.end_headers()
-            self.wfile.write(content.encode('utf-8'))
-          else:
+                #LOG('content: {}'.format(content))
+                self.send_response(200)
+                self.send_header('Content-type', 'application/xml')
+                #self.send_header('Content-type', 'text/plain')
+                self.end_headers()
+                self.wfile.write(content.encode('utf-8'))
+            except Exception:
+                # Redirect
+                self.send_response(301)
+                self.send_header('Location', url)
+                self.end_headers()
+        else:
             self.send_response(404)
             self.end_headers()
-        #except Exception:
-        #  self.send_response(500)
-        #  self.end_headers()
+
 
     def do_POST(self):
         """Handle http post requests, used for license"""

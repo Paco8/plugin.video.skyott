@@ -156,7 +156,7 @@ def play(params):
   play_item.setContentLookup(False)
   xbmcplugin.setResolvedUrl(_handle, True, listitem=play_item)
 
-def add_videos(category, ctype, videos, ref=None, url_next=None, url_prev=None):
+def add_videos(category, ctype, videos, ref=None, url_next=None, url_prev=None, from_watchlist=False):
   #LOG("category: {} ctype: {}".format(category, ctype))
   xbmcplugin.setPluginCategory(_handle, category)
   xbmcplugin.setContent(_handle, ctype)
@@ -189,6 +189,13 @@ def add_videos(category, ctype, videos, ref=None, url_next=None, url_prev=None):
       if t['info']['mediatype'] == 'episode':
         t['art']['fanart'] = None
 
+    menu_items = []
+    if t['type'] in ['movie', 'series'] and 'slug' in t:
+      if not from_watchlist:
+        menu_items.append((addon.getLocalizedString(30175), "RunPlugin(" + get_url(action='to_watchlist', slug=t['slug'], op='add') + ")"))
+      else:
+        menu_items.append((addon.getLocalizedString(30176), "RunPlugin(" + get_url(action='to_watchlist', slug=t['slug'], op='delete') + ")"))
+
     if t['type'] == 'movie':
       list_item = xbmcgui.ListItem(label = title_name)
       list_item.setProperty('IsPlayable', 'true')
@@ -200,11 +207,15 @@ def add_videos(category, ctype, videos, ref=None, url_next=None, url_prev=None):
           url += '&content_id={}&provider_variant_id={}'.format(t['content_id'], t['provider_variant_id'])
       else:
         url = get_url(action='play', slug=t['slug'])
+      if len(menu_items) > 0:
+        list_item.addContextMenuItems(menu_items)
       xbmcplugin.addDirectoryItem(_handle, url, list_item, False)
     elif t['type'] == 'series':
       list_item = xbmcgui.ListItem(label = title_name)
       list_item.setInfo('video', t['info'])
       list_item.setArt(t['art'])
+      if len(menu_items) > 0:
+        list_item.addContextMenuItems(menu_items)
       xbmcplugin.addDirectoryItem(_handle, get_url(action='series', slug=t['slug'], name=title_name), list_item, True)
     elif t['type'] == 'season':
       list_item = xbmcgui.ListItem(label = title_name)
@@ -316,8 +327,9 @@ def login_with_cookie():
 
 def export_key():
   directory = xbmcgui.Dialog().browseSingle(0, addon.getLocalizedString(30185), '')
+  LOG('type directory: {}'.format(type(directory)))
   if directory:
-    sky.export_key_file(directory + 'skyott.key')
+    sky.export_key_file(directory)
 
 def list_users():
   open_folder(addon.getLocalizedString(30160)) # Change user
@@ -328,6 +340,16 @@ def list_users():
     add_menu_option(addon.getLocalizedString(30184), get_url(action='export_key')) # Export key
   add_menu_option(addon.getLocalizedString(30150), get_url(action='logout')) # Close session
   close_folder()
+
+def to_watchlist(params):
+  retcode, message = sky.to_watchlist(slug=params['slug'], action=params['op'])
+  if retcode == 201:
+    message = 30177 if params['op'] == 'add' else 30178
+    show_notification(addon.getLocalizedString(message), xbmcgui.NOTIFICATION_INFO)
+    if params['op'] == 'delete':
+      xbmc.executebuiltin("Container.Refresh")
+  else:
+    show_notification(str(retcode) +': '+ message)
 
 
 def router(paramstring):
@@ -359,7 +381,7 @@ def router(paramstring):
     elif params['action'] == 'logout':
       logout()
     elif params['action'] == 'wishlist':
-      add_videos(addon.getLocalizedString(30102), 'movies', sky.get_my_list())
+      add_videos(addon.getLocalizedString(30102), 'movies', sky.get_my_list(), from_watchlist=True)
     elif params['action'] == 'category':
       add_videos(params['name'], 'movies', sky.get_catalog(params['slug']))
     elif params['action'] == 'movie_catalog':
@@ -376,6 +398,8 @@ def router(paramstring):
       search(params)
     elif params['action'] == 'tv':
       add_videos(addon.getLocalizedString(30104), 'movies', sky.get_channels_with_epg())
+    elif params['action'] == 'to_watchlist':
+      to_watchlist(params)
   else:
     # Main
     open_folder(addon.getLocalizedString(30101)) # Menu
