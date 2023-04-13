@@ -19,15 +19,15 @@ class Endpoints(object):
     else:
       mytv = 'https://sas.peacocktv.com/mytv'
     self.endpoints = {
-      'section': webclients + '/bff/sections/v1?partition_id=no-partition&template=sections&segment=First_30_Days_Paid&slug={slug}',
+      'section': webclients + '/bff/sections/v1?partition_id=no-partition&template=sections&segment=all_premium_users&slug={slug}',
       'get-series': atom + '/adapter-calypso/v3/query/node?slug={slug}&represent=(items(items))',
       'get-video-info': atom + '/adapter-calypso/v3/query/node?slug={slug}',
       'get-video-info-uuid': atom + '/adapter-calypso/v3/query/nodes/uuid/{uuid}?exclude=expired%2Cfuture%2Cshortform',
       'login': rango +'/signin/service/international',
       'profiles': webclients +'/bff/personas/v2',
       'get-profile-info': webclients + '/bff/personas/v2/{profile_id}?skipPinValidation=true',
-      'my-stuff': webclients + '/bff/sections/v1?partition_id=no-partition&template=sections&segment=default&slug=%2Fmy-stuff',
-      'my-list': webclients + '/bff/sections/v1/personalised?partition_id=no-partition&template=sections&segment=default&slug={slug}&filter=byw&filter=pg&filter=wl&filter=cw',
+      'my-stuff': webclients + '/bff/sections/v1?partition_id=no-partition&template=sections&segment=all_premium_users&slug=%2Fmy-stuff',
+      'my-section': webclients + '/bff/sections/v1/personalised?partition_id=no-partition&template=sections&segment=all_premium_users&slug={slug}&filter=byw&filter=pg&filter=wl&filter=cw',
       'localisation': ovp + '/ls/localisation',
       'me': ovp + '/auth/users/me',
       'tokens': ovp + '/auth/throttled/tokens',

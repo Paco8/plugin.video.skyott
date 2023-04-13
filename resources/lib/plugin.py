@@ -156,6 +156,7 @@ def play(params):
   play_item.setContentLookup(False)
   xbmcplugin.setResolvedUrl(_handle, True, listitem=play_item)
 
+
 def add_videos(category, ctype, videos, ref=None, url_next=None, url_prev=None, from_watchlist=False):
   #LOG("category: {} ctype: {}".format(category, ctype))
   xbmcplugin.setPluginCategory(_handle, category)
@@ -197,6 +198,9 @@ def add_videos(category, ctype, videos, ref=None, url_next=None, url_prev=None, 
         menu_items.append((addon.getLocalizedString(30176), "RunPlugin(" + get_url(action='to_watchlist', slug=t['slug'], op='delete') + ")"))
 
     if t['type'] == 'movie':
+      # If an episode is not in a episode listing, display the series name too
+      if ctype != 'episodes' and t['info'].get('mediatype', '') == 'episode':
+        t['info']['title'] = t['info'].get('tvshowtitle', '') +' - '+ t['info']['title']
       list_item = xbmcgui.ListItem(label = title_name)
       list_item.setProperty('IsPlayable', 'true')
       list_item.setInfo('video', t['info'])
@@ -382,6 +386,8 @@ def router(paramstring):
       logout()
     elif params['action'] == 'wishlist':
       add_videos(addon.getLocalizedString(30102), 'movies', sky.get_my_list(), from_watchlist=True)
+    elif params['action'] == 'continue-watching':
+      add_videos(addon.getLocalizedString(30122), 'movies', sky.get_continue_watching())
     elif params['action'] == 'category':
       add_videos(params['name'], 'movies', sky.get_catalog(params['slug']))
     elif params['action'] == 'movie_catalog':
@@ -416,6 +422,7 @@ def router(paramstring):
           #if item.get('icon'): art={'icon': item['icon']}
           add_menu_option(item['title'], get_url(action='category', name=item['title'], slug=item['slug']), art=art)
 
+      add_menu_option(addon.getLocalizedString(30122), get_url(action='continue-watching')) # Continue watching
       add_menu_option(addon.getLocalizedString(30112), get_url(action='search')) # Search
       add_menu_option(addon.getLocalizedString(30180), get_url(action='profiles')) # Profiles
       #add_menu_option(addon.getLocalizedString(30108), get_url(action='devices')) # Devices

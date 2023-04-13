@@ -204,6 +204,10 @@ msgctxt "#30121"
 msgid "Kids"
 msgstr ""
 
+msgctxt "#30122"
+msgid "Continue watching"
+msgstr ""
+
 msgctxt "#30150"
 msgid "Close session"
 msgstr ""

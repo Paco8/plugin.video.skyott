@@ -185,6 +185,10 @@ msgctxt "#30121"
 msgid "Kids"
 msgstr "Infantiles"
 
+msgctxt "#30122"
+msgid "Continue watching"
+msgstr "Seguir viendo"
+
 msgctxt "#30150"
 msgid "Close session"
 msgstr "Cerrar sesión"

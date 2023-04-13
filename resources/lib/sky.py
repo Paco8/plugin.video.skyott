@@ -118,6 +118,7 @@ class SkyShowtime(object):
              'x-skyott-territory': h.get('x-skyott-territory'),
         })
       self.net.headers.update(self.platform['headers'])
+      #print_json(self.platform['headers'])
       #print_json(self.net.headers)
 
       # Load profile
@@ -409,7 +410,14 @@ class SkyShowtime(object):
       return slug
 
     def get_my_list(self):
-      url = self.endpoints['my-list'].format(slug=self.get_my_stuff_slug())
+      return self.get_my_section(self.get_my_stuff_slug())
+
+    def get_continue_watching(self):
+     return self.get_my_section('/home/continue-watching')
+
+    def get_my_section(self, slug):
+      url = self.endpoints['my-section'].format(slug=slug)
+      #LOG(url)
       headers = self.net.headers.copy()
       if self.account['user_token']:
         headers['x-skyott-usertoken'] = self.account['user_token']
@@ -417,7 +425,7 @@ class SkyShowtime(object):
       headers.update(sig_header)
       data = self.net.load_data(url, headers)
       #print_json(data)
-      #self.cache.save_json('my-list.json', data)
+      #self.cache.save_json('my-section.json', data)
       if 'rails' in data and len(data['rails']) > 0:
         rails = list(data["rails"].items())
         return self.parse_catalog(rails[0][1]['items'])
