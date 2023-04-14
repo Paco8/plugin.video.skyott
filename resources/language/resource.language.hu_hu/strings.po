@@ -1,0 +1,422 @@
+# XBMC Media Center language file
+# This file is used by 3 addons:
+# plugin.video.movistarplus, plugin.video.orange.spain and plugin.video.skyott
+# Addon Provider: Paco8
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC-Addons\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-12-28 16:47+0100\n"
+"PO-Revision-Date: 2023-04-13 HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgctxt "#30001"
+msgid "Main"
+msgstr "Fõ"
+
+msgctxt "#30002"
+msgid "Proxy"
+msgstr ""
+
+# For Orange and Movistar only
+msgctxt "#30003"
+msgid "Experimental"
+msgstr "Kísérleti"
+
+# For Orange and Movistar only
+msgctxt "#30010"
+msgid "DRM type"
+msgstr "DRM típusa"
+
+msgctxt "#30011"
+msgid "Manifest alteration"
+msgstr "Manifest változtatás"
+
+# For Orange and Movistar only
+msgctxt "#30012"
+msgid "Use proxy for license"
+msgstr "Használj proxit a licenchez"
+
+# For Orange only
+msgctxt "#30013"
+msgid "Fix freezes in VOD content"
+msgstr "Fagyás elkerülése a VOD tartalomban"
+
+# For Orange only
+msgctxt "#30016"
+msgid "Proxy timeout (ms)"
+msgstr "Proxy idõtúllépés (ms)"
+
+msgctxt "#30017"
+msgid "Show only subscribed content"
+msgstr "Csak az elõfizetett tartalmak megjelenítése"
+
+# For Orange only
+msgctxt "#30018"
+msgid "Try to play HD in SD devices"
+msgstr "Próbáljon meg HD-t játszani SD-eszközökön"
+
+msgctxt "#30019"
+msgid "Configure InputStream Adaptive"
+msgstr "InputStream Adaptive beállítása"
+
+# For Orange and Movistar only
+msgctxt "#30020"
+msgid "Add EPG info to TV channels"
+msgstr "EPG infó a TV csatornákhoz"
+
+# For Orange and Movistar only
+msgctxt "#30021"
+msgid "Download extra info (like posters, actors...)"
+msgstr "További információk letöltése (pl. plakátok, színészképek...)"
+
+# For Movistar only
+msgctxt "#30022"
+msgid "Report sessions to servers"
+msgstr "A munkamenetek jelentése a szervereknek"
+
+# For Movistar only
+msgctxt "#30023"
+msgid "Reuse devices"
+msgstr "Használja újra az eszközöket"
+
+# For Movistar only
+msgctxt "#30024"
+msgid "Try to fix error 4027"
+msgstr "A 4027 hiba javítási kísérlete"
+
+# For SkyOTT only
+msgctxt "#30031"
+msgid "Streaming service"
+msgstr "Streaming service"
+
+# For SkyOTT only
+msgctxt "#30032"
+msgid "Preferred server"
+msgstr "Preferált szerver"
+
+# For SkyOTT only
+msgctxt "#30033"
+msgid "Enable 4K"
+msgstr "4K engedélyezése"
+
+# For SkyOTT only
+msgctxt "#30034"
+msgid "Fix audio and subtitle language names"
+msgstr "Javítsa ki a hang- és feliratnyelv-neveket"
+
+# For SkyOTT only
+msgctxt "#30035"
+msgid "Exclude DD+ audio tracks"
+msgstr "A DD+ hangsávok kizárása"
+
+# For SkyOTT only
+msgctxt "#30036"
+msgid "Exclude AAC audio tracks"
+msgstr "Az AAC hangsávok kizárása"
+
+# For SkyOTT only
+msgctxt "#30040"
+msgid "Use only for these languages (e.g.: es en pt):"
+msgstr "Csak ezekhez a nyelvekhez használja (pl.: es en pt):"
+
+msgctxt "#30101"
+msgid "Menu"
+msgstr "Menü"
+
+msgctxt "#30102"
+msgid "My list"
+msgstr "Saját listám"
+
+# For Orange and Movistar only
+msgctxt "#30103"
+msgid "Recordings"
+msgstr "Felvételek"
+
+msgctxt "#30104"
+msgid "Live TV"
+msgstr "Élõ TV"
+
+msgctxt "#30105"
+msgid "Movies"
+msgstr "Filmek"
+
+msgctxt "#30106"
+msgid "TV shows"
+msgstr "Sorozatok"
+
+# For Orange and Movistar only
+msgctxt "#30107"
+msgid "EPG"
+msgstr "EPG"
+
+msgctxt "#30108"
+msgid "Manage devices"
+msgstr "Eszközök kezelése"
+
+msgctxt "#30109"
+msgid "Next page"
+msgstr "Következõ oldal"
+
+msgctxt "#30110"
+msgid "Previous page"
+msgstr "Elõzõ oldal"
+
+msgctxt "#30111"
+msgid "VOD"
+msgstr "VOD"
+
+msgctxt "#30112"
+msgid "Search"
+msgstr "Keresés"
+
+msgctxt "#30113"
+msgid "New search"
+msgstr "Új keresés"
+
+msgctxt "#30114"
+msgid "Delete search"
+msgstr "Keresés törlése"
+
+msgctxt "#30115"
+msgid "Delete all searchs"
+msgstr "Összes keresés törlése"
+
+msgctxt "#30116"
+msgid "Search term"
+msgstr "Keresés kifejezésre"
+
+msgctxt "#30117"
+msgid "Search results"
+msgstr "Találatok"
+
+msgctxt "#30120"
+msgid "Documentaries"
+msgstr "Dokumentum"
+
+msgctxt "#30121"
+msgid "Kids"
+msgstr "Gyermek"
+
+msgctxt "#30122"
+msgid "Continue watching"
+msgstr "Nézd tovább"
+
+msgctxt "#30150"
+msgid "Close session"
+msgstr "Munkamenet bezárása"
+
+msgctxt "#30151"
+msgid "Delete device"
+msgstr ""
+
+msgctxt "#30152"
+msgid "Select device"
+msgstr "Eszköz kiválasztása"
+
+msgctxt "#30153"
+msgid "New device"
+msgstr "Új eszköz"
+
+msgctxt "#30154"
+msgid "Device name"
+msgstr "Eszköz neve"
+
+msgctxt "#30160"
+msgid "Accounts"
+msgstr "Fiókok"
+
+msgctxt "#30161"
+msgid "Add account"
+msgstr "Fiók hozzáadása"
+
+msgctxt "#30162"
+msgid "Remove account"
+msgstr "Fiók törlése"
+
+msgctxt "#30163"
+msgid "Username"
+msgstr "Felhasználónév"
+
+msgctxt "#30164"
+msgid "Password"
+msgstr "Jelszó"
+
+msgctxt "#30165"
+msgid "Select account"
+msgstr "Fiók választás"
+
+msgctxt "#30166"
+msgid "Login failed"
+msgstr "Bejelentkezési hiba"
+
+msgctxt "#30167"
+msgid "Edit account"
+msgstr "Fiók szerkesztése"
+
+# For Orange and Movistar only
+msgctxt "#30170"
+msgid "Play from the beginning"
+msgstr "Lejátszás az elejérõl"
+
+# For Orange and Movistar only
+msgctxt "#30171"
+msgid "Record program"
+msgstr "Felvett program"
+
+# For Orange and Movistar only
+msgctxt "#30172"
+msgid "Recording scheduled"
+msgstr "Idõzített felvétel"
+
+# For Orange and Movistar only
+msgctxt "#30173"
+msgid "Delete recording"
+msgstr "Felvétel törlése"
+
+# For Orange and Movistar only
+msgctxt "#30174"
+msgid "Do you want to delete {}?"
+msgstr "Törli a következõt: {}?"
+
+msgctxt "#30175"
+msgid "Add to my list"
+msgstr "Hozzáadás a listámhoz"
+
+msgctxt "#30176"
+msgid "Remove from my list"
+msgstr "Törlés a listámból"
+
+msgctxt "#30177"
+msgid "Title added to my list"
+msgstr "Cím hozzáadva a listámhoz"
+
+msgctxt "#30178"
+msgid "Title removed from my list"
+msgstr "Cím törölve a listámból"
+
+msgctxt "#30180"
+msgid "Profiles"
+msgstr "Profilok"
+
+msgctxt "#30181"
+msgid "Login with key file"
+msgstr "Bejelentkezés key fájl-al"
+
+msgctxt "#30182"
+msgid "Select the key file"
+msgstr "Válaszd ki a key fájlt"
+
+msgctxt "#30183"
+msgid "Login with username"
+msgstr "Bejelentkezés jelszóval"
+
+msgctxt "#30184"
+msgid "Export access token to key file"
+msgstr "Hozzáférési token exportálása key fájlba"
+
+msgctxt "#30185"
+msgid "Select a folder to save the key file"
+msgstr "Mappa kiválasztása a key fájl mentéséhez"
+
+msgctxt "#30186"
+msgid "Login with a cookie file"
+msgstr "Bejelentkezés cookie fájl-al"
+
+msgctxt "#30187"
+msgid "Select the cookie file"
+msgstr "Cookie fájl kiválasztása"
+
+msgctxt "#30200"
+msgid "Error"
+msgstr "Hiba"
+
+msgctxt "#30201"
+msgid "Information"
+msgstr "Információ"
+
+msgctxt "#30202"
+msgid "Inputstream.adaptive is not available"
+msgstr "Inputstream.adaptive hiányzik"
+
+msgctxt "#30203"
+msgid "Format not supported"
+msgstr "Nem támogatott formátum"
+
+msgctxt "#30204"
+msgid "Video not available"
+msgstr "Videó nem hozzáférhetõ"
+
+# For Orange and Movistar only
+msgctxt "#30300"
+msgid "IPTV Manager"
+msgstr "IPTV Manager"
+
+# For Orange and Movistar only
+msgctxt "#30301"
+msgid "Install IPTV Manager add-on"
+msgstr "IPTV Manager kiegészítõ telepítése"
+
+# For Orange and Movistar only
+msgctxt "#30302"
+msgid "Enable IPTV Manager integration"
+msgstr "IPTV Manager integrációja"
+
+# For Orange and Movistar only
+msgctxt "#30303"
+msgid "IPTV Manager settings"
+msgstr "IPTV Manager beállítások"
+
+# For Orange and Movistar only
+msgctxt "#30304"
+msgid "IPTV"
+msgstr "IPTV"
+
+# For Orange and Movistar only
+msgctxt "#30305"
+msgid "Export channels and EPG for IPTV automatically"
+msgstr "Csatornák és EPG automatikus exportálása IPTV-hez"
+
+# For Orange and Movistar only
+msgctxt "#30306"
+msgid "Save to this folder (requires restart)"
+msgstr "Mentés ebbe a mappába (újraindítás szükséges)"
+
+# For Orange and Movistar only
+msgctxt "#30307"
+msgid "Install IPTV Simple add-on"
+msgstr "IPTV Simple add-on telepítése"
+
+# For Orange and Movistar only
+msgctxt "#30308"
+msgid "Open IPTV Simple settings"
+msgstr "IPTV Simple beállítások"
+
+# For Orange and Movistar only
+msgctxt "#30310"
+msgid "Exporting channels"
+msgstr "Csatornák exportálása"
+
+# For Orange and Movistar only
+msgctxt "#30311"
+msgid "Exporting EPG"
+msgstr "EPG exportálása"
+
+# For Orange and Movistar only
+msgctxt "#30312"
+msgid "Export channels and EPG now"
+msgstr "EPG és Csatornák exportálása"
+
+msgctxt "#30320"
+msgid "Rating: {}"
+msgstr "Értékelés: {}"
+
+msgctxt "#30321"
+msgid "Show age rating before playback"
+msgstr "Korhatár-besorolás megjelenítése lejátszás elõtt"
