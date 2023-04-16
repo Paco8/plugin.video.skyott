@@ -156,8 +156,31 @@ def play(params):
   play_item.setContentLookup(False)
   xbmcplugin.setResolvedUrl(_handle, True, listitem=play_item)
 
+  if addon.getSettingBool('send_progress') and slug:
+    from .player import SkyPlayer
+    player = SkyPlayer()
+    monitor = xbmc.Monitor()
+    last_pos = 0
+    total_time = 0
+    start_time = time.time()
+    while not monitor.abortRequested() and player.running:
+      monitor.waitForAbort(10)
+      if player.isPlaying():
+        last_pos = player.getTime()
+        if total_time == 0: total_time = player.getTotalTime()
+        #LOG('**** position: {}'.format(last_pos))
+        if time.time() > (start_time + 120):
+          start_time = time.time()
+          LOG('**** {} {}'.format(info['provider_variant_id'], info['bookmark_metadata']))
+          sky.set_bookmark(info['provider_variant_id'], info['bookmark_metadata'], last_pos)
+    LOG('**** playback finished')
+    LOG('**** last_pos: {} total_time: {}'.format(last_pos, total_time))
+    if (total_time - last_pos) < 20: last_pos = total_time
+    if last_pos != 0:
+      sky.set_bookmark(info['provider_variant_id'], info['bookmark_metadata'], last_pos)
 
-def add_videos(category, ctype, videos, ref=None, url_next=None, url_prev=None, from_watchlist=False):
+
+def add_videos(category, ctype, videos, ref=None, url_next=None, url_prev=None, from_watchlist=False, updateListing=False, cacheToDisc=True):
   #LOG("category: {} ctype: {}".format(category, ctype))
   xbmcplugin.setPluginCategory(_handle, category)
   xbmcplugin.setContent(_handle, ctype)
@@ -200,9 +223,12 @@ def add_videos(category, ctype, videos, ref=None, url_next=None, url_prev=None, 
     if t['type'] == 'movie':
       # If an episode is not in a episode listing, display the series name too
       if ctype != 'episodes' and t['info'].get('mediatype', '') == 'episode':
-        t['info']['title'] = t['info'].get('tvshowtitle', '') +' - '+ t['info']['title']
+        t['info']['title'] = '{} {}x{} - {}'.format(t['info'].get('tvshowtitle', ''), t['info'].get('season', 0), t['info'].get('episode', 0), t['info']['title'])
       list_item = xbmcgui.ListItem(label = title_name)
       list_item.setProperty('IsPlayable', 'true')
+      if addon.getSettingBool('send_progress') and 'stream_position' in t:
+        list_item.setProperty('ResumeTime', str(t['stream_position']))
+        list_item.setProperty('TotalTime', str(t['info']['duration']))
       list_item.setInfo('video', t['info'])
       list_item.setArt(t['art'])
       if t.get('stream_type') == 'tv':
@@ -236,7 +262,7 @@ def add_videos(category, ctype, videos, ref=None, url_next=None, url_prev=None, 
     list_item = xbmcgui.ListItem(label = addon.getLocalizedString(30109)) # Next page
     xbmcplugin.addDirectoryItem(_handle, get_url(action=ref, url=url_next, name=category), list_item, True)
 
-  xbmcplugin.endOfDirectory(_handle)
+  xbmcplugin.endOfDirectory(_handle, updateListing=updateListing, cacheToDisc=cacheToDisc)
 
 def list_profiles(params):
   LOG('list_profiles: params: {}'.format(params))
@@ -387,7 +413,7 @@ def router(paramstring):
     elif params['action'] == 'wishlist':
       add_videos(addon.getLocalizedString(30102), 'movies', sky.get_my_list(), from_watchlist=True)
     elif params['action'] == 'continue-watching':
-      add_videos(addon.getLocalizedString(30122), 'movies', sky.get_continue_watching())
+      add_videos(addon.getLocalizedString(30122), 'movies', sky.get_continue_watching(), cacheToDisc=False)
     elif params['action'] == 'category':
       add_videos(params['name'], 'movies', sky.get_catalog(params['slug']))
     elif params['action'] == 'movie_catalog':

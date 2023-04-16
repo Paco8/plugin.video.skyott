@@ -37,4 +37,6 @@ class Endpoints(object):
       'epg': webclients + '/bff/channel_guide?startTime={start_time}&contentSegments=Free',
       'playouts-live': ovp + '/video/playouts/live',
       'to-watchlist': mytv + '/watchlist/{uuid}',
+      'get-bookmarks': ovp + '/bookmarking/bookmarks',
+      'set-bookmark': ovp + '/bookmarking/bookmarks/{content_id}',
     }

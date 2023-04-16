@@ -81,6 +81,10 @@ msgctxt "#30024"
 msgid "Try to fix error 4027"
 msgstr "Intentar solucionar el error 4027"
 
+msgctxt "#30025"
+msgid "Send video progress to provider's server"
+msgstr "Enviar progreso al servidor de la plataforma"
+
 msgctxt "#30031"
 msgid "Streaming service"
 msgstr "Plataforma"

@@ -221,6 +221,8 @@ class SkyShowtime(object):
             t['info']['tvshowtitle'] = e['seriesName']
             t['info']['season'] = e['seasonNumber']
             t['info']['episode'] = e['number']
+          if 'streamPosition' in e:
+            t['stream_position'] = e['streamPosition']
           res.append(t)
         elif e['type'] == 'CATALOGUE/SERIES':
           t['type'] = 'series'
@@ -245,6 +247,7 @@ class SkyShowtime(object):
       t['info']['title'] = att['title']
       t['art'] = self.get_art(att['images'])
       t['info']['genre'] = att['genres']
+      t['bookmark_metadata'] = {}
       if e['type'] == 'CATALOGUE/SERIES':
         t['type'] = 'series'
         t['info']['mediatype'] = 'tvshow'
@@ -272,6 +275,8 @@ class SkyShowtime(object):
         if 'formats' in att:
           if 'HD' in att['formats']:
             t['content_id'] = att['formats']['HD']['contentId']
+            if 'startOfCredits' in att['formats']['HD']:
+              t['bookmark_metadata']['startOfCredits'] = att['formats']['HD']['startOfCredits']
           elif 'SD' in att['formats']:
             t['content_id'] = att['formats']['SD']['contentId']
         t['provider_variant_id'] = att.get('providerVariantId')
@@ -279,6 +284,8 @@ class SkyShowtime(object):
         t['uuid'] = att['programmeUuid']
       elif 'seriesUuid' in att:
         t['uuid'] = att['seriesUuid']
+      if 'providerSeriesId' in att:
+        t['bookmark_metadata']['providerSeriesId'] = att['providerSeriesId']
       return t
 
     def parse_items(self, data):
@@ -691,7 +698,7 @@ class SkyShowtime(object):
          data = self.get_video_info(slug)
          uuid = data.get('uuid')
       url = self.endpoints['to-watchlist'].format(uuid=uuid)
-      LOG(url)
+      #LOG(url)
       headers = self.net.headers.copy()
       headers['Accept'] = 'application/vnd.mytv.v3+json'
       if self.account['user_token']:
@@ -711,6 +718,37 @@ class SkyShowtime(object):
         if 'errorCode' in data:
           return data['errorCode'], data['description']
       return response.status_code, ''
+
+    def get_bookmarks(self):
+      url = self.endpoints['get-bookmarks']
+      headers = self.net.headers.copy()
+      headers['Accept'] = 'application/vnd.bookmarking.v1+json'
+      headers['Content-Type'] = 'application/vnd.bookmarking.v1+json'
+      if self.account['user_token']:
+        headers['x-skyott-usertoken'] = self.account['user_token']
+      sig_header = self.sig.calculate_signature('GET', url, headers)
+      headers.update(sig_header)
+      data = self.net.load_data(url, headers)
+      return data
+
+    def set_bookmark(self, content_id, metadata, position):
+      url = self.endpoints['set-bookmark'].format(content_id=content_id)
+      headers = self.net.headers.copy()
+      headers['Accept'] = 'application/vnd.bookmarking.v1+json'
+      headers['Content-Type'] = 'application/vnd.bookmarking.v1+json'
+      if self.account['user_token']:
+        headers['x-skyott-usertoken'] = self.account['user_token']
+
+      now = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+      data = {"streamPosition": position, "timestamp": now, "metadata": metadata}
+      post_data = json.dumps(data)
+      LOG(post_data)
+
+      sig_header = self.sig.calculate_signature('PUT', url, headers, post_data)
+      headers.update(sig_header)
+      response = self.net.session.put(url, headers=headers, data=post_data)
+      content = response.content.decode('utf-8')
+      LOG('set_bookmark: result: {} {}'.format(response.status_code, content))
 
     def download_epg(self):
       cache_filename = 'cache/epg.json'

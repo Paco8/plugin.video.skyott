@@ -91,6 +91,10 @@ msgctxt "#30024"
 msgid "Try to fix error 4027"
 msgstr "A 4027 hiba javítási kísérlete"
 
+msgctxt "#30025"
+msgid "Send video progress to provider's server"
+msgstr ""
+
 # For SkyOTT only
 msgctxt "#30031"
 msgid "Streaming service"
