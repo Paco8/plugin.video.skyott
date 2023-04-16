@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30001"
 msgid "Main"
-msgstr "Fő"
+msgstr "Alapbeállítások"
 
 msgctxt "#30002"
 msgid "Proxy"
@@ -41,7 +41,7 @@ msgstr "Manifest változtatás"
 # For Orange and Movistar only
 msgctxt "#30012"
 msgid "Use proxy for license"
-msgstr "Használj proxit a licenchez"
+msgstr "Használj proxyt a licenchez"
 
 # For Orange only
 msgctxt "#30013"
@@ -93,12 +93,12 @@ msgstr "A 4027 hiba javítási kísérlete"
 
 msgctxt "#30025"
 msgid "Send video progress to provider's server"
-msgstr ""
+msgstr "Nézett státus szinkonizálása a szerverrel"
 
 # For SkyOTT only
 msgctxt "#30031"
 msgid "Streaming service"
-msgstr "Streaming service"
+msgstr "Streaming szolgáltató"
 
 # For SkyOTT only
 msgctxt "#30032"
@@ -113,7 +113,7 @@ msgstr "4K engedélyezése"
 # For SkyOTT only
 msgctxt "#30034"
 msgid "Fix audio and subtitle language names"
-msgstr "Javítsa ki a hang- és feliratnyelv-neveket"
+msgstr "Javítsa a hang- és feliratnyelv-neveket"
 
 # For SkyOTT only
 msgctxt "#30035"
@@ -218,7 +218,7 @@ msgstr "Munkamenet bezárása"
 
 msgctxt "#30151"
 msgid "Delete device"
-msgstr ""
+msgstr "Eszköz törlése"
 
 msgctxt "#30152"
 msgid "Select device"
@@ -254,7 +254,7 @@ msgstr "Jelszó"
 
 msgctxt "#30165"
 msgid "Select account"
-msgstr "Fiók választás"
+msgstr "Fiók kiválasztása"
 
 msgctxt "#30166"
 msgid "Login failed"
@@ -355,7 +355,7 @@ msgstr "Nem támogatott formátum"
 
 msgctxt "#30204"
 msgid "Video not available"
-msgstr "Videó nem hozzáférhető"
+msgstr "Videó nem elérhető"
 
 # For Orange and Movistar only
 msgctxt "#30300"
