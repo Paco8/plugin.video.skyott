@@ -93,7 +93,7 @@ msgstr "Spróbuj naprawić błąd 4027"
 
 msgctxt "#30025"
 msgid "Send video progress to provider's server"
-msgstr ""
+msgstr "Wyślij postęp wideo do serwera platformy"
 
 # For SkyOTT only
 msgctxt "#30031"
