@@ -203,6 +203,11 @@ def add_videos(category, ctype, videos, ref=None, url_next=None, url_prev=None, 
 
   for t in videos:
     #LOG("t: {}".format(t))
+
+    if t.get('subscribed', True) == False:
+      if addon.getSettingBool('only_subscribed'): continue
+      t['info']['title'] = '[COLOR gray]' + t['info']['title'] + '[/COLOR]'
+
     title_name = t['info']['title']
     if not 'type' in t: continue
 
@@ -295,7 +300,7 @@ def search(params):
       sky.delete_search(search_term)
       xbmc.executebuiltin("Container.Refresh")
     else:
-      videos = sky.search_vod(search_term)
+      videos = sky.search(search_term)
       add_videos(addon.getLocalizedString(30117), 'movies', videos)
     return
 
@@ -381,6 +386,30 @@ def to_watchlist(params):
   else:
     show_notification(str(retcode) +': '+ message)
 
+def list_devices(params):
+  LOG('list_devices: params: {}'.format(params))
+
+  devices = sky.get_devices()
+
+  if 'id' in params:
+    if params['name'] == 'select':
+      LOG('Selecting device {}'.format(params['id']))
+      #sky.change_device(params['id'])
+    xbmc.executebuiltin("Container.Refresh")
+    return
+
+  open_folder(addon.getLocalizedString(30108)) # Devices
+
+  for d in devices:
+    name = '{} {} {} ({})'.format(d['description'], d['alias'], d['str_date'], d['id'][:8])
+    if d['id'] in sky.account['cookie']:
+      name = '[B][COLOR blue]' + name + '[/COLOR][/B]'
+
+    select_action = get_url(action='devices', id=d['id'], name='select')
+    add_menu_option(name, select_action)
+
+  close_folder(cacheToDisc=False)
+
 
 def router(paramstring):
   """
@@ -432,6 +461,8 @@ def router(paramstring):
       add_videos(addon.getLocalizedString(30104), 'movies', sky.get_channels_with_epg())
     elif params['action'] == 'to_watchlist':
       to_watchlist(params)
+    elif params['action'] == 'devices':
+      list_devices(params)
   else:
     # Main
     open_folder(addon.getLocalizedString(30101)) # Menu

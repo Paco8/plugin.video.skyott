@@ -58,6 +58,7 @@ class SkyShowtime(object):
     account = {'username': None, 'password': None,
                'device_id': None,
                'profile_id': None, 'profile_type': None,
+               'my_segments': [],
                'cookie': None, 'user_token': None}
 
     def __init__(self, config_directory, platform='skyshowtime'):
@@ -158,6 +159,23 @@ class SkyShowtime(object):
       data = self.cache.load_file('searchs.json')
       self.search_list = json.loads(data) if data else []
 
+      # Load my segments
+      if self.account['user_token']:
+        me_filename = self.pldir + '/me.json'
+        content = self.cache.load(me_filename)
+        if content:
+          data = json.loads(content)
+        else:
+          data = self.get_me()
+          self.cache.save_json(me_filename, data)
+        for s in data.get('segmentation', []).get('content', []):
+          self.account['my_segments'].append(s['name'])
+
+    def is_subscribed(self, segments):
+      for s in self.account['my_segments']:
+        if s in segments: return True
+      return False
+
     def get_art(self, images):
       def image_url(url):
         return url.replace('?language', '/400?language')
@@ -196,6 +214,11 @@ class SkyShowtime(object):
         t['id'] = e['id']
         t['slug'] = e.get('slug')
         t['info']['title'] = e['title']
+        if 'displayStartTime' in e:
+          t['info']['title'] = '[COLOR yellow]{}[/COLOR] - {}'.format(timestamp2str(e['displayStartTime']/1000, '%a %d %H:%M'), t['info']['title'])
+        if 'contentSegments' in e:
+          t['segments'] = e['contentSegments']
+          t['subscribed'] = self.is_subscribed(t['segments'])
         if e['type'] == 'CATALOGUE/COLLECTION':
           t['type'] = 'category'
           res.append(t)
@@ -211,7 +234,10 @@ class SkyShowtime(object):
           t['type'] = 'movie'
           t['info']['mediatype'] = 'movie'
           t['info']['year'] = e.get('year')
-          t['info']['duration'] = e['duration']['durationSeconds']
+          if 'duration' in e:
+            t['info']['duration'] = e['duration']['durationSeconds']
+          elif 'durationSeconds' in e:
+            t['info']['duration'] = e['durationSeconds']
           t['info']['mpaa'] = e.get('ottCertificate')
           t['info']['plot'] = e.get('synopsisLong')
           t['art'] = self.get_art(e['images'])
@@ -234,8 +260,6 @@ class SkyShowtime(object):
           res.append(t)
         else:
           LOG('catalog type not supported: {}'.format(e['type']))
-        if 'displayStartTime' in e:
-          t['info']['title'] = '[COLOR yellow]{}[/COLOR] - {}'.format(timestamp2str(e['displayStartTime']/1000, '%a %d %H:%M'), t['info']['title'])
       return res
 
     def parse_item(self, data):
@@ -286,6 +310,9 @@ class SkyShowtime(object):
         t['uuid'] = att['seriesUuid']
       if 'providerSeriesId' in att:
         t['bookmark_metadata']['providerSeriesId'] = att['providerSeriesId']
+      if 'contentSegments' in att:
+        t['segments'] = att['contentSegments']
+        t['subscribed'] = self.is_subscribed(t['segments'])
       return t
 
     def parse_items(self, data):
@@ -336,6 +363,15 @@ class SkyShowtime(object):
       #print_json(data)
       #self.cache.save_json('movie.json', data)
       return self.parse_item(data)
+
+    def get_video_info_uuid(self, uuid):
+      url = self.endpoints['get-video-info-uuid'].format(uuid=uuid)
+      data = self.net.load_data(url)
+      #self.cache.save_json('uuid_data.json', data)
+      if len(data) > 0:
+        return self.parse_item(data[0])
+      else:
+        return None
 
     def login(self, username='', password=''):
       url = self.endpoints['login']
@@ -639,16 +675,22 @@ class SkyShowtime(object):
       url = self.endpoints['search-vod'].format(search_term=search_term)
       data = self.net.load_data(url)
       #print_json(data)
+      #self.cache.save_json('search_result.json', data)
       if not 'results' in data: return None
       res = []
       for i in data['results']:
         if 'uuid' in i:
-          url = self.endpoints['get-video-info-uuid'].format(uuid=i['uuid'])
-          #if i['uuidtype'] == 'series': LOG(url)
-          d = self.net.load_data(url)
-          t = self.parse_item(d[0])
-          res.append(t)
+          t = self.get_video_info_uuid(i['uuid'])
+          if t:
+            res.append(t)
       return res
+
+    def search(self, search_term):
+      url = self.endpoints['search'].format(search_term=search_term)
+      data = self.net.load_data(url)
+      #print_json(data)
+      self.cache.save_json('search_result.json', data)
+      return self.parse_catalog(data['data']['search']['results'])
 
     def get_main_menu(self):
       def find_item(term, items):
@@ -749,6 +791,28 @@ class SkyShowtime(object):
       response = self.net.session.put(url, headers=headers, data=post_data)
       content = response.content.decode('utf-8')
       LOG('set_bookmark: result: {} {}'.format(response.status_code, content))
+
+    def get_devices(self):
+      url = self.endpoints['get-devices']
+      headers = self.net.headers.copy()
+      headers['Accept'] = 'application/vnd.bridge.v1+json'
+      headers['cookie'] = self.account['cookie']
+      data = self.net.load_data(url, headers)
+      #LOG(data)
+      res = []
+      if 'devices' in data:
+        for d in data['devices']:
+          dev = {}
+          dev['id'] = d['deviceid']
+          dev['description'] = d['devicedescription']
+          dev['signin_time'] = d.get('signintime', 0)
+          dev['str_date'] = timestamp2str(dev['signin_time']/1000, '%d/%m/%Y %H:%M:%S')
+          dev['alias'] = d['alias'] if d['alias'] else ''
+          dev['type'] = d['type']
+          if 'location' in d:
+            dev['location'] = d['location']
+          res.append(dev)
+      return res
 
     def download_epg(self):
       cache_filename = 'cache/epg.json'
@@ -881,6 +945,6 @@ class SkyShowtime(object):
       shutil.copyfile(filename, self.cache.config_directory + self.pldir + '/cookie.conf')
 
     def clear_session(self):
-      files = ['device_id.conf', 'localisation.json', 'profile.json', 'profile_info.json', 'token.json', 'menu.json']
+      files = ['device_id.conf', 'localisation.json', 'profile.json', 'profile_info.json', 'token.json', 'menu.json', 'me.json']
       for f in files:
         self.cache.remove_file(self.pldir +'/'+ f)
