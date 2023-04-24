@@ -130,6 +130,11 @@ msgctxt "#30040"
 msgid "Use only for these languages (e.g.: es en pt):"
 msgstr "Csak ezekhez a nyelvekhez használja (pl.: es en pt):"
 
+# For SkyOTT only
+msgctxt "#30041"
+msgid "Subscription country (two letter code):"
+msgstr ""
+
 msgctxt "#30101"
 msgid "Menu"
 msgstr "Menü"
@@ -356,6 +361,20 @@ msgstr "Nem támogatott formátum"
 msgctxt "#30204"
 msgid "Video not available"
 msgstr "Videó nem elérhető"
+
+# For SkyOTT only
+msgctxt "#30205"
+msgid "No playback URL"
+msgstr ""
+
+msgctxt "#30206"
+msgid "Proxy is not running"
+msgstr ""
+
+# For SkyOTT only
+msgctxt "#30207"
+msgid "No user token"
+msgstr ""
 
 # For Orange and Movistar only
 msgctxt "#30300"

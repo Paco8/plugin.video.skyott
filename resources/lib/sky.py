@@ -60,8 +60,9 @@ class SkyShowtime(object):
                'profile_id': None, 'profile_type': None,
                'my_segments': [],
                'cookie': None, 'user_token': None}
+    get_token_error = ''
 
-    def __init__(self, config_directory, platform='skyshowtime'):
+    def __init__(self, config_directory, platform='skyshowtime', territory=None):
       self.logged = False
 
       self.platform = self.platforms[platform]
@@ -118,6 +119,12 @@ class SkyShowtime(object):
              'x-skyott-language': h.get('x-skyott-language'),
              'x-skyott-territory': h.get('x-skyott-territory'),
         })
+      # Override data from localisation if the user set a territory
+      if territory:
+        self.platform['headers'].update({
+             'x-skyott-activeterritory': territory,
+             'x-skyott-territory': territory
+        })
       self.net.headers.update(self.platform['headers'])
       #print_json(self.platform['headers'])
       #print_json(self.net.headers)
@@ -152,6 +159,8 @@ class SkyShowtime(object):
         data = self.get_tokens()
         if 'userToken' in data:
           self.cache.save_json(token_filename, data)
+        if 'description' in data:
+          self.get_token_error = data['description']
       if data and 'userToken' in data:
         self.account['user_token'] = data['userToken']
 
@@ -520,7 +529,8 @@ class SkyShowtime(object):
 
     def get_tokens(self):
       url = self.endpoints['tokens']
-      headers = self.net.headers.copy()
+      #headers = self.net.headers.copy()
+      headers = {}
       headers['Accept'] = 'application/vnd.tokens.v1+json'
       headers['Content-Type'] = 'application/vnd.tokens.v1+json'
       headers['cookie'] = self.account['cookie']
@@ -540,11 +550,14 @@ class SkyShowtime(object):
            "drmDeviceId": "UNKNOWN"
         }
       }
+      LOG('get_tokens: post_data: {}'.format(post_data))
       post_data = json.dumps(post_data)
       sig_header = self.sig.calculate_signature('POST', url, headers, post_data)
       headers.update(sig_header)
       data = self.net.post_data(url, post_data, headers)
-      LOG('get_tokens: data: {}'.format(data))
+      headers['cookie'] = '<redacted>'
+      LOG('get_tokens: headers: {}'.format(headers))
+      LOG('get_tokens: response data: {}'.format(data))
       return data
 
     def request_playback_tokens(self, url, post_data, content_type, preferred_server=''):

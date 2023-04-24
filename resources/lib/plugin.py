@@ -67,7 +67,7 @@ def play(params):
     if 'errorCode' in data['response']:
       show_notification(data['response']['description'])
     else:
-      show_notification('No playback url')
+      show_notification(addon.getLocalizedString(30205)) # No playback url
     return
 
   import inputstreamhelper
@@ -78,7 +78,7 @@ def play(params):
 
   proxy = sky.cache.load_file('proxy.conf')
   if not proxy:
-    show_notification('Proxy is not running')
+    show_notification(addon.getLocalizedString(30206)) # Proxy is not running
     return
 
   url = data['manifest_url']
@@ -493,7 +493,12 @@ def run():
   LOG('profile_dir: {}'.format(profile_dir))
   platform_id = addon.getSetting('platform_id').lower()
   LOG('platform_id: {}'.format(platform_id))
-  sky = SkyShowtime(profile_dir, platform_id)
+  territory = addon.getSetting('territory').upper()
+  LOG('territory: {}'.format(territory))
+  sky = SkyShowtime(profile_dir, platform_id, territory)
+
+  if sky.logged and not sky.account['user_token']:
+    show_notification(addon.getLocalizedString(30207) +': '+ sky.get_token_error)
 
   # Clear cache
   LOG('Cleaning cache. {} files removed.'.format(sky.cache.clear_cache()))

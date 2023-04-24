@@ -1,6 +1,7 @@
 <settings>
     <category label="30001">
         <setting id="platform_id" type="labelenum" label="30031" values="SkyShowtime|PeacockTV" default="PeacockTV"/>
+        <setting id="territory" type="text" label="30041" default=""/>
         <setting id="preferred_server" type="labelenum" label="30032" values="Auto|Limelight|Cloudfront|Akamai|Level3|Fastly" default='Auto'/>
         <setting id="uhd" type="bool" label="30033" default="false"/>
         <setting id="send_progress" type="bool" label="30025" default="false"/>
