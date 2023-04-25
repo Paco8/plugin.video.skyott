@@ -133,7 +133,7 @@ msgstr "Użycie tylko dla tych języków (np. es en pt):"
 # For SkyOTT only
 msgctxt "#30041"
 msgid "Subscription country (two letter code):"
-msgstr ""
+msgstr "Kraj subskrypcji (kod dwuliterowy):"
 
 msgctxt "#30101"
 msgid "Menu"
@@ -365,16 +365,16 @@ msgstr "Wideo niedostępne"
 # For SkyOTT only
 msgctxt "#30205"
 msgid "No playback URL"
-msgstr ""
+msgstr "Brak adresu URL do odtwarzania"
 
 msgctxt "#30206"
 msgid "Proxy is not running"
-msgstr ""
+msgstr "Proxy nie działa"
 
 # For SkyOTT only
 msgctxt "#30207"
 msgid "No user token"
-msgstr ""
+msgstr "Brak tokena użytkownika"
 
 # For Orange and Movistar only
 msgctxt "#30300"
