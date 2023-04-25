@@ -105,7 +105,7 @@ class SkyShowtime(object):
 
       # Load localisation
       localisation_filename = self.pldir + '/localisation.json'
-      content = self.cache.load_file(localisation_filename)
+      content = self.cache.load(localisation_filename)
       if content:
         extra_headers = json.loads(content)
       else:
@@ -122,7 +122,6 @@ class SkyShowtime(object):
       # Override data from localisation if the user set a territory
       if territory:
         self.platform['headers'].update({
-             'x-skyott-activeterritory': territory,
              'x-skyott-territory': territory
         })
       self.net.headers.update(self.platform['headers'])
