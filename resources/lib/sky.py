@@ -121,9 +121,9 @@ class SkyShowtime(object):
         })
       # Override data from localisation if the user set a territory
       if territory:
-        self.platform['headers'].update({
-             'x-skyott-territory': territory
-        })
+        self.platform['headers']['x-skyott-territory'] = territory
+        if self.platform['headers']['x-skyott-activeterritory'] == 'XX':
+          self.platform['headers']['x-skyott-activeterritory'] = territory
       self.net.headers.update(self.platform['headers'])
       #print_json(self.platform['headers'])
       #print_json(self.net.headers)
