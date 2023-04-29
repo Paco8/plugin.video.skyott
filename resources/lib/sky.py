@@ -10,7 +10,7 @@ import requests
 import io
 import os
 import time
-#import re
+import re
 from datetime import datetime
 
 from .log import LOG, print_json
@@ -102,6 +102,12 @@ class SkyShowtime(object):
       else:
         self.platform['device_id'] = self.create_device_id()
         self.cache.save_file(self.pldir + '/device_id.conf', self.platform['device_id'])
+
+      # Get the territory from the cookie
+      if not territory and self.account['cookie']:
+        m = re.search(b'hterr=([A-Z]{2})', self.account['cookie'])
+        if m: territory = m.group(1).decode('utf-8')
+      LOG('territory: {}'.format(territory))
 
       # Load localisation
       localisation_filename = self.pldir + '/localisation.json'
