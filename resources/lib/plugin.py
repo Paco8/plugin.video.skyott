@@ -113,7 +113,7 @@ def play(params):
 
   if addon.getSettingBool('use_ttml2ssa') and slug:
     # Convert subtitles
-    from .parsemanifest import extract_tracks
+    from .parsemanifest import extract_tracks, download_split_subtitle
     from ttml2ssa import Ttml2SsaAddon
     ttml = Ttml2SsaAddon()
     subtype = ttml.subtitle_type()
@@ -132,13 +132,16 @@ def play(params):
     filter_list = addon.getSetting('ttml2ssa_filter').lower().split()
     subtracks = [t for t in tracks['subs'] if len(filter_list) == 0 or t['lang'][:2] in filter_list]
     for t in subtracks:
-      suburl = baseurl +'/'+ t['baseurl']
-      LOG('suburl: {}'.format(suburl))
       filename = subfolder + t['lang'][:2]
       if t['value'] == 'caption': filename += ' [CC]'
       elif t['value'] == 'forced-subtitle': filename += '.forced'
       LOG('filename: {}'.format(filename))
-      content = sky.net.load_url(suburl)
+
+      if t['split']:
+        content = download_split_subtitle(baseurl, t['filename'], int(t['start_number']))
+      else:
+        content = sky.net.load_url(os.path.join(baseurl, t['filename']))
+
       #LOG(content.encode('utf-8'))
       ttml.parse_vtt_from_string(content)
       if subtype != 'srt':

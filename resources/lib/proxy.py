@@ -81,6 +81,13 @@ class RequestHandler(BaseHTTPRequestHandler):
                     if 'mp4a' in track['codecs']:
                       content = content.replace(track['orig'], '<!-- Deleted mp4a audio track {} -->\n'.format(track['lang']))
 
+                for track in tracks['subs']:
+                  if track['split']:
+                    # It seems this isn't supported by Kodi.
+                    # The track is removed, otherwise Kodi keeps turning off subtitles
+                    # and it doesn't even allow to use external subtitles.
+                    content = content.replace(track['orig'], '<!-- Deleted subtitle track {} -->\n'.format(track['lang']))
+
                 if addon.getSettingBool('fix_languages'):
                   for track_type in ('subs', 'audios'):
                     for track in tracks[track_type]:

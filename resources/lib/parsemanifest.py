@@ -6,6 +6,24 @@
 from __future__ import unicode_literals, absolute_import, division
 
 import re
+import os
+import requests
+from .log import LOG
+
+def download_split_subtitle(base_url, filename_template, start_number=0):
+  session = requests.Session()
+  filename_template = filename_template.replace('$Number$', '{}')
+  i = start_number
+  res = []
+  while True:
+    url = os.path.join(base_url, filename_template.format(i))
+    LOG('Downloading {}'.format(url))
+    response = session.get(url)
+    if response.status_code == 404:
+        break
+    res.append(response.content.decode('utf-8'))
+    i += 1
+  return ''.join(res)
 
 def extract_tracks(manifest):
   pattern = re.compile(r'<AdaptationSet.*?</AdaptationSet>', re.DOTALL)
@@ -17,7 +35,14 @@ def extract_tracks(manifest):
       m = re.search(r'{}="(.*?)"'.format(label), track, re.DOTALL)
       t[label] = m.group(1) if m else ''
     m = re.search(r'<BaseURL>(.*?)</BaseURL>', track, re.DOTALL)
-    t['baseurl'] = m.group(1) if m else ''
+    t['split'] = False
+    t['filename'] = m.group(1) if m else ''
+    if 'AdaptationSet' in track:
+      m = re.search(r'media="([^"]+)"\s+startNumber="([^"]+)"', track)
+      if m:
+        t['split'] = True
+        t['filename'] = m.group(1)
+        t['start_number'] = m.group(2)
     if t['contentType'] in ['text', 'audio']:
       new_lang = t['lang'][:2]
       if t['value'] == 'caption': new_lang += '-[CC]'

@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.3.3] - 2023-04-29
+- Add support for split subtitles.
+
 ## [0.3.2] - 2023-04-25
 - A fix in the _Subscription country_ option.
 
