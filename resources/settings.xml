@@ -4,6 +4,7 @@
         <setting id="territory" type="text" label="30041" default=""/>
         <setting id="preferred_server" type="labelenum" label="30032" values="Auto|Limelight|Cloudfront|Akamai|Level3|Fastly" default='Auto'/>
         <setting id="uhd" type="bool" label="30033" default="false"/>
+        <setting id="hdcp_enabled" type="bool" label="30037" default="false"/>
         <setting id="send_progress" type="bool" label="30025" default="false"/>
         <setting id="only_subscribed" type="bool" label="30017" default="false"/>
         <setting id="use_ttml2ssa" type="bool" label="$ADDON[script.module.ttml2ssa 32202]" default="false"/>

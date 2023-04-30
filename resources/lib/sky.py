@@ -574,6 +574,7 @@ class SkyShowtime(object):
       post_data = json.dumps(post_data)
       sig_header = self.sig.calculate_signature('POST', url, headers, post_data)
       headers.update(sig_header)
+      LOG(post_data)
       #print_json(headers)
 
       response = self.net.session.post(url, headers=headers, data=post_data)
@@ -600,7 +601,7 @@ class SkyShowtime(object):
         res['license_token'] = data['protection']['licenceToken']
       return res
 
-    def get_playback_info(self, content_id, provider_variant_id, preferred_server='', uhd=False):
+    def get_playback_info(self, content_id, provider_variant_id, preferred_server='', uhd=False, hdcpEnabled=False):
       url = self.endpoints['playouts']
       post_data = {
         "device": {
@@ -622,7 +623,7 @@ class SkyShowtime(object):
           ],
           "maxVideoFormat": "HD",
           "model": "PC",
-          "hdcpEnabled": "true",
+          "hdcpEnabled": hdcpEnabled,
           "supportedColourSpaces": ["SDR"],
         },
         "client": {
@@ -646,7 +647,7 @@ class SkyShowtime(object):
       #print_json(post_data)
       return self.request_playback_tokens(url, post_data, 'application/vnd.playvod.v1+json', preferred_server)
 
-    def get_live_playback_info(self, service_key, preferred_server=''):
+    def get_live_playback_info(self, service_key, preferred_server='', hdcpEnabled=False):
       url = self.endpoints['playouts-live']
       post_data = {
         "serviceKey": service_key,
@@ -669,7 +670,7 @@ class SkyShowtime(object):
           ],
           "maxVideoFormat": "HD",
           "model": "PC",
-          "hdcpEnabled": "true"
+          "hdcpEnabled": hdcpEnabled
         },
         "client": {
           "thirdParties": ["FREEWHEEL"],

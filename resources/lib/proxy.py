@@ -48,6 +48,11 @@ def is_ascii(s):
   except:
     return all(ord(c) < 128 for c in s)
 
+def try_load_json(text):
+  try:
+    return json.loads(text)
+  except:
+    return None
 
 class RequestHandler(BaseHTTPRequestHandler):
 
@@ -154,6 +159,10 @@ class RequestHandler(BaseHTTPRequestHandler):
             LOG('license response length: {}'.format(len(license_data)))
             if is_ascii(license_data):
               LOG('license response: {}'.format(license_data))
+              d = try_load_json(license_data)
+              if d and 'errorCode' in d and 'description' in d:
+                from .gui import show_notification
+                show_notification('{}: {}'.format(addon.getLocalizedString(30200), d['description']))
             else:
               LOG('license response: {}'.format(encode_base64(license_data)))
 

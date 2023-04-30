@@ -54,13 +54,14 @@ def play(params):
 
   preferred_server = addon.getSetting('preferred_server')
   enable_uhd = addon.getSettingBool('uhd')
+  enable_hdcp = True if addon.getSettingBool('hdcp_enabled') else False
   if slug:
-    data = sky.get_playback_info(info['content_id'], info['provider_variant_id'], preferred_server, uhd=enable_uhd)
+    data = sky.get_playback_info(info['content_id'], info['provider_variant_id'], preferred_server, uhd=enable_uhd, hdcpEnabled=enable_hdcp)
   else:
     if params.get('content_id') and params.get('provider_variant_id'):
-      data = sky.get_playback_info(params['content_id'], params['provider_variant_id'], preferred_server)
+      data = sky.get_playback_info(params['content_id'], params['provider_variant_id'], preferred_server, hdcpEnabled=enable_hdcp)
     else:
-      data = sky.get_live_playback_info(service_key, preferred_server)
+      data = sky.get_live_playback_info(service_key, preferred_server, hdcpEnabled=enable_hdcp)
 
   LOG('playback info: {}'.format(data))
   if not 'manifest_url' in data:

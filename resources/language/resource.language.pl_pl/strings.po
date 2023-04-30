@@ -126,6 +126,11 @@ msgid "Exclude AAC audio tracks"
 msgstr "Wykluczenie ścieżek dźwiękowych AAC"
 
 # For SkyOTT only
+msgctxt "#30037"
+msgid "Enable HDCP"
+msgstr ""
+
+# For SkyOTT only
 msgctxt "#30040"
 msgid "Use only for these languages (e.g.: es en pt):"
 msgstr "Użycie tylko dla tych języków (np. es en pt):"
