@@ -128,7 +128,7 @@ msgstr "Wykluczenie ścieżek dźwiękowych AAC"
 # For SkyOTT only
 msgctxt "#30037"
 msgid "Enable HDCP"
-msgstr ""
+msgstr "Włączenie HDCP"
 
 # For SkyOTT only
 msgctxt "#30040"
