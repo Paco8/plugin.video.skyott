@@ -29,6 +29,10 @@ msgctxt "#30003"
 msgid "Experimental"
 msgstr ""
 
+msgctxt "#30004"
+msgid "Subtitles"
+msgstr ""
+
 # For Orange and Movistar only
 msgctxt "#30010"
 msgid "DRM type"
@@ -93,6 +97,10 @@ msgstr ""
 
 msgctxt "#30025"
 msgid "Send video progress to provider's server"
+msgstr ""
+
+msgctxt "#30026"
+msgid "Update interval (in seconds)"
 msgstr ""
 
 # For SkyOTT only

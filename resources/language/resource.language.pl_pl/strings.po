@@ -29,6 +29,10 @@ msgctxt "#30003"
 msgid "Experimental"
 msgstr "Ekperymentalne"
 
+msgctxt "#30004"
+msgid "Subtitles"
+msgstr ""
+
 # For Orange and Movistar only
 msgctxt "#30010"
 msgid "DRM type"
@@ -94,6 +98,10 @@ msgstr "Spróbuj naprawić błąd 4027"
 msgctxt "#30025"
 msgid "Send video progress to provider's server"
 msgstr "Wyślij postęp wideo do serwera platformy"
+
+msgctxt "#30026"
+msgid "Update interval (in seconds)"
+msgstr ""
 
 # For SkyOTT only
 msgctxt "#30031"

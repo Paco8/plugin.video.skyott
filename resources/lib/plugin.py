@@ -167,20 +167,23 @@ def play(params):
     last_pos = 0
     total_time = 0
     start_time = time.time()
+    interval = addon.getSettingInt('progress_interval')
+    if interval < 20: interval = 20
+    LOG('progress_interval: {}'.format(interval))
     while not monitor.abortRequested() and player.running:
       monitor.waitForAbort(10)
       if player.isPlaying():
         last_pos = player.getTime()
         if total_time == 0: total_time = player.getTotalTime()
         #LOG('**** position: {}'.format(last_pos))
-        if time.time() > (start_time + 120):
+        if time.time() > (start_time + interval):
           start_time = time.time()
           LOG('**** {} {}'.format(info['provider_variant_id'], info['bookmark_metadata']))
           sky.set_bookmark(info['provider_variant_id'], info['bookmark_metadata'], last_pos)
     LOG('**** playback finished')
     LOG('**** last_pos: {} total_time: {}'.format(last_pos, total_time))
     if (total_time - last_pos) < 20: last_pos = total_time
-    if last_pos != 0:
+    if last_pos > interval:
       sky.set_bookmark(info['provider_variant_id'], info['bookmark_metadata'], last_pos)
 
 

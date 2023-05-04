@@ -29,6 +29,10 @@ msgctxt "#30003"
 msgid "Experimental"
 msgstr "Experimental"
 
+msgctxt "#30004"
+msgid "Subtitles"
+msgstr "Subtítulos"
+
 msgctxt "#30010"
 msgid "DRM type"
 msgstr "Tipo de DRM"
@@ -84,6 +88,10 @@ msgstr "Intentar solucionar el error 4027"
 msgctxt "#30025"
 msgid "Send video progress to provider's server"
 msgstr "Enviar progreso al servidor de la plataforma"
+
+msgctxt "#30026"
+msgid "Update interval (in seconds)"
+msgstr "Tiempo entre actualizaciones (en segundos)"
 
 msgctxt "#30031"
 msgid "Streaming service"

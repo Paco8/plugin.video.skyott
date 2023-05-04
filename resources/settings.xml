@@ -6,11 +6,14 @@
         <setting id="uhd" type="bool" label="30033" default="false"/>
         <setting id="hdcp_enabled" type="bool" label="30037" default="false"/>
         <setting id="send_progress" type="bool" label="30025" default="false"/>
+        <setting id="progress_interval" type="number" label="30026" default="120" enable="eq(-1,true)" subsetting="true"/>
         <setting id="only_subscribed" type="bool" label="30017" default="false"/>
+        <setting label="30019" type="action" id="is_settings" action="Addon.OpenSettings(inputstream.adaptive)" enable="System.HasAddon(inputstream.adaptive)" option="close"/>
+    </category>
+    <category label="30004">
         <setting id="use_ttml2ssa" type="bool" label="$ADDON[script.module.ttml2ssa 32202]" default="false"/>
         <setting id="ssa_settings" type="action" label="$ADDON[script.module.ttml2ssa 32201]" option="close" action="Addon.OpenSettings(script.module.ttml2ssa)" enable="eq(-1,true)" subsetting="true"/>
         <setting id="ttml2ssa_filter" label="30040" type="text" default="" enable="eq(-2,true)" subsetting="true"/>
-        <setting label="30019" type="action" id="is_settings" action="Addon.OpenSettings(inputstream.adaptive)" enable="System.HasAddon(inputstream.adaptive)" option="close"/>
     </category>
     <category label="30002">
         <setting label="30011" type="bool" id="manifest_modification" default="true"/>
