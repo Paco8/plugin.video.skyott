@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: XBMC-Addons\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-28 16:47+0100\n"
-"PO-Revision-Date: 2023-04-13 HO:MI+ZONE\n"
+"PO-Revision-Date: 2023-05-05 HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE\n"
 "Language: hu\n"
@@ -31,7 +31,7 @@ msgstr "Kísérleti"
 
 msgctxt "#30004"
 msgid "Subtitles"
-msgstr ""
+msgstr "Feliratok"
 
 # For Orange and Movistar only
 msgctxt "#30010"
@@ -101,7 +101,7 @@ msgstr "Nézett státus szinkonizálása a szerverrel"
 
 msgctxt "#30026"
 msgid "Update interval (in seconds)"
-msgstr ""
+msgstr "Frissítési időköz (másodperc)"
 
 # For SkyOTT only
 msgctxt "#30031"
@@ -136,7 +136,7 @@ msgstr "Az AAC hangsávok kizárása"
 # For SkyOTT only
 msgctxt "#30037"
 msgid "Enable HDCP"
-msgstr ""
+msgstr "HDCP engedélyezése"
 
 # For SkyOTT only
 msgctxt "#30040"
@@ -146,7 +146,7 @@ msgstr "Csak ezekhez a nyelvekhez használja (pl.: es en pt):"
 # For SkyOTT only
 msgctxt "#30041"
 msgid "Subscription country (two letter code):"
-msgstr ""
+msgstr "Előfizetés helye, ország (kétbetűs kód):"
 
 msgctxt "#30101"
 msgid "Menu"
@@ -382,12 +382,12 @@ msgstr ""
 
 msgctxt "#30206"
 msgid "Proxy is not running"
-msgstr ""
+msgstr "A Proxy nem fut"
 
 # For SkyOTT only
 msgctxt "#30207"
 msgid "No user token"
-msgstr ""
+msgstr "Nincs felhasználói token"
 
 # For Orange and Movistar only
 msgctxt "#30300"
