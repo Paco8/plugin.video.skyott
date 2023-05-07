@@ -22,7 +22,7 @@ msgstr "Główne"
 
 msgctxt "#30002"
 msgid "Proxy"
-msgstr ""
+msgstr "Proxy"
 
 # For Orange and Movistar only
 msgctxt "#30003"
@@ -31,7 +31,7 @@ msgstr "Ekperymentalne"
 
 msgctxt "#30004"
 msgid "Subtitles"
-msgstr ""
+msgstr "Napisy"
 
 # For Orange and Movistar only
 msgctxt "#30010"
@@ -101,7 +101,7 @@ msgstr "Wyślij postęp wideo do serwera platformy"
 
 msgctxt "#30026"
 msgid "Update interval (in seconds)"
-msgstr ""
+msgstr "Częstotliwość aktualizacji (w sekundach)"
 
 # For SkyOTT only
 msgctxt "#30031"
