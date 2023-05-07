@@ -54,7 +54,7 @@ def play(params):
 
   preferred_server = addon.getSetting('preferred_server')
   enable_uhd = addon.getSettingBool('uhd')
-  enable_hdcp = True if addon.getSettingBool('hdcp_enabled') else False
+  enable_hdcp = bool(addon.getSettingBool('hdcp_enabled'))
   if slug:
     data = sky.get_playback_info(info['content_id'], info['provider_variant_id'], preferred_server, uhd=enable_uhd, hdcpEnabled=enable_hdcp)
   else:
