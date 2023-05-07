@@ -810,6 +810,7 @@ class SkyShowtime(object):
       response = self.net.session.put(url, headers=headers, data=post_data)
       content = response.content.decode('utf-8')
       LOG('set_bookmark: result: {} {}'.format(response.status_code, content))
+      return response.status_code
 
     def get_devices(self):
       url = self.endpoints['get-devices']

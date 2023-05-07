@@ -187,7 +187,7 @@ def play(params):
       sky.set_bookmark(info['provider_variant_id'], info['bookmark_metadata'], last_pos)
 
 
-def add_videos(category, ctype, videos, ref=None, url_next=None, url_prev=None, from_watchlist=False, updateListing=False, cacheToDisc=True):
+def add_videos(category, ctype, videos, from_watchlist=False, from_continue=False, updateListing=False, cacheToDisc=True):
   #LOG("category: {} ctype: {}".format(category, ctype))
   xbmcplugin.setPluginCategory(_handle, category)
   xbmcplugin.setContent(_handle, ctype)
@@ -201,12 +201,6 @@ def add_videos(category, ctype, videos, ref=None, url_next=None, url_prev=None, 
     xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_LASTPLAYED)
   if ctype == 'episodes':
     xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_EPISODE)
-
-  """
-  if url_prev:
-    list_item = xbmcgui.ListItem(label = addon.getLocalizedString(30110)) # Previous page
-    xbmcplugin.addDirectoryItem(_handle, get_url(action=ref, url=url_prev, name=category), list_item, True)
-  """
 
   for t in videos:
     #LOG("t: {}".format(t))
@@ -231,6 +225,8 @@ def add_videos(category, ctype, videos, ref=None, url_next=None, url_prev=None, 
         menu_items.append((addon.getLocalizedString(30175), "RunPlugin(" + get_url(action='to_watchlist', slug=t['slug'], op='add') + ")"))
       else:
         menu_items.append((addon.getLocalizedString(30176), "RunPlugin(" + get_url(action='to_watchlist', slug=t['slug'], op='delete') + ")"))
+    if from_continue and t.get('info', []).get('mediatype') == 'movie':
+        menu_items.append((addon.getLocalizedString(30179), "RunPlugin(" + get_url(action='remove_from_continue', slug=t['slug']) + ")"))
 
     if t['type'] == 'movie':
       # If an episode is not in a episode listing, display the series name too
@@ -269,10 +265,6 @@ def add_videos(category, ctype, videos, ref=None, url_next=None, url_prev=None, 
       #list_item.setInfo('video', t['info'])
       #list_item.setArt(t['art'])
       xbmcplugin.addDirectoryItem(_handle, get_url(action='category', slug=t['slug'], name=title_name), list_item, True)
-
-  if url_next:
-    list_item = xbmcgui.ListItem(label = addon.getLocalizedString(30109)) # Next page
-    xbmcplugin.addDirectoryItem(_handle, get_url(action=ref, url=url_next, name=category), list_item, True)
 
   xbmcplugin.endOfDirectory(_handle, updateListing=updateListing, cacheToDisc=cacheToDisc)
 
@@ -393,6 +385,13 @@ def to_watchlist(params):
   else:
     show_notification(str(retcode) +': '+ message)
 
+def remove_from_continue(params):
+  info = sky.get_video_info(params['slug'])
+  LOG('remove_from_continue: info: {}'.format(info))
+  status_code = sky.set_bookmark(info['provider_variant_id'], info['bookmark_metadata'], info['info']['duration'])
+  LOG('status_code: {}'.format(status_code))
+  xbmc.executebuiltin("Container.Refresh")
+
 def list_devices(params):
   LOG('list_devices: params: {}'.format(params))
 
@@ -449,7 +448,7 @@ def router(paramstring):
     elif params['action'] == 'wishlist':
       add_videos(addon.getLocalizedString(30102), 'movies', sky.get_my_list(), from_watchlist=True)
     elif params['action'] == 'continue-watching':
-      add_videos(addon.getLocalizedString(30122), 'movies', sky.get_continue_watching(), cacheToDisc=False)
+      add_videos(addon.getLocalizedString(30122), 'movies', sky.get_continue_watching(), from_continue=True, cacheToDisc=False)
     elif params['action'] == 'category':
       add_videos(params['name'], 'movies', sky.get_catalog(params['slug']))
     elif params['action'] == 'movie_catalog':
@@ -468,6 +467,8 @@ def router(paramstring):
       add_videos(addon.getLocalizedString(30104), 'movies', sky.get_channels_with_epg())
     elif params['action'] == 'to_watchlist':
       to_watchlist(params)
+    elif params['action'] == 'remove_from_continue':
+      remove_from_continue(params)
     elif params['action'] == 'devices':
       list_devices(params)
   else:

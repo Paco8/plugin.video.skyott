@@ -299,6 +299,10 @@ msgctxt "#30178"
 msgid "Title removed from my list"
 msgstr "Título quitado de mi lista"
 
+msgctxt "#30179"
+msgid "Remove from continue watching"
+msgstr "Quitar de seguir viendo"
+
 msgctxt "#30180"
 msgid "Profiles"
 msgstr "Perfiles"
