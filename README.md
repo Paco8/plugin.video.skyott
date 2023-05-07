@@ -4,8 +4,6 @@
 
 # Peacock / Skyshowtime for Kodi
 
-**This addon is under development and not all may work correctly.**
-
 ## Important notes: ##
 -  Logging in by entering a username and password is not possible yet. For the moment it's necessary to get a cookie from a web browser. You'll find below some methods to do it.
 - Playback is only supported on Android devices (including firesticks) due to DRM restrictions.
@@ -40,12 +38,18 @@ If the above tools don't work for you, you can try to get it manually:
 ## Settings
 ### Main
 - **Streaming service**: Select PeacockTV or SkyShowtime.
+- **Subscription country**: two-letter code (such as `ES` `PT` `NL`) of the subscription country (optional).
 - **Preferred server**: Videos are hosted in different servers. You can choose the one which works better for you.
 - **Enable 4K**: Enables 4K content. Playback may not work on non 4K devices.
+- **Enable HDCP**: Users of Android devices with Widevine L3 may need to turn it off.
+- **Send video progress to provider's server**: the stream positions will be sent to the server so that you can resume playback in other applications.
+- **Update interval**: the time interval, in seconds, between video progress updates.
+- **Show only subscribed content**: Only titles included in your subscription will be displayed.
+- **Configure InputStream Adaptive**: Opens the settings of InputStream Adaptive.
+## Subtitles
 - **Improved subtitles**: Subtitles will be downloaded prior to playback and converted to the more customizable SSA/ASS format.
 - **Improved subtitles settings**: Opens a new configuration window that allows you to customize the appearance of subtitles.
 - **Use only for these languages**: Only the subtitles for the specified languages (two letter language codes, separated by spaces) will be downloaded. For example: `es en pl` will download subtitles in Spanish, English and Polish.
-- **Configure InputStream Adaptive**: Opens the settings of InputStream Adaptive.
 ### Proxy
 - **Manifest alteration**: Allows the addon to perform some changes in the manifest.
 - **Fix audio and subtitle language names**: Versions 18 and 19 of Kodi don't support language codes that include a country code (such as `es-ES`). As a workaround, this option removes the country code.

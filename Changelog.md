@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.5] - 2023-05-07
+- The subtitle options in the settings have been moved to a new section.
+- New option to set the interval to send the stream position to the server.
+
+## [0.3.4] - 2023-05-01
+- New option in settings: _Enable HDCP_. Android devices with Widevine L3 may need to turn it off.
+
 ## [0.3.3] - 2023-04-29
 - Add support for split subtitles.
 
