@@ -19,6 +19,7 @@ from .cache import Cache
 from .endpoints import Endpoints
 from .signature import Signature
 from .timeconv import timestamp2str
+from .user_agent import user_agent
 
 class SkyShowtime(object):
 
@@ -30,9 +31,9 @@ class SkyShowtime(object):
          'headers': {
            'x-skyott-activeterritory': 'ES',
            'x-skyott-client-version': '4.3.12',
-           'x-skyott-device': 'COMPUTER',
+           'x-skyott-device': 'MOBILE',
            'x-skyott-language': 'en-US',
-           'x-skyott-platform': 'PC',
+           'x-skyott-platform': 'ANDROID',
            'x-skyott-proposition': 'SKYSHOWTIME',
            'x-skyott-provider': 'SKYSHOWTIME',
            'x-skyott-territory': 'ES'
@@ -45,9 +46,9 @@ class SkyShowtime(object):
          'headers': {
            'x-skyott-activeterritory': 'US',
            'x-skyott-client-version': '4.3.12',
-           'x-skyott-device': 'COMPUTER',
+           'x-skyott-device': 'MOBILE',
            'x-skyott-language': 'en',
-           'x-skyott-platform': 'PC',
+           'x-skyott-platform': 'ANDROID',
            'x-skyott-proposition': 'NBCUOTT',
            'x-skyott-provider': 'NBCU',
            'x-skyott-territory': 'US'
@@ -76,7 +77,7 @@ class SkyShowtime(object):
       # Network
       default_headers = {
         'Accept': 'application/json, text/javascript, */*; q=0.01',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
+        'User-Agent': user_agent(platform),
       }
       self.net = Network()
       self.net.headers = default_headers
@@ -622,7 +623,7 @@ class SkyShowtime(object):
              }
           ],
           "maxVideoFormat": "HD",
-          "model": "PC",
+          "model": "Pixel",
           "hdcpEnabled": hdcpEnabled,
           "supportedColourSpaces": ["SDR"],
         },
@@ -669,7 +670,7 @@ class SkyShowtime(object):
             }
           ],
           "maxVideoFormat": "HD",
-          "model": "PC",
+          "model": "Pixel",
           "hdcpEnabled": hdcpEnabled
         },
         "client": {
@@ -711,6 +712,15 @@ class SkyShowtime(object):
       self.cache.save_json('search_result.json', data)
       return self.parse_catalog(data['data']['search']['results'])
 
+    def download_menu(self):
+      # MOBILE loads a different menu
+      headers = self.net.headers.copy()
+      headers['x-skyott-device'] = 'COMPUTER'
+      headers['x-skyott-platform'] = 'PC'
+      url = self.endpoints['menu']
+      data = self.net.load_data(url, headers=headers)
+      return data
+
     def get_main_menu(self):
       def find_item(term, items):
         for i in items:
@@ -724,8 +734,7 @@ class SkyShowtime(object):
       if content:
         data = json.loads(content)
       else:
-        url = self.endpoints['menu']
-        data = self.net.load_data(url)
+        data = self.download_menu()
         self.cache.save_json(cache_filename, data)
 
       res = []

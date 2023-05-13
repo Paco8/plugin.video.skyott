@@ -39,6 +39,7 @@ from .log import LOG
 from .addon import profile_dir, addon
 from .signature import Signature
 from .parsemanifest import extract_tracks
+from .user_agent import user_agent
 
 session = requests.Session()
 
@@ -138,15 +139,15 @@ class RequestHandler(BaseHTTPRequestHandler):
             url = params['url']
             LOG('url: {}'.format(url))
 
+            platform_id = addon.getSetting('platform_id').lower()
             headers = {
-              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
+              'User-Agent': user_agent(platform_id),
               'Accept': '*/*',
             }
 
             path="/" + url.split("://", 1)[1].split("/", 1)[1]
             LOG(path)
 
-            platform_id = addon.getSetting('platform_id').lower()
             sig = Signature(platform_id)
             sig_header = sig.calculate_signature('POST', path, {}, isa_data)
             headers.update(sig_header)
