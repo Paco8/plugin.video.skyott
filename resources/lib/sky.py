@@ -394,33 +394,33 @@ class SkyShowtime(object):
       headers = self.net.headers.copy()
       headers['content-type'] = 'application/x-www-form-urlencoded'
       headers['Accept'] = 'application/vnd.siren+json'
-      headers['Origin'] = 'https://www.peacocktv.com'
-      headers['Referer'] = 'https://www.peacocktv.com/'
-      #print_json(headers)
+      headers['user-agent'] = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'
+      del headers['x-skyott-device']
+      print_json(headers)
 
-      h = {}
-      headers.update(h)
-
-      post_data = 'userIdentifier=' + username +'&password=' + password
+      post_data = {'userIdentifier': username, 'password': password, 'rememberMe': True, 'isWeb': True}
+      #print(json.dumps(post_data))
       response = self.net.session.post(url, data=post_data, headers=headers)
-      print(response.content)
+      LOG('login response: {} retcode: {}'.format(response.content, response.status_code))
 
       cookie_dict = requests.utils.dict_from_cookiejar(response.cookies)
-      cookie_string = '; '.join([key + '=' + value for key, value in cookie_dict.iteritems()])
-      #print(cookie_string)
-      self.account['cookie'] = cookie_string
+      print_json(cookie_dict)
+      cookie_string = '; '.join([key + '=' + value for key, value in cookie_dict.items()])
+      LOG('cookie: {}'.format(cookie_string))
+      content = response.content.decode('utf-8')
 
-      data = json.loads(response.content)
-      #print_json(data)
-      if data.get('properties', []).get('eventType') == 'success':
-        device_id = data['properties']['data']['deviceid']
-        #self.account['device_id'] = device_id
-        self.account['cookie'] += '; deviceid=' + device_id
-        cookie_filename = self.pldir + '/cookie.conf'
-        self.cache.save_file(cookie_filename, self.account['cookie'])
-        return True, response.content
-
-      return False, response.content
+      try:
+        data = json.loads(content)
+        #print_json(data)
+        if data.get('properties', []).get('eventType') == 'success':
+          self.account['cookie'] = cookie_string
+          #device_id = data['properties']['data']['deviceid']
+          #self.account['cookie'] += '; deviceid=' + device_id
+          cookie_filename = self.pldir + '/cookie.conf'
+          self.cache.save_file(cookie_filename, self.account['cookie'])
+          return True, content
+      except:
+        return False, content
 
     def delete_cookie(self):
       cookie_filename = self.pldir + '/cookie.conf'

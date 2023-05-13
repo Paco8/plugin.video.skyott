@@ -367,7 +367,7 @@ def export_key():
 
 def list_users():
   open_folder(addon.getLocalizedString(30160)) # Change user
-  #add_menu_option(addon.getLocalizedString(30183), get_url(action='login', method='credentials')) # Login with username
+  add_menu_option(addon.getLocalizedString(30183), get_url(action='login', method='credentials')) # Login with username
   add_menu_option(addon.getLocalizedString(30181), get_url(action='login', method='key')) # Login with key
   add_menu_option(addon.getLocalizedString(30186), get_url(action='login', method='cookie')) # Login with cookie
   if sky.account['cookie']:
