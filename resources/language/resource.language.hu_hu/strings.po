@@ -282,6 +282,10 @@ msgctxt "#30167"
 msgid "Edit account"
 msgstr "Fiók szerkesztése"
 
+msgctxt "#30168"
+msgid "Login successful"
+msgstr ""
+
 # For Orange and Movistar only
 msgctxt "#30170"
 msgid "Play from the beginning"

@@ -263,6 +263,10 @@ msgctxt "#30167"
 msgid "Edit account"
 msgstr "Editar cuenta"
 
+msgctxt "#30168"
+msgid "Login successful"
+msgstr "Se ha iniciado sesión"
+
 msgctxt "#30170"
 msgid "Play from the beginning"
 msgstr "Ver desde el principio"

@@ -344,6 +344,7 @@ def login():
     success, _ = sky.login(username, password)
     if success:
       clear_session()
+      show_notification(addon.getLocalizedString(30168), xbmcgui.NOTIFICATION_INFO) # Success
     else:
       show_notification(addon.getLocalizedString(30166)) # Failed
 

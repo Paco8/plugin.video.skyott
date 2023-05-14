@@ -135,6 +135,9 @@ class SkyShowtime(object):
       #print_json(self.platform['headers'])
       #print_json(self.net.headers)
 
+      # From this point the cookie is needed
+      if not self.logged: return
+
       # Load profile
       content = self.cache.load_file(self.pldir + '/profile.json')
       if content:
@@ -402,25 +405,33 @@ class SkyShowtime(object):
       #print(json.dumps(post_data))
       response = self.net.session.post(url, data=post_data, headers=headers)
       LOG('login response: {} retcode: {}'.format(response.content, response.status_code))
+      LOG('login response headers:')
+      print_json(dict(response.headers))
 
       cookie_dict = requests.utils.dict_from_cookiejar(response.cookies)
+      LOG('login response cookies:')
       print_json(cookie_dict)
       cookie_string = '; '.join([key + '=' + value for key, value in cookie_dict.items()])
-      LOG('cookie: {}'.format(cookie_string))
+      #LOG('cookie: {}'.format(cookie_string))
       content = response.content.decode('utf-8')
 
       try:
         data = json.loads(content)
         #print_json(data)
         if data.get('properties', []).get('eventType') == 'success':
+          #if not 'device' in cookie_string:
+          #  device_id = data['properties']['data']['deviceid']
+          #  cookie_string += '; deviceid=' + device_id
+          #if not 'hterr' in cookie_string:
+          #  cookie_string += '; hterr=' + response.headers.get('x-geo-origin', '')
+          LOG('cookie: {}'.format(cookie_string))
           self.account['cookie'] = cookie_string
-          #device_id = data['properties']['data']['deviceid']
-          #self.account['cookie'] += '; deviceid=' + device_id
           cookie_filename = self.pldir + '/cookie.conf'
           self.cache.save_file(cookie_filename, self.account['cookie'])
           return True, content
       except:
-        return False, content
+        pass
+      return False, content
 
     def delete_cookie(self):
       cookie_filename = self.pldir + '/cookie.conf'
