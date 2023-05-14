@@ -284,7 +284,7 @@ msgstr "Edytuj konto"
 
 msgctxt "#30168"
 msgid "Login successful"
-msgstr ""
+msgstr "Logowanie zakończyło się sukcesem"
 
 # For Orange and Movistar only
 msgctxt "#30170"
