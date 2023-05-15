@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.10] - 2023-05-15
+- (Experimental) Finally log in with username and password is possible!
+
+## [0.3.8] - 2023-05-13
+- Android headers are used instead of PC's.
+
+## [0.3.6] - 2023-05-08
+- New context menu option to remove movies from the continue watching list.
+
 ## [0.3.5] - 2023-05-07
 - The subtitle options in the settings have been moved to a new section.
 - New option to set the interval to send the stream position to the server.
