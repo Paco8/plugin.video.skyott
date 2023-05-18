@@ -19,7 +19,7 @@ from .cache import Cache
 from .endpoints import Endpoints
 from .signature import Signature
 from .timeconv import timestamp2str
-from .user_agent import user_agent
+from .user_agent import user_agent, chrome_user_agent
 
 class SkyShowtime(object):
 
@@ -397,7 +397,7 @@ class SkyShowtime(object):
       headers = self.net.headers.copy()
       headers['content-type'] = 'application/x-www-form-urlencoded'
       headers['Accept'] = 'application/vnd.siren+json'
-      headers['user-agent'] = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'
+      headers['User-Agent'] = chrome_user_agent
       del headers['x-skyott-device']
       print_json(headers)
 
@@ -728,6 +728,8 @@ class SkyShowtime(object):
       headers = self.net.headers.copy()
       headers['x-skyott-device'] = 'COMPUTER'
       headers['x-skyott-platform'] = 'PC'
+      headers['User-Agent'] = chrome_user_agent
+      #print_json(headers)
       url = self.endpoints['menu']
       data = self.net.load_data(url, headers=headers)
       return data
