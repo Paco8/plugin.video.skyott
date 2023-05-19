@@ -5,7 +5,9 @@
 # Peacock / Skyshowtime for Kodi
 
 ## Important notes: ##
+<!--
 -  ~~Logging in by entering a username and password is not possible yet. For the moment it's necessary to get a cookie from a web browser. You'll find below some methods to do it~~.
+-->
 - Playback is only supported on Android devices (including firesticks) due to DRM restrictions.
 
 ## Installation
@@ -15,12 +17,14 @@ or better, you can install it from [this repository](https://github.com/Paco8/ko
 ## Select the streaming service
 Open the settings of the addon and select whether to use PeacockTV or SkyShowtime.
 
+<!--
 ## How to get the cookie ##
 This application for Android can extract automatically the cookie:
 https://github.com/Paco8/SkyExtractCookieAndroid
 <br>
 There's also a similar application for PC:
 https://github.com/Paco8/SkyExtractCookie
+-->
 <!--
 ## How to get the cookie manually
 If the above tools don't work for you, you can try to get it manually:
