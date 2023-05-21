@@ -8,7 +8,8 @@
 <!--
 -  ~~Logging in by entering a username and password is not possible yet. For the moment it's necessary to get a cookie from a web browser. You'll find below some methods to do it~~.
 -->
-- Playback is only supported on Android devices (including firesticks) due to DRM restrictions.
+- **Playback only works on Android devices** (including firesticks) due to DRM restrictions.
+- SkyShowtime subscribers must select SkyShowtime as the `Streaming service` in the addon settings.
 
 ## Installation
 You can download the package from the [Releases page](https://github.com/Paco8/plugin.video.skyott/releases)
