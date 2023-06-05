@@ -114,6 +114,7 @@ def play(params):
 
   if addon.getSettingBool('use_ttml2ssa') and slug:
     # Convert subtitles
+    import re
     from .parsemanifest import extract_tracks, download_split_subtitle
     from ttml2ssa import Ttml2SsaAddon
     ttml = Ttml2SsaAddon()
@@ -131,7 +132,9 @@ def play(params):
     subpaths = []
     tracks = extract_tracks(content)
     filter_list = addon.getSetting('ttml2ssa_filter').lower().split()
-    subtracks = [t for t in tracks['subs'] if len(filter_list) == 0 or t['lang'][:2] in filter_list]
+    subtracks = []
+    if len(filter_list) > 0:
+      subtracks = [t for t in tracks['subs'] if t['lang'][:2] in filter_list]
     for t in subtracks:
       filename = subfolder + t['lang'][:2]
       if t['value'] == 'caption': filename += ' [CC]'
@@ -142,6 +145,14 @@ def play(params):
         content = download_split_subtitle(baseurl, t['filename'], int(t['start_number']))
       else:
         content = sky.net.load_url(os.path.join(baseurl, t['filename']))
+
+      # Add <i> and </i> for italics
+      content = re.sub(r'<c\.[^>]*font-style_italic[^>]*>(.*?)<\/c>', r'<i>\1</i>', content, flags=re.DOTALL)
+      # Remove remaining <c> tags
+      content = re.sub(r'<c\.[^>]*>|<\/c>', '', content)
+      # Add spaces before and after <i> </i> if necessary
+      content = re.sub(r'(?<![.,;:!?\-\s])<i>', r' <i>', content)
+      content = re.sub(r'</i>(?![.,;:!?\-\s])', r'</i> ', content)
 
       #LOG(content.encode('utf-8'))
       ttml.parse_vtt_from_string(content)

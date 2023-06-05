@@ -140,8 +140,8 @@ msgstr "HDCP engedélyezése"
 
 # For SkyOTT only
 msgctxt "#30040"
-msgid "Use only for these languages (e.g.: es en pt):"
-msgstr "Csak ezekhez a nyelvekhez használja (pl.: es en pt):"
+msgid "Use for these languages (e.g.: es en pt):"
+msgstr ""
 
 # For SkyOTT only
 msgctxt "#30041"
@@ -464,3 +464,8 @@ msgstr "Értékelés: {}"
 msgctxt "#30321"
 msgid "Show age rating before playback"
 msgstr "Korhatár-besorolás megjelenítése lejátszás előtt"
+
+# For SkyOTT only
+#~ msgctxt "#30040"
+#~ msgid "Use only for these languages (e.g.: es en pt):"
+#~ msgstr "Csak ezekhez a nyelvekhez használja (pl.: es en pt):"

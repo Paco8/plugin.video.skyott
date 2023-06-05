@@ -140,8 +140,8 @@ msgstr "Włączenie HDCP"
 
 # For SkyOTT only
 msgctxt "#30040"
-msgid "Use only for these languages (e.g.: es en pt):"
-msgstr "Użycie tylko dla tych języków (np. es en pt):"
+msgid "Use for these languages (e.g.: es en pt):"
+msgstr ""
 
 # For SkyOTT only
 msgctxt "#30041"
@@ -464,3 +464,8 @@ msgstr "Ocena: {}"
 msgctxt "#30321"
 msgid "Show age rating before playback"
 msgstr "Pokaż ocenę wieku przed odtwarzaniem"
+
+# For SkyOTT only
+#~ msgctxt "#30040"
+#~ msgid "Use only for these languages (e.g.: es en pt):"
+#~ msgstr "Użycie tylko dla tych języków (np. es en pt):"

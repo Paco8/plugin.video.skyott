@@ -140,7 +140,7 @@ msgstr ""
 
 # For SkyOTT only
 msgctxt "#30040"
-msgid "Use only for these languages (e.g.: es en pt):"
+msgid "Use for these languages (e.g.: es en pt):"
 msgstr ""
 
 # For SkyOTT only
