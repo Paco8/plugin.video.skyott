@@ -141,7 +141,7 @@ msgstr "Włączenie HDCP"
 # For SkyOTT only
 msgctxt "#30040"
 msgid "Use for these languages (e.g.: es en pt):"
-msgstr ""
+msgstr "Użyj dla tych języków (np.: es en pt):"
 
 # For SkyOTT only
 msgctxt "#30041"
