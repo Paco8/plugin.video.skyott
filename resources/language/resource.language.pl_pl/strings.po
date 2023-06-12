@@ -467,7 +467,7 @@ msgstr "Pokaż ocenę wieku przed odtwarzaniem"
 
 msgctxt "#30400"
 msgid "{} days remaining"
-msgstr ""
+msgstr "Pozostało {} dni"
 
 # For SkyOTT only
 #~ msgctxt "#30040"
