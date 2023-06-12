@@ -151,7 +151,7 @@ def play(params):
       # Remove remaining <c> tags
       content = re.sub(r'<c\.[^>]*>|<\/c>', '', content)
       # Add spaces before and after <i> </i> if necessary
-      content = re.sub(r'(?<![.,;:!?\-\s])<i>', r' <i>', content)
+      content = re.sub(r'(?<![!¿?\-\s])<i>', r' <i>', content)
       content = re.sub(r'</i>(?![.,;:!?\-\s])', r'</i> ', content)
 
       #LOG(content.encode('utf-8'))
@@ -219,6 +219,14 @@ def add_videos(category, ctype, videos, from_watchlist=False, from_continue=Fals
     if t.get('subscribed', True) == False:
       if addon.getSettingBool('only_subscribed'): continue
       t['info']['title'] = '[COLOR gray]' + t['info']['title'] + '[/COLOR]'
+
+    if 'offer' in t:
+      ends = t['offer'].get('end', 0)
+      if ends > 0:
+        now = int(time.time()*1000)
+        n_days = int((ends - now) / (1000 * 60 * 60 * 24))
+        if (n_days <= 30):
+          t['info']['title'] += ' [COLOR red](' + addon.getLocalizedString(30400).format(n_days) + ')[/COLOR]'
 
     title_name = t['info']['title']
     if not 'type' in t: continue

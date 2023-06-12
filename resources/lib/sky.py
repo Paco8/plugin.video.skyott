@@ -237,6 +237,10 @@ class SkyShowtime(object):
         if 'contentSegments' in e:
           t['segments'] = e['contentSegments']
           t['subscribed'] = self.is_subscribed(t['segments'])
+        if 'formats' in e:
+          if 'HD' in e['formats']:
+            t['offer'] = {'start': e['formats']['HD'].get('availability', []).get('offerStartTs', 0),
+                          'end': e['formats']['HD'].get('availability', []).get('offerEndTs', 0) }
         if e['type'] == 'CATALOGUE/COLLECTION':
           t['type'] = 'category'
           res.append(t)
@@ -322,6 +326,10 @@ class SkyShowtime(object):
           elif 'SD' in att['formats']:
             t['content_id'] = att['formats']['SD']['contentId']
         t['provider_variant_id'] = att.get('providerVariantId')
+      if 'formats' in att:
+        if 'HD' in att['formats']:
+            t['offer'] = {'start': att['formats']['HD'].get('availability', []).get('offerStartTs', 0),
+                          'end': att['formats']['HD'].get('availability', []).get('offerEndTs', 0) }
       if 'programmeUuid' in att:
         t['uuid'] = att['programmeUuid']
       elif 'seriesUuid' in att:

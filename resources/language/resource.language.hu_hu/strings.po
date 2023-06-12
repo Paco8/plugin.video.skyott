@@ -465,6 +465,10 @@ msgctxt "#30321"
 msgid "Show age rating before playback"
 msgstr "Korhatár-besorolás megjelenítése lejátszás előtt"
 
+msgctxt "#30400"
+msgid "{} days remaining"
+msgstr ""
+
 # For SkyOTT only
 #~ msgctxt "#30040"
 #~ msgid "Use only for these languages (e.g.: es en pt):"
