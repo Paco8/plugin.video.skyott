@@ -468,3 +468,7 @@ msgstr ""
 msgctxt "#30400"
 msgid "{} days remaining"
 msgstr ""
+
+msgctxt "#30401"
+msgid "{} hours remaining"
+msgstr ""

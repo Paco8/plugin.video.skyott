@@ -224,9 +224,13 @@ def add_videos(category, ctype, videos, from_watchlist=False, from_continue=Fals
       ends = t['offer'].get('end', 0)
       if ends > 0:
         now = int(time.time()*1000)
-        n_days = int((ends - now) / (1000 * 60 * 60 * 24))
+        n_hours = int((ends - now) / (1000 * 60 * 60))
+        n_days = int(n_hours / 24)
         if (n_days <= 30):
-          t['info']['title'] += ' [COLOR red](' + addon.getLocalizedString(30400).format(n_days) + ')[/COLOR]'
+          if n_days < 1:
+            t['info']['title'] += ' [COLOR red](' + addon.getLocalizedString(30401).format(n_hours) + ')[/COLOR]'
+          else:
+            t['info']['title'] += ' [COLOR red](' + addon.getLocalizedString(30400).format(n_days) + ')[/COLOR]'
 
     title_name = t['info']['title']
     if not 'type' in t: continue

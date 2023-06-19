@@ -469,6 +469,10 @@ msgctxt "#30400"
 msgid "{} days remaining"
 msgstr "Pozostało {} dni"
 
+msgctxt "#30401"
+msgid "{} hours remaining"
+msgstr ""
+
 # For SkyOTT only
 #~ msgctxt "#30040"
 #~ msgid "Use only for these languages (e.g.: es en pt):"
