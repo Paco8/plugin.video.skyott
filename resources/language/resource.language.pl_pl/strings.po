@@ -471,7 +471,7 @@ msgstr "Pozostało {} dni"
 
 msgctxt "#30401"
 msgid "{} hours remaining"
-msgstr ""
+msgstr "Pozostało {} godzin"
 
 # For SkyOTT only
 #~ msgctxt "#30040"
