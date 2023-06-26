@@ -44,7 +44,8 @@ def extract_tracks(manifest):
         t['filename'] = m.group(1)
         t['start_number'] = m.group(2)
     if t['contentType'] in ['text', 'audio']:
-      new_lang = t['lang'][:2]
+      #new_lang = t['lang'][:2]
+      new_lang = re.sub(r'-[A-Z]{2}', '', t['lang'])
       if t['value'] == 'caption': new_lang += '-[CC]'
       if t['value'] == 'forced-subtitle': new_lang += '-[Forced]'
       t['new_lang'] = new_lang

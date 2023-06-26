@@ -4,6 +4,8 @@
         <setting id="territory" type="text" label="30041" default=""/>
         <setting id="preferred_server" type="labelenum" label="30032" values="Auto|Limelight|Cloudfront|Akamai|Level3|Fastly" default='Auto'/>
         <setting id="uhd" type="bool" label="30033" default="false"/>
+        <setting id="dolbyvision" type="bool" label="DolbyVision" default="false" visible="eq(-1,true)" subsetting="true"/>
+        <setting id="hdr10" type="bool" label="HDR10" default="false" visible="eq(-2,true)" subsetting="true"/>
         <setting id="hdcp_enabled" type="bool" label="30037" default="false"/>
         <setting id="send_progress" type="bool" label="30025" default="false"/>
         <setting id="progress_interval" type="number" label="30026" default="120" enable="eq(-1,true)" subsetting="true"/>

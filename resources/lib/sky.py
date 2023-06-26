@@ -621,7 +621,7 @@ class SkyShowtime(object):
         res['license_token'] = data['protection']['licenceToken']
       return res
 
-    def get_playback_info(self, content_id, provider_variant_id, preferred_server='', uhd=False, hdcpEnabled=False):
+    def get_playback_info(self, content_id, provider_variant_id, preferred_server='', uhd=False, hdcpEnabled=False, hdr10=False, dolbyvision=False):
       url = self.endpoints['playouts']
       post_data = {
         "device": {
@@ -662,7 +662,14 @@ class SkyShowtime(object):
           {"protection": "WIDEVINE", "container": "ISOBMFF", "transport": "DASH","acodec": "AAC", "vcodec": "H265"}
         )
         post_data['device']['maxVideoFormat'] = 'UHD'
-        post_data['device']['supportedColourSpaces'] = ["DolbyVision", "HDR10", "SDR"]
+
+        # Order is important
+        post_data['device']['supportedColourSpaces'] = []
+        if dolbyvision:
+          post_data['device']['supportedColourSpaces'].append('DolbyVision')
+        if hdr10:
+          post_data['device']['supportedColourSpaces'].append('HDR10')
+        post_data['device']['supportedColourSpaces'].append('SDR')
 
       #print_json(post_data)
       return self.request_playback_tokens(url, post_data, 'application/vnd.playvod.v1+json', preferred_server)
