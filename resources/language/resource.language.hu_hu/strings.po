@@ -148,6 +148,11 @@ msgctxt "#30041"
 msgid "Subscription country (two letter code):"
 msgstr "Előfizetés helye, ország (kétbetűs kód):"
 
+# For SkyOTT only
+msgctxt "#30050"
+msgid "Remember username and password"
+msgstr ""
+
 msgctxt "#30101"
 msgid "Menu"
 msgstr "Menü"
@@ -362,6 +367,18 @@ msgstr "Bejelentkezés cookie fájl-al"
 msgctxt "#30187"
 msgid "Select the cookie file"
 msgstr "Cookie fájl kiválasztása"
+
+msgctxt "#30190"
+msgid "Login to {} with a key file"
+msgstr ""
+
+msgctxt "#30191"
+msgid "Login to {} with username"
+msgstr ""
+
+msgctxt "#30192"
+msgid "Use a {} account"
+msgstr ""
 
 msgctxt "#30200"
 msgid "Error"

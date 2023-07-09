@@ -356,16 +356,24 @@ def logout():
   sky.delete_cookie()
 
 def login():
-  def ask_credentials(username=''):
+  def ask_credentials(username='', password=''):
     username = input_window(addon.getLocalizedString(30163), username) # Username
     if username:
-      password = input_window(addon.getLocalizedString(30164), hidden=True) # Password
+      password = input_window(addon.getLocalizedString(30164), password, hidden=True) # Password
       if password:
         return username, password
     return None, None
 
-  username, password = ask_credentials()
+  store_credentials = addon.getSettingBool('store_credentials')
+  if store_credentials:
+    username, password = sky.load_credentials()
+  else:
+    username, password = ('', '')
+
+  username, password = ask_credentials(username, password)
   if username:
+    if store_credentials:
+      sky.save_credentials(username, password)
     success, _ = sky.login(username, password)
     if success:
       clear_session()
@@ -392,13 +400,24 @@ def export_key():
     sky.export_key_file(directory)
 
 def list_users():
-  open_folder(addon.getLocalizedString(30160)) # Change user
-  add_menu_option(addon.getLocalizedString(30183), get_url(action='login', method='credentials')) # Login with username
-  add_menu_option(addon.getLocalizedString(30181), get_url(action='login', method='key')) # Login with key
-  add_menu_option(addon.getLocalizedString(30186), get_url(action='login', method='cookie')) # Login with cookie
+  platform_name = addon.getSetting('platform_id')
+  open_folder(addon.getLocalizedString(30160)) # Accounts
+  add_menu_option(addon.getLocalizedString(30191).format(platform_name), get_url(action='login', method='credentials')) # Login with username
+  add_menu_option(addon.getLocalizedString(30190).format(platform_name), get_url(action='login', method='key')) # Login with key
+  #add_menu_option(addon.getLocalizedString(30186), get_url(action='login', method='cookie')) # Login with cookie
   if sky.account['cookie']:
     add_menu_option(addon.getLocalizedString(30184), get_url(action='export_key')) # Export key
   add_menu_option(addon.getLocalizedString(30150), get_url(action='logout')) # Close session
+  close_folder()
+
+def list_platforms():
+  platforms = ['SkyShowtime', 'PeacockTV']
+  open_folder(addon.getLocalizedString(30160)) # Accounts
+  for platform in platforms:
+    name = addon.getLocalizedString(30192).format(platform)
+    if platform == addon.getSetting('platform_id'):
+      name = '[B][COLOR blue]' + name + '[/COLOR][/B]'
+    add_menu_option(name, get_url(action='select_platform', platform=platform))
   close_folder()
 
 def to_watchlist(params):
@@ -471,6 +490,11 @@ def router(paramstring):
       list_users()
     elif params['action'] == 'logout':
       logout()
+    elif params['action'] == 'platforms':
+      list_platforms()
+    elif params['action'] == 'select_platform':
+      addon.setSetting('platform_id', params['platform'])
+      list_users()
     elif params['action'] == 'wishlist':
       add_videos(addon.getLocalizedString(30102), 'movies', sky.get_my_list(), from_watchlist=True)
     elif params['action'] == 'continue-watching':
@@ -518,7 +542,8 @@ def router(paramstring):
       add_menu_option(addon.getLocalizedString(30180), get_url(action='profiles')) # Profiles
       #add_menu_option(addon.getLocalizedString(30108), get_url(action='devices')) # Devices
 
-    add_menu_option(addon.getLocalizedString(30160), get_url(action='user')) # Accounts
+    #add_menu_option(addon.getLocalizedString(30160), get_url(action='user')) # Accounts
+    add_menu_option(addon.getLocalizedString(30160), get_url(action='platforms')) # Accounts
     close_folder(cacheToDisc=False)
 
 

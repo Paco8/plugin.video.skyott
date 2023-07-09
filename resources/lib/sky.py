@@ -59,7 +59,7 @@ class SkyShowtime(object):
     account = {'username': None, 'password': None,
                'device_id': None,
                'profile_id': None, 'profile_type': None,
-               'my_segments': [],
+               'my_segments': [], 'account_type': [],
                'cookie': None, 'user_token': None}
     get_token_error = ''
 
@@ -188,6 +188,8 @@ class SkyShowtime(object):
           self.cache.save_json(me_filename, data)
         for s in data.get('segmentation', []).get('content', []):
           self.account['my_segments'].append(s['name'])
+        for s in data.get('segmentation', []).get('account', []):
+          self.account['account_type'].append(s['name'])
 
     def is_subscribed(self, segments):
       for s in self.account['my_segments']:
@@ -1005,3 +1007,18 @@ class SkyShowtime(object):
       files = ['device_id.conf', 'localisation.json', 'profile.json', 'profile_info.json', 'token.json', 'menu.json', 'me.json']
       for f in files:
         self.cache.remove_file(self.pldir +'/'+ f)
+
+    def save_credentials(self, username, password):
+      from .b64 import encode_base64
+      data = {'username': username, 'password': encode_base64(password)}
+      self.cache.save_json(self.pldir + '/credentials.json', data)
+
+    def load_credentials(self):
+      from .b64 import decode_base64
+      content = self.cache.load_file(self.pldir + '/credentials.json')
+      if content:
+        data = json.loads(content)
+        return data['username'], decode_base64(data['password'])
+      else:
+        return '', ''
+

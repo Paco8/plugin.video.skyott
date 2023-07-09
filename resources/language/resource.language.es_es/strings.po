@@ -132,6 +132,11 @@ msgctxt "#30041"
 msgid "Subscription country (two letter code):"
 msgstr "País de la suscripción (código de dos letras):"
 
+# For SkyOTT only
+msgctxt "#30050"
+msgid "Remember username and password"
+msgstr "Recordar usuario y clave"
+
 msgctxt "#30101"
 msgid "Menu"
 msgstr "Menú"
@@ -340,6 +345,18 @@ msgctxt "#30187"
 msgid "Select the cookie file"
 msgstr "Selecciona el fichero cookie"
 
+msgctxt "#30190"
+msgid "Login to {} with a key file"
+msgstr "Iniciar sesión en {} con fichero key"
+
+msgctxt "#30191"
+msgid "Login to {} with username"
+msgstr "Iniciar sesión en {} con nombre y clave"
+
+msgctxt "#30192"
+msgid "Use a {} account"
+msgstr "Usar una cuenta de {}"
+
 msgctxt "#30200"
 msgid "Error"
 msgstr "Error"
@@ -392,7 +409,7 @@ msgstr "Opciones de IPTV Manager"
 # For Orange and Movistar only
 msgctxt "#30304"
 msgid "IPTV"
-msgstr ""
+msgstr "IPTV"
 
 msgctxt "#30305"
 msgid "Export channels and EPG for IPTV automatically"
