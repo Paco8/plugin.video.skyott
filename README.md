@@ -2,21 +2,23 @@
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Paco8/plugin.video.skyott)
 ![GitHub all releases](https://img.shields.io/github/downloads/Paco8/plugin.video.skyott/total)
 
-# Peacock / Skyshowtime for Kodi
+# Skyshowtime addon for Kodi
 
-## Important notes: ##
+## Important note: ##
 <!--
 -  ~~Logging in by entering a username and password is not possible yet. For the moment it's necessary to get a cookie from a web browser. You'll find below some methods to do it~~.
 -->
 - **Playback only works on Android devices** (including firesticks) due to DRM restrictions.
-- SkyShowtime subscribers must select SkyShowtime as the `Streaming service` in the addon settings.
+<!-- - SkyShowtime subscribers must select SkyShowtime as the `Streaming service` in the addon settings. -->
 
 ## Installation
 You can download the package from the [Releases page](https://github.com/Paco8/plugin.video.skyott/releases)
 or better, you can install it from [this repository](https://github.com/Paco8/kodi-repo/raw/master/mini-repo/repository.addons.paco8/repository.addons.paco8-1.0.0.zip).
 
+<!--
 ## Select the streaming service
 Open the settings of the addon and select whether to use PeacockTV or SkyShowtime.
+-->
 
 <!--
 ## How to get the cookie ##
@@ -42,7 +44,8 @@ If the above tools don't work for you, you can try to get it manually:
 -->
 ## Settings
 ### Main
-- **Streaming service**: Select PeacockTV or SkyShowtime.
+<!-- - **Streaming service**: Select PeacockTV or SkyShowtime. -->
+- **Remember username and password**: if this option is enabled the addon will save your login credentials in the disk.
 - **Subscription country**: two-letter code (such as `ES` `PT` `NL`) of the subscription country (optional).
 - **Preferred server**: Videos are hosted in different servers. You can choose the one which works better for you.
 - **Enable 4K**: Enables 4K content. Playback may not work on non 4K devices.
