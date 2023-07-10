@@ -151,7 +151,7 @@ msgstr "Kraj subskrypcji (kod dwuliterowy):"
 # For SkyOTT only
 msgctxt "#30050"
 msgid "Remember username and password"
-msgstr ""
+msgstr "Zapamiętaj nazwę użytkownika i hasło"
 
 msgctxt "#30101"
 msgid "Menu"
@@ -370,15 +370,15 @@ msgstr "Wybierz plik cookie"
 
 msgctxt "#30190"
 msgid "Login to {} with a key file"
-msgstr ""
+msgstr "Logowanie do {} za pomocą pliku klucza"
 
 msgctxt "#30191"
 msgid "Login to {} with username"
-msgstr ""
+msgstr "Zaloguj się do {} nazwą użytkownika"
 
 msgctxt "#30192"
 msgid "Use a {} account"
-msgstr ""
+msgstr "Użyj konta {}"
 
 msgctxt "#30200"
 msgid "Error"
