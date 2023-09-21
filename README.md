@@ -65,4 +65,4 @@ If the above tools don't work for you, you can try to get it manually:
 - **Exclude AAC audio tracks**: The addon will remove any audio tracks in AAC format.
 
 ## Donation
-If you find this addon useful there's now the possibility to **[buy me a coffee](https://www.buymeacoffee.com/paco8.addons)**.
+If you find this addon useful there's now the possibility to **[buy me a coffee](https://www.buymeacoffee.com/addons)**.
