@@ -452,7 +452,7 @@ msgstr "Automatyczny eksport kanałów i EPG do IPTV"
 # For Orange and Movistar only
 msgctxt "#30306"
 msgid "Save channels and EPG to this folder"
-msgstr ""
+msgstr "Zapisz kanały i EPG w tym folderze"
 
 # For Orange and Movistar only
 msgctxt "#30307"
@@ -497,11 +497,11 @@ msgstr "Pozostało {} godzin"
 
 msgctxt "#30450"
 msgid "Buy the developer a coffee"
-msgstr ""
+msgstr "Kup kawę deweloperowi"
 
 msgctxt "#30451"
 msgid "If you find this addon useful you can buy the developer a coffee:"
-msgstr ""
+msgstr "Jeśli uważasz ten dodatek za przydatny, możesz kupić deweloperowi kawę:"
 
 # For Orange and Movistar only
 #~ msgctxt "#30306"
