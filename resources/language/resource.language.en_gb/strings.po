@@ -292,6 +292,11 @@ msgid "Login successful"
 msgstr ""
 
 # For Orange and Movistar only
+msgctxt "#30169"
+msgid "Record season"
+msgstr ""
+
+# For Orange and Movistar only
 msgctxt "#30170"
 msgid "Play from the beginning"
 msgstr ""
@@ -446,7 +451,7 @@ msgstr ""
 
 # For Orange and Movistar only
 msgctxt "#30306"
-msgid "Save to this folder (requires restart)"
+msgid "Save channels and EPG to this folder"
 msgstr ""
 
 # For Orange and Movistar only
@@ -488,4 +493,12 @@ msgstr ""
 
 msgctxt "#30401"
 msgid "{} hours remaining"
+msgstr ""
+
+msgctxt "#30450"
+msgid "Buy the developer a coffee"
+msgstr ""
+
+msgctxt "#30451"
+msgid "If you find this addon useful you can buy the developer a coffee:"
 msgstr ""

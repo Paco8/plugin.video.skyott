@@ -292,6 +292,11 @@ msgid "Login successful"
 msgstr ""
 
 # For Orange and Movistar only
+msgctxt "#30169"
+msgid "Record season"
+msgstr ""
+
+# For Orange and Movistar only
 msgctxt "#30170"
 msgid "Play from the beginning"
 msgstr "Lejátszás az elejéről"
@@ -446,8 +451,8 @@ msgstr "Csatornák és EPG automatikus exportálása IPTV-hez"
 
 # For Orange and Movistar only
 msgctxt "#30306"
-msgid "Save to this folder (requires restart)"
-msgstr "Mentés ebbe a mappába (újraindítás szükséges)"
+msgid "Save channels and EPG to this folder"
+msgstr ""
 
 # For Orange and Movistar only
 msgctxt "#30307"
@@ -489,6 +494,19 @@ msgstr ""
 msgctxt "#30401"
 msgid "{} hours remaining"
 msgstr ""
+
+msgctxt "#30450"
+msgid "Buy the developer a coffee"
+msgstr ""
+
+msgctxt "#30451"
+msgid "If you find this addon useful you can buy the developer a coffee:"
+msgstr ""
+
+# For Orange and Movistar only
+#~ msgctxt "#30306"
+#~ msgid "Save to this folder (requires restart)"
+#~ msgstr "Mentés ebbe a mappába (újraindítás szükséges)"
 
 # For SkyOTT only
 #~ msgctxt "#30040"

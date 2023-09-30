@@ -273,6 +273,11 @@ msgctxt "#30168"
 msgid "Login successful"
 msgstr "Se ha iniciado sesión"
 
+# For Orange and Movistar only
+msgctxt "#30169"
+msgid "Record season"
+msgstr "Grabar temporada"
+
 msgctxt "#30170"
 msgid "Play from the beginning"
 msgstr "Ver desde el principio"
@@ -416,8 +421,8 @@ msgid "Export channels and EPG for IPTV automatically"
 msgstr "Exportar automáticamente canales y guía para IPTV"
 
 msgctxt "#30306"
-msgid "Save to this folder (requires restart)"
-msgstr "Guardar en esta carpeta (requiere reinicio)"
+msgid "Save channels and EPG to this folder"
+msgstr "Guardar canales y EPG en esta carpeta"
 
 msgctxt "#30307"
 msgid "Install IPTV Simple add-on"
@@ -454,6 +459,14 @@ msgstr "quedan {} días"
 msgctxt "#30401"
 msgid "{} hours remaining"
 msgstr "quedan {} horas"
+
+msgctxt "#30450"
+msgid "Buy the developer a coffee"
+msgstr "Invita al programador a un café"
+
+msgctxt "#30451"
+msgid "If you find this addon useful you can buy the developer a coffee:"
+msgstr "Si este addon es útil para ti puedes invitar al programador a un café:"
 
 #~ msgctxt "#30040"
 #~ msgid "Use only for these languages (e.g.: es en pt):"
