@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: XBMC-Addons\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-28 16:47+0100\n"
-"PO-Revision-Date: 2023-05-05 HO:MI+ZONE\n"
+"PO-Revision-Date: 2023-10-29 HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE\n"
 "Language: hu\n"
@@ -141,7 +141,7 @@ msgstr "HDCP engedélyezése"
 # For SkyOTT only
 msgctxt "#30040"
 msgid "Use for these languages (e.g.: es en pt):"
-msgstr ""
+msgstr "Használd ezeket a nyelveket (pl.: en hu): "
 
 # For SkyOTT only
 msgctxt "#30041"
@@ -151,7 +151,7 @@ msgstr "Előfizetés helye, ország (kétbetűs kód):"
 # For SkyOTT only
 msgctxt "#30050"
 msgid "Remember username and password"
-msgstr ""
+msgstr "Jegyezd meg a felhasználót és a jelszót"
 
 msgctxt "#30101"
 msgid "Menu"
@@ -289,12 +289,12 @@ msgstr "Fiók szerkesztése"
 
 msgctxt "#30168"
 msgid "Login successful"
-msgstr ""
+msgstr "Bejelentkezés sikeres"
 
 # For Orange and Movistar only
 msgctxt "#30169"
 msgid "Record season"
-msgstr ""
+msgstr "Felvett évad"
 
 # For Orange and Movistar only
 msgctxt "#30170"
@@ -339,7 +339,7 @@ msgstr "Cím törölve a listámból"
 
 msgctxt "#30179"
 msgid "Remove from continue watching"
-msgstr ""
+msgstr "Folytatásból törlés"
 
 msgctxt "#30180"
 msgid "Profiles"
@@ -375,15 +375,15 @@ msgstr "Cookie fájl kiválasztása"
 
 msgctxt "#30190"
 msgid "Login to {} with a key file"
-msgstr ""
+msgstr "Bejelentkezés {} kulcs fájlal"
 
 msgctxt "#30191"
 msgid "Login to {} with username"
-msgstr ""
+msgstr "Bejelentkezés {} felhasználónévvel"
 
 msgctxt "#30192"
 msgid "Use a {} account"
-msgstr ""
+msgstr "Használd a {} fiókot"
 
 msgctxt "#30200"
 msgid "Error"
@@ -408,7 +408,7 @@ msgstr "Videó nem elérhető"
 # For SkyOTT only
 msgctxt "#30205"
 msgid "No playback URL"
-msgstr ""
+msgstr "Nincs lejátszható URL"
 
 msgctxt "#30206"
 msgid "Proxy is not running"
@@ -452,7 +452,7 @@ msgstr "Csatornák és EPG automatikus exportálása IPTV-hez"
 # For Orange and Movistar only
 msgctxt "#30306"
 msgid "Save channels and EPG to this folder"
-msgstr ""
+msgstr "Csatornák és EPG mentése ebbe a mappába"
 
 # For Orange and Movistar only
 msgctxt "#30307"
@@ -489,19 +489,19 @@ msgstr "Korhatár-besorolás megjelenítése lejátszás előtt"
 
 msgctxt "#30400"
 msgid "{} days remaining"
-msgstr ""
+msgstr "{} nap van hátra"
 
 msgctxt "#30401"
 msgid "{} hours remaining"
-msgstr ""
+msgstr "{} óra van hátra"
 
 msgctxt "#30450"
 msgid "Buy the developer a coffee"
-msgstr ""
+msgstr "Fizess egy kávét a fejlesztőnek"
 
 msgctxt "#30451"
 msgid "If you find this addon useful you can buy the developer a coffee:"
-msgstr ""
+msgstr "Ha hasznosnak találod ezt a kiegészítőt, fizess a fejlesztőnek egy kávét:"
 
 # For Orange and Movistar only
 #~ msgctxt "#30306"
