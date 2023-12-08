@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: XBMC-Addons\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-28 16:47+0100\n"
-"PO-Revision-Date: 2023-04-14 HO:MI+ZONE\n"
+"PO-Revision-Date: 2023-12-08 HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE\n"
 "Language: pl\n"
@@ -141,12 +141,12 @@ msgstr "Włączenie HDCP"
 # For SkyOTT only
 msgctxt "#30038"
 msgid "Include forced subtitles"
-msgstr ""
+msgstr "Uwzględnij wymuszone napisy"
 
 # For SkyOTT only
 msgctxt "#30039"
 msgid "Include non forced subtitles"
-msgstr ""
+msgstr "Uwzględnij niewymuszone napisy"
 
 # For SkyOTT only
 msgctxt "#30040"
