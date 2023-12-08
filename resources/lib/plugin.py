@@ -143,6 +143,12 @@ def play(params):
       elif t['value'] == 'forced-subtitle': filename += '.forced'
       LOG('filename: {}'.format(filename))
 
+      if not addon.getSettingBool('include_forced_subs') and '.forced' in filename:
+        continue
+
+      if not addon.getSettingBool('include_non_forced_subs') and not '.forced' in filename:
+        continue
+
       if t['split']:
         content = download_split_subtitle(baseurl, t['filename'], int(t['start_number']))
       else:

@@ -19,6 +19,8 @@
         <setting id="use_ttml2ssa" type="bool" label="$ADDON[script.module.ttml2ssa 32202]" default="false"/>
         <setting id="ssa_settings" type="action" label="$ADDON[script.module.ttml2ssa 32201]" option="close" action="Addon.OpenSettings(script.module.ttml2ssa)" enable="eq(-1,true)" subsetting="true"/>
         <setting id="ttml2ssa_filter" label="30040" type="text" default="" enable="eq(-2,true)" subsetting="true"/>
+        <setting label="30038" type="bool" id="include_forced_subs" default="true" enable="eq(-3,true)" subsetting="true"/>
+        <setting label="30039" type="bool" id="include_non_forced_subs" default="true" enable="eq(-4,true)" subsetting="true"/>
     </category>
     <category label="30002">
         <setting label="30011" type="bool" id="manifest_modification" default="true"/>
