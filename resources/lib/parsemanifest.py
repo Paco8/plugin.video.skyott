@@ -11,15 +11,20 @@ import requests
 from .log import LOG
 
 def download_split_subtitle(base_url, filename_template, start_number=0):
+  LOG('base_url: {}'.format(base_url))
+  LOG('filename: {}'.format(filename_template))
   session = requests.Session()
   filename_template = filename_template.replace('$Number$', '{}')
   i = start_number
   res = []
   while True:
-    url = os.path.join(base_url, filename_template.format(i))
+    if 'http' not in filename_template:
+      url = os.path.join(base_url, filename_template.format(i))
+    else:
+      url = filename_template.format(i)
     LOG('Downloading {}'.format(url))
     response = session.get(url)
-    if response.status_code == 404:
+    if response.status_code != 200:
         break
     res.append(response.content.decode('utf-8'))
     i += 1
@@ -31,18 +36,22 @@ def extract_tracks(manifest):
   tracks = {'audios': [], 'subs': []}
   for track in matches:
     t = {'orig': track}
-    for label in ['contentType', 'Label', 'lang', 'mimeType', 'value', 'codecs']:
+    for label in ['contentType', 'Label', 'lang', 'mimeType', 'value', 'codecs', 'startNumber', 'media']:
       m = re.search(r'{}="(.*?)"'.format(label), track, re.DOTALL)
       t[label] = m.group(1) if m else ''
     m = re.search(r'<BaseURL>(.*?)</BaseURL>', track, re.DOTALL)
     t['split'] = False
     t['filename'] = m.group(1) if m else ''
     if 'AdaptationSet' in track:
-      m = re.search(r'media="([^"]+)"\s+startNumber="([^"]+)"', track)
-      if m:
+      #m = re.search(r'media="([^"]+)"\s+startNumber="([^"]+)"', track)
+      #if m:
+      #  t['split'] = True
+      #  t['filename'] = m.group(1)
+      #  t['start_number'] = m.group(2)
+      if t['media'] and t['startNumber']:
+        t['filename'] = t['media']
+        t['start_number'] = t['startNumber']
         t['split'] = True
-        t['filename'] = m.group(1)
-        t['start_number'] = m.group(2)
     if t['contentType'] in ['text', 'audio']:
       #new_lang = t['lang'][:2]
       new_lang = re.sub(r'-[A-Z]{2}', '', t['lang'])
