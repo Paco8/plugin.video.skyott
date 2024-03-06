@@ -52,6 +52,8 @@ def extract_tracks(manifest):
         t['filename'] = t['media']
         t['start_number'] = t['startNumber']
         t['split'] = True
+        del t['media']
+        del t['startNumber']
     if t['contentType'] in ['text', 'audio']:
       #new_lang = t['lang'][:2]
       new_lang = re.sub(r'-[A-Z]{2}', '', t['lang'])

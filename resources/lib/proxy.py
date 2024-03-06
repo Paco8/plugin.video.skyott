@@ -43,6 +43,9 @@ from .user_agent import user_agent
 
 session = requests.Session()
 
+import xbmc
+kodi_version = int(xbmc.getInfoLabel('System.BuildVersion')[:2])
+
 def is_ascii(s):
   try:
     return s.isascii()
@@ -87,12 +90,14 @@ class RequestHandler(BaseHTTPRequestHandler):
                     if 'mp4a' in track['codecs']:
                       content = content.replace(track['orig'], '<!-- Deleted mp4a audio track {} -->\n'.format(track['lang']))
 
-                for track in tracks['subs']:
-                  if track['split']:
-                    # It seems this isn't supported by Kodi.
-                    # The track is removed, otherwise Kodi keeps turning off subtitles
-                    # and it doesn't even allow to use external subtitles.
-                    content = content.replace(track['orig'], '<!-- Deleted subtitle track {} -->\n'.format(track['lang']))
+                if kodi_version < 20:
+                  # Split subtitles are only supported in Kodi 21+.
+                  # The track is removed when using Kodi < 20,
+                  # otherwise Kodi keeps turning off subtitles
+                  # and it doesn't even allow to use external subtitles.
+                  for track in tracks['subs']:
+                    if track['split']:
+                      content = content.replace(track['orig'], '<!-- Deleted subtitle track {} -->\n'.format(track['lang']))
 
                 if addon.getSettingBool('fix_languages'):
                   for track_type in ('subs', 'audios'):
