@@ -407,8 +407,10 @@ class SkyShowtime(object):
       headers = self.net.headers.copy()
       headers['content-type'] = 'application/x-www-form-urlencoded'
       headers['Accept'] = 'application/vnd.siren+json'
-      headers['User-Agent'] = chrome_user_agent
-      del headers['x-skyott-device']
+      #headers['User-Agent'] = chrome_user_agent
+      #del headers['x-skyott-device']
+      del headers['x-skyott-platform']
+      headers['x-skyott-device'] = 'PC'
       print_json(headers)
 
       post_data = {'userIdentifier': username, 'password': password, 'rememberMe': True, 'isWeb': True}
