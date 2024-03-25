@@ -983,6 +983,8 @@ class SkyShowtime(object):
         data = json.load(f)
         output_dir = 'peacocktv' if 'peacocktv' in data['host'] else 'skyshowtime'
         self.cache.save_file(output_dir + '/cookie.conf', data['data'])
+        if 'device_id' in data:
+          self.cache.save_file(output_dir + '/device_id.conf', data['device_id'])
 
     def export_key_file(self, directory, filename=None):
       if not filename:
@@ -993,7 +995,8 @@ class SkyShowtime(object):
       path = directory + filename
       data = {'app_name': 'skyott', 'timestamp': str(int(time.time()*1000)),
               'host': 'https://www.' + self.platform['host'],
-              'data': self.account['cookie'].decode('utf-8')}
+              'data': self.account['cookie'].decode('utf-8'),
+              'device_id': self.platform['device_id']}
       #print_json(data)
       with io.open(path, 'w', encoding='utf-8') as f:
         f.write(json.dumps(data, ensure_ascii=False))

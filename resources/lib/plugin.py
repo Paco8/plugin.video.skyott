@@ -390,8 +390,8 @@ def login():
 def login_with_key():
   filename = xbmcgui.Dialog().browseSingle(1, addon.getLocalizedString(30182), '', '.key')
   if filename:
-    sky.import_key_file(filename)
     clear_session()
+    sky.import_key_file(filename)
 
 def login_with_cookie():
   filename = xbmcgui.Dialog().browseSingle(1, addon.getLocalizedString(30187), '', '.txt|.conf')
