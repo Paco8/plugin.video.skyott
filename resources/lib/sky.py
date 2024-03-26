@@ -572,8 +572,8 @@ class SkyShowtime(object):
             "personaId": self.account['profile_id']
         },
         "device": {
-           "type": "COMPUTER",
-           "platform": "PC",
+           "type": "MOBILE",
+           "platform": "ANDROID",
            "id": self.platform['device_id'],
            "drmDeviceId": "UNKNOWN"
         }
