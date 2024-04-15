@@ -1,4 +1,4 @@
-![Kodi version](https://img.shields.io/badge/kodi%20versions-18--19--20-blue)
+![Kodi version](https://img.shields.io/badge/kodi%20versions-18--19--20--21-blue)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Paco8/plugin.video.skyott)
 ![GitHub all releases](https://img.shields.io/github/downloads/Paco8/plugin.video.skyott/total)
 
