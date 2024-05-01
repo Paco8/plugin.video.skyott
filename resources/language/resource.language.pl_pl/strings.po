@@ -432,12 +432,12 @@ msgstr "Brak tokena użytkownika"
 # For Movistar only
 msgctxt "#30208"
 msgid "Session expired"
-msgstr ""
+msgstr "Sesja wygasła"
 
 # For SkyOTT only
 msgctxt "#30209"
 msgid "The subscription with ads is not supported yet"
-msgstr ""
+msgstr "Subskrypcja z reklamami nie jest jeszcze obsługiwana"
 
 # For Orange and Movistar only
 msgctxt "#30300"
@@ -502,17 +502,17 @@ msgstr "Eksportuj EPG i kanały"
 # For Movistar only
 msgctxt "#30313"
 msgid "The EPG export has finished."
-msgstr ""
+msgstr "Eksport EPG został zakończony."
 
 # For Movistar only
 msgctxt "#30314"
 msgid "Exporting {}"
-msgstr ""
+msgstr "Eksportowanie"
 
 # For Movistar only
 msgctxt "#30315"
 msgid "Number of days"
-msgstr ""
+msgstr "Liczba dni"
 
 msgctxt "#30320"
 msgid "Rating: {}"
