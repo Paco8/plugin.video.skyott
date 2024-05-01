@@ -434,6 +434,11 @@ msgctxt "#30208"
 msgid "Session expired"
 msgstr ""
 
+# For SkyOTT only
+msgctxt "#30209"
+msgid "The subscription with ads is not supported yet"
+msgstr ""
+
 # For Orange and Movistar only
 msgctxt "#30300"
 msgid "IPTV Manager"

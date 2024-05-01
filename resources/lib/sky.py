@@ -325,6 +325,8 @@ class SkyShowtime(object):
             t['content_id'] = att['formats']['HD']['contentId']
             if 'startOfCredits' in att['formats']['HD']:
               t['bookmark_metadata']['startOfCredits'] = att['formats']['HD']['startOfCredits']
+            if 'markers' in att['formats']['HD']:
+              t['markers'] = att['formats']['HD']['markers']
           elif 'SD' in att['formats']:
             t['content_id'] = att['formats']['SD']['contentId']
         t['provider_variant_id'] = att.get('providerVariantId')

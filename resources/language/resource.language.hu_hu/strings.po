@@ -429,6 +429,16 @@ msgctxt "#30207"
 msgid "No user token"
 msgstr "Nincs felhasználói token"
 
+# For Movistar only
+msgctxt "#30208"
+msgid "Session expired"
+msgstr ""
+
+# For SkyOTT only
+msgctxt "#30209"
+msgid "The subscription with ads is not supported yet"
+msgstr ""
+
 # For Orange and Movistar only
 msgctxt "#30300"
 msgid "IPTV Manager"
@@ -488,6 +498,21 @@ msgstr "EPG exportálása"
 msgctxt "#30312"
 msgid "Export channels and EPG now"
 msgstr "EPG és Csatornák exportálása"
+
+# For Movistar only
+msgctxt "#30313"
+msgid "The EPG export has finished."
+msgstr ""
+
+# For Movistar only
+msgctxt "#30314"
+msgid "Exporting {}"
+msgstr ""
+
+# For Movistar only
+msgctxt "#30315"
+msgid "Number of days"
+msgstr ""
 
 msgctxt "#30320"
 msgid "Rating: {}"

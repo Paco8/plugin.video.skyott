@@ -410,6 +410,11 @@ msgctxt "#30208"
 msgid "Session expired"
 msgstr "La sesión ha caducado"
 
+# For SkyOTT only
+msgctxt "#30209"
+msgid "The subscription with ads is not supported yet"
+msgstr "La subscripción con anuncios aún no está disponible en este addon"
+
 msgctxt "#30300"
 msgid "IPTV Manager"
 msgstr "IPTV Manager"
