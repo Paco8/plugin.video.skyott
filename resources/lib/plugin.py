@@ -27,6 +27,7 @@ from .log import LOG
 from .sky import *
 from .addon import *
 from .gui import *
+from .user_agent import chrome_user_agent
 
 # Get the plugin url in plugin:// notation.
 _url = sys.argv[0]
@@ -94,6 +95,7 @@ def play(params):
     url = '{}/?manifest={}'.format(proxy, url)
 
   #url = 'http://ftp.itec.aau.at/datasets/DASHDataset2014/BigBuckBunny/10sec/BigBuckBunny_10s_onDemand_2014_05_09.mpd'
+  #url = 'https://rdmedia.bbc.co.uk/bbb/2/client_manifest-common_init.mpd'
 
   play_item = xbmcgui.ListItem(path=url)
   play_item.setProperty('inputstream.adaptive.manifest_type', 'mpd')
@@ -102,7 +104,7 @@ def play(params):
     license_url = '{}/license?url={}||R{{SSM}}|'.format(proxy, quote_plus(data['license_url']))
     LOG('license_url: {}'.format(license_url))
     play_item.setProperty('inputstream.adaptive.license_key', license_url)
-  #play_item.setProperty('inputstream.adaptive.stream_headers', 'User-Agent=Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0')
+  play_item.setProperty('inputstream.adaptive.stream_headers', 'User-Agent=' + chrome_user_agent)
   #play_item.setProperty('inputstream.adaptive.server_certificate', certificate)
   #play_item.setProperty('inputstream.adaptive.license_flags', 'persistent_storage')
   #play_item.setProperty('inputstream.adaptive.license_flags', 'force_secure_decoder')
@@ -184,31 +186,54 @@ def play(params):
   play_item.setContentLookup(False)
   xbmcplugin.setResolvedUrl(_handle, True, listitem=play_item)
 
-  if addon.getSettingBool('send_progress') and slug:
+  # Control player
+  send_progress = addon.getSettingBool('send_progress')
+  skip_recap = addon.getSettingBool('skip_recap')
+  skip_intro = addon.getSettingBool('skip_intro')
+  LOG('markers: {}'.format(info.get('markers')))
+  if (send_progress or skip_recap or skip_intro) and slug:
     from .player import SkyPlayer
     player = SkyPlayer()
     monitor = xbmc.Monitor()
-    last_pos = 0
-    total_time = 0
-    start_time = time.time()
-    interval = addon.getSettingInt('progress_interval')
-    if interval < 20: interval = 20
-    LOG('progress_interval: {}'.format(interval))
+
+    def check_marker(l_start, l_end, last_pos):
+      if l_start in info['markers'] and l_end in info['markers']:
+        s_start = int(info['markers'][l_start] / 1000)
+        s_end = int(info['markers'][l_end] / 1000) - 2
+        #LOG('s_start: {} s_end: {}'.format(s_start, s_end))
+        if last_pos > s_start:
+          if s_end - s_start > 10:
+            player.seekTime(s_end)
+          del info['markers'][l_start]
+      return
+
+    if send_progress:
+      last_pos = 0
+      total_time = 0
+      start_time = time.time()
+      interval = addon.getSettingInt('progress_interval')
+      if interval < 20: interval = 20
+      LOG('progress_interval: {}'.format(interval))
     while not monitor.abortRequested() and player.running:
-      monitor.waitForAbort(10)
+      monitor.waitForAbort(2)
       if player.isPlaying():
         last_pos = player.getTime()
-        if total_time == 0: total_time = player.getTotalTime()
-        #LOG('**** position: {}'.format(last_pos))
-        if time.time() > (start_time + interval):
-          start_time = time.time()
-          LOG('**** {} {}'.format(info['provider_variant_id'], info['bookmark_metadata']))
-          sky.set_bookmark(info['provider_variant_id'], info['bookmark_metadata'], last_pos)
+        if send_progress:
+          if total_time == 0: total_time = player.getTotalTime()
+          #LOG('**** position: {}'.format(last_pos))
+          if time.time() > (start_time + interval):
+            start_time = time.time()
+            LOG('**** {} {}'.format(info['provider_variant_id'], info['bookmark_metadata']))
+            sky.set_bookmark(info['provider_variant_id'], info['bookmark_metadata'], last_pos)
+        if 'markers' in info:
+          if skip_recap: check_marker('SOR', 'EOR', last_pos)
+          if skip_intro: check_marker('SOI', 'EOI', last_pos)
     LOG('**** playback finished')
-    LOG('**** last_pos: {} total_time: {}'.format(last_pos, total_time))
-    if (total_time - last_pos) < 20: last_pos = total_time
-    if last_pos > interval:
-      sky.set_bookmark(info['provider_variant_id'], info['bookmark_metadata'], last_pos)
+    if send_progress:
+      LOG('**** last_pos: {} total_time: {}'.format(last_pos, total_time))
+      if (total_time - last_pos) < 20: last_pos = total_time
+      if last_pos > interval:
+        sky.set_bookmark(info['provider_variant_id'], info['bookmark_metadata'], last_pos)
 
 
 def add_videos(category, ctype, videos, from_watchlist=False, from_continue=False, updateListing=False, cacheToDisc=True):

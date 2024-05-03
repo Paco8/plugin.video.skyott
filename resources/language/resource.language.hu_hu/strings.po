@@ -33,6 +33,10 @@ msgctxt "#30004"
 msgid "Subtitles"
 msgstr "Feliratok"
 
+msgctxt "#30005"
+msgid "Playback"
+msgstr ""
+
 # For Orange and Movistar only
 msgctxt "#30010"
 msgid "DRM type"
@@ -102,6 +106,14 @@ msgstr "Nézett státus szinkonizálása a szerverrel"
 msgctxt "#30026"
 msgid "Update interval (in seconds)"
 msgstr "Frissítési időköz (másodperc)"
+
+msgctxt "#30027"
+msgid "Skip recaps"
+msgstr ""
+
+msgctxt "#30028"
+msgid "Skip intros"
+msgstr ""
 
 # For SkyOTT only
 msgctxt "#30031"
