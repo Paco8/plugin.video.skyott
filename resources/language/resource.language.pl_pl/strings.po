@@ -35,7 +35,7 @@ msgstr "Napisy"
 
 msgctxt "#30005"
 msgid "Playback"
-msgstr ""
+msgstr "Odtwarzanie"
 
 # For Orange and Movistar only
 msgctxt "#30010"
@@ -109,11 +109,11 @@ msgstr "Częstotliwość aktualizacji (w sekundach)"
 
 msgctxt "#30027"
 msgid "Skip recaps"
-msgstr ""
+msgstr "Pomiń podsumowania"
 
 msgctxt "#30028"
 msgid "Skip intros"
-msgstr ""
+msgstr "Pomiń wstępy"
 
 # For SkyOTT only
 msgctxt "#30031"
