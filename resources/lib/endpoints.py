@@ -42,4 +42,5 @@ class Endpoints(object):
       'get-bookmarks': ovp + '/bookmarking/bookmarks',
       'set-bookmark': ovp + '/bookmarking/bookmarks/{content_id}',
       'get-devices': cybertron +'/sessions/me/devices',
+      'get-public-profile': cybertron +'/public/profile',
     }

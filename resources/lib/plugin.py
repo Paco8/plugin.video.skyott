@@ -46,10 +46,10 @@ def play(params):
 
   LOG('play - slug: {} service_key: {}'.format(slug, service_key))
 
-  if sky.platform['name'] == 'SkyShowtime':
-    if 'NO_ADS' not in sky.account['account_type']:
-      show_notification(addon.getLocalizedString(30209))
-      return
+  #if sky.platform['name'] == 'SkyShowtime':
+  #  if 'NO_ADS' not in sky.account['account_type']:
+  #    show_notification(addon.getLocalizedString(30209))
+  #    return
 
   if slug:
     info = sky.get_video_info(slug)
@@ -91,6 +91,16 @@ def play(params):
     return
 
   url = data['manifest_url']
+  if 'NO_ADS' not in sky.account['account_type'] and slug:
+    try:
+      new_url = sky.get_manifest_with_ads(data)
+      if new_url:
+        url = new_url
+    except Exception as e:
+      LOG('Exception error: {}'.format(str(e)))
+      pass
+  LOG('playback url: {}'.format(url))
+
   if addon.getSettingBool('manifest_modification'):
     url = '{}/?manifest={}'.format(proxy, url)
 
@@ -190,8 +200,8 @@ def play(params):
   send_progress = addon.getSettingBool('send_progress')
   skip_recap = addon.getSettingBool('skip_recap')
   skip_intro = addon.getSettingBool('skip_intro')
-  LOG('markers: {}'.format(info.get('markers')))
   if (send_progress or skip_recap or skip_intro) and slug:
+    LOG('markers: {}'.format(info.get('markers')))
     from .player import SkyPlayer
     player = SkyPlayer()
     monitor = xbmc.Monitor()

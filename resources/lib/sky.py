@@ -158,6 +158,9 @@ class SkyShowtime(object):
          if 'persona' in data and 'displayLanguage' in data['persona']:
            self.platform['headers']['x-skyott-language'] = data['persona']['displayLanguage']
            self.net.headers.update(self.platform['headers'])
+         if 'persona' in data:
+           #print_json(data['persona'])
+           self.account['freewheel'] = data['persona']['obfuscatedIds']['freewheel']
 
       # Load user token
       token_filename = self.pldir + '/token.json'
@@ -599,12 +602,12 @@ class SkyShowtime(object):
       post_data = json.dumps(post_data)
       sig_header = self.sig.calculate_signature('POST', url, headers, post_data)
       headers.update(sig_header)
-      LOG(post_data)
+      #LOG(post_data)
       #print_json(headers)
 
       response = self.net.session.post(url, headers=headers, data=post_data)
       content = response.content.decode('utf-8')
-      LOG(content)
+      #LOG(content)
       data = json.loads(content)
       #print_json(data)
       #self.cache.save_json('playback.json', data)
@@ -612,11 +615,14 @@ class SkyShowtime(object):
       res = {'response': data}
       if 'asset' in data:
         manifest_url = None
+        cdn = ''
         for i in data['asset']['endpoints']:
           if not manifest_url:
             manifest_url = i['url']
+            cdn = i['cdn']
           if i['cdn'].lower() == preferred_server.lower():
             manifest_url = i['url']
+            cdn = i['cdn']
             break
         if manifest_url and self.platform['name'] == 'SkyShowtime':
           manifest_url += '&audio=all&subtitle=all&forcedNarrative=true&trickplay=true'
@@ -624,6 +630,7 @@ class SkyShowtime(object):
       if 'protection' in data:
         res['license_url'] = data['protection']['licenceAcquisitionUrl']
         res['license_token'] = data['protection']['licenceToken']
+        res['cdn'] = cdn
       return res
 
     def get_playback_info(self, content_id, provider_variant_id, preferred_server='', uhd=False, hdcpEnabled=False, hdr10=False, dolbyvision=False):
@@ -876,6 +883,15 @@ class SkyShowtime(object):
           res.append(dev)
       return res
 
+    def get_public_profile(self):
+      url = self.endpoints['get-public-profile']
+      headers = self.net.headers.copy()
+      headers['Accept'] = 'application/vnd.aggregator.v3+json'
+      headers['cookie'] = self.account['cookie']
+      headers['Content-Type'] = 'application/vnd.aggregator.v3+json'
+      data = self.net.load_data(url, headers)
+      return data
+
     def download_epg(self):
       cache_filename = 'cache/epg.json'
       content = self.cache.load(cache_filename, 60)
@@ -1028,3 +1044,17 @@ class SkyShowtime(object):
       else:
         return '', ''
 
+    def get_manifest_with_ads(self, playback_info):
+      from .ads import get_fw_data, get_ad_url
+      data = self.get_public_profile()
+      profile_id = data['profile']['id']['obfuscatedids']['adobe_analytics']['profileid']
+      fw_data = get_fw_data(profile_id, playback_info, self.account,
+                            self.platform['headers']['x-skyott-territory'], self.net.headers,
+                            self.platform['name'])
+      #print_json(fw_data)
+      data = get_ad_url(playback_info['manifest_url'], fw_data, self.net.headers, self.platform['name'])
+      #print_json(data)
+      if 'manifestUrl' in data:
+        return data['manifestUrl'] #, data['trackingUrl']
+      else:
+        return None #, None
