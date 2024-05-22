@@ -76,7 +76,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 LOG('baseurl: {}'.format(baseurl))
                 content = response.content.decode('utf-8')
                 pos = content.find('<Period')
-                if not '<BaseURL>' in content and pos > -1:
+                if pos > -1 and not re.search(r'</BaseURL>\s*<Period', content):
                   content = content[:pos] + '<BaseURL>' + baseurl + '/</BaseURL>' + content[pos:]
 
                 tracks = extract_tracks(content)
