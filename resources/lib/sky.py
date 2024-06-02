@@ -624,7 +624,7 @@ class SkyShowtime(object):
             manifest_url = i['url']
             cdn = i['cdn']
             break
-        if manifest_url and self.platform['name'] == 'SkyShowtime':
+        if manifest_url: # and self.platform['name'] == 'SkyShowtime':
           manifest_url += '&audio=all&subtitle=all&forcedNarrative=true&trickplay=true'
         res['manifest_url'] = manifest_url
       if 'protection' in data:

@@ -12,7 +12,7 @@ from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
 def get_fw_data(profile_id, playback_info, account, territory, headers, platform):
   freewheel = playback_info['response']['thirdParties']['FREEWHEEL']
   if 'durationMs' in playback_info['response']:
-    duration = str(playback_info['response']['durationMs'] / 1000)
+    duration = str(int(playback_info['response']['durationMs'] / 1000))
   else:
     duration = "600"
 
@@ -75,6 +75,8 @@ def get_fw_data(profile_id, playback_info, account, territory, headers, platform
   #print(json.dumps(headers, indent=4))
 
   response = requests.get(url, params=query, headers=headers)
+  #print(response.url)
+  #print(response.text)
   data = json.loads(response.text)
   return data
 

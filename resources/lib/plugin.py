@@ -91,7 +91,8 @@ def play(params):
     return
 
   url = data['manifest_url']
-  if 'NO_ADS' not in sky.account['account_type'] and slug:
+  #if 'NO_ADS' not in sky.account['account_type'] and slug:
+  if addon.getSettingBool('ads') and slug:
     try:
       new_url = sky.get_manifest_with_ads(data)
       if new_url:
@@ -107,15 +108,33 @@ def play(params):
   #url = 'http://ftp.itec.aau.at/datasets/DASHDataset2014/BigBuckBunny/10sec/BigBuckBunny_10s_onDemand_2014_05_09.mpd'
   #url = 'https://rdmedia.bbc.co.uk/bbb/2/client_manifest-common_init.mpd'
 
+  certificate = (
+    'Cr4CCAMSEN41PnjoV2GYRkwx+pafn3AYkt/ygAYijgIwggEKAoIBAQDU59zNRn0kxM00V4uLWYqN'
+    '47dMLA9i3GDotI+yEJPQ76khlvFPlfevr3n0I9/M4Oiy2ub97y4MGkiB37Btgz5cvKQbVc7iJBlS'
+    'LmZ58R8Pebkj6uG/RLtXN+zs/UQn7vDDqKcc2qDKiZO9pkiAK5RhZHCXvIzW4gGGO2HPSCNduSrM'
+    '5mDEOWs3L46u1lmf1lOda/T46PiNE5e4OPzcncf8opRyvN2kw34IY6R20fwtQRTnkDdj7gyqOcVt'
+    'YfUQ5NNdqhg84OH72y12a0vi1qqrLv/6Frp9HLbqIdHM7zKUmrsrVSlUjjdlrg/YF3lTRy6kn/Jb'
+    'jdVZOrganZqecK9nAgMBAAE6DXBlYWNvY2t0di5jb21AAUgBEoADCbIGMPBYtiPuHYg4WPCVgJIt'
+    'KgsrIiwO9/GX+0dpYbaRSiq+2rNcybsl0juP+jRGantYOsylf0j2BYFHVEnVkb9mfsW36YlHYBsH'
+    'GTNt6IsK7GeV6BiPc0S2s2ll9N8ofU3cqRTzPvGojs5LoQ1HWO9tDrgYLohwFG+2BIimJERdbkSy'
+    'nR0NoTZjeBIzTVW8tdDQ+yPZqUtWu3SpDBeksvcDmrTCvQZMZNb3aSh2Q1bKA8/DV7UGMMBtJvjs'
+    '5hn2tVNJ+7n6oW878y9ThzqtpMvGnsS8iMit5e/Wzku0KwgHNwjfsNtVCJo1fLsmE9wAs7SOY1ql'
+    'UtnCD37Bh0e7v1HYzhwAqLvorqzpRGB7sy97XEzhDllFnUuM57kaS6aPAy04Il35DQKYWWt/FeAp'
+    '/hw8CTCX0hhNaWOMp38Tiuj+mSsUmwkq/71R9VsY0EN+k+BDXpaJHIJO9Dk+mm08P0ILWT7/sMJy'
+    '225r81jyLmvsth4Kw47T4NqkJlP0/Tvs')
+
   play_item = xbmcgui.ListItem(path=url)
   play_item.setProperty('inputstream.adaptive.manifest_type', 'mpd')
   play_item.setProperty('inputstream.adaptive.license_type', 'com.widevine.alpha')
   if 'license_url' in data:
-    license_url = '{}/license?url={}||R{{SSM}}|'.format(proxy, quote_plus(data['license_url']))
+    extra_params = ''
+    if slug:
+      extra_params = '&content_id={}&provider_variant_id={}'.format(info['content_id'], info['provider_variant_id'])
+    license_url = '{}/license?url={}{}||R{{SSM}}|'.format(proxy, quote_plus(data['license_url']), extra_params)
     LOG('license_url: {}'.format(license_url))
     play_item.setProperty('inputstream.adaptive.license_key', license_url)
   play_item.setProperty('inputstream.adaptive.stream_headers', 'User-Agent=' + chrome_user_agent)
-  #play_item.setProperty('inputstream.adaptive.server_certificate', certificate)
+  play_item.setProperty('inputstream.adaptive.server_certificate', certificate)
   #play_item.setProperty('inputstream.adaptive.license_flags', 'persistent_storage')
   #play_item.setProperty('inputstream.adaptive.license_flags', 'force_secure_decoder')
 

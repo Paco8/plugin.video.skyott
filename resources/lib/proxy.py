@@ -33,6 +33,7 @@ import threading
 import socket
 from contextlib import closing
 import xbmcaddon
+import time
 
 from .b64 import encode_base64
 from .log import LOG
@@ -42,6 +43,8 @@ from .parsemanifest import extract_tracks
 from .user_agent import user_agent
 
 session = requests.Session()
+sky = None
+previous_licenses = {}
 
 import xbmc
 kodi_version = int(xbmc.getInfoLabel('System.BuildVersion')[:2])
@@ -110,11 +113,12 @@ class RequestHandler(BaseHTTPRequestHandler):
                 #self.send_header('Content-type', 'text/plain')
                 self.end_headers()
                 self.wfile.write(content.encode('utf-8'))
-            except Exception:
+            except Exception as e:
                 # Redirect
                 self.send_response(301)
                 self.send_header('Location', url)
                 self.end_headers()
+                LOG('Exception error: {}'.format(str(e)))
         else:
             self.send_response(404)
             self.end_headers()
@@ -129,6 +133,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
             return
         try:
+            global previous_licenses, sky
             pos = path.find('?')
             path = path[pos+1:]
             params = dict(parse_qsl(path))
@@ -149,6 +154,30 @@ class RequestHandler(BaseHTTPRequestHandler):
               'User-Agent': user_agent(platform_id),
               'Accept': '*/*',
             }
+
+            if 'content_id' in params and 'provider_variant_id' in params:
+              if not url in previous_licenses:
+                previous_licenses[url] = {'url': url, 'time': time.time()}
+              else:
+                if (time.time() - previous_licenses[url]['time'] <= 60):
+                  url = previous_licenses[url]['url']
+                else:
+                  LOG('reused license url, requesting another one')
+                  if sky == None:
+                    from .sky import SkyShowtime
+                    territory = addon.getSetting('territory').upper()
+                    sky = SkyShowtime(profile_dir, platform_id, territory)
+                  preferred_server = addon.getSetting('preferred_server')
+                  enable_uhd = addon.getSettingBool('uhd')
+                  dolbyvision = addon.getSettingBool('dolbyvision')
+                  hdr10 = addon.getSettingBool('hdr10')
+                  enable_hdcp = bool(addon.getSettingBool('hdcp_enabled'))
+                  data = sky.get_playback_info(params['content_id'], params['provider_variant_id'], preferred_server, uhd=enable_uhd, hdcpEnabled=enable_hdcp, dolbyvision=dolbyvision, hdr10=hdr10)
+                  #LOG('playback info: {}'.format(data))
+                  previous_licenses[url]['url'] = data['license_url']
+                  previous_licenses[url]['time'] = time.time()
+                  url = data['license_url']
+              #LOG('previous_licenses: {}'.format(previous_licenses))
 
             path="/" + url.split("://", 1)[1].split("/", 1)[1]
             LOG(path)
