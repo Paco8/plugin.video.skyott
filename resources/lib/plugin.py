@@ -100,6 +100,7 @@ def play(params):
     except Exception as e:
       LOG('Exception error: {}'.format(str(e)))
       pass
+  manifest_url = url
   LOG('playback url: {}'.format(url))
 
   if addon.getSettingBool('manifest_modification'):
@@ -162,10 +163,13 @@ def play(params):
     if not os.path.exists(subfolder):
       os.makedirs(subfolder)
 
-    response = sky.net.session.get(data['manifest_url'], allow_redirects=True)
+    response = sky.net.session.get(manifest_url, allow_redirects=True)
     content = response.content.decode('utf-8')
     #LOG(content)
     baseurl = os.path.dirname(response.url)
+    match = re.search(r'<BaseURL>(.*?)<\/BaseURL>\s*<Period', content)
+    if match:
+      baseurl = match.group(1)
 
     subpaths = []
     tracks = extract_tracks(content)
@@ -178,6 +182,7 @@ def play(params):
       if t['value'] == 'caption': filename += ' [CC]'
       elif t['value'] == 'forced-subtitle': filename += '.forced'
       LOG('filename: {}'.format(filename))
+      LOG('period_start: {}'.format(t['period_start']))
 
       if not addon.getSettingBool('include_forced_subs') and '.forced' in filename:
         continue
@@ -199,6 +204,8 @@ def play(params):
       content = re.sub(r'</i>(?![.,;:!?\-\s])', r'</i> ', content)
 
       #LOG(content.encode('utf-8'))
+
+      ttml.shift = t['period_start'] * 1000
       ttml.parse_vtt_from_string(content)
       if subtype != 'srt':
         filename_ssa = filename + '.ssa'
