@@ -43,7 +43,6 @@ from .parsemanifest import extract_tracks
 from .user_agent import user_agent
 
 session = requests.Session()
-sky = None
 previous_licenses = {}
 
 import xbmc
@@ -78,6 +77,10 @@ class RequestHandler(BaseHTTPRequestHandler):
                 baseurl = os.path.dirname(response.url)
                 LOG('baseurl: {}'.format(baseurl))
                 content = response.content.decode('utf-8')
+
+                #with open(profile_dir + '/manifest_orig.mpd', 'w') as f:
+                #  f.write(content)
+
                 pos = content.find('<Period')
                 if pos > -1 and not re.search(r'</BaseURL>\s*<Period', content):
                   content = content[:pos] + '<BaseURL>' + baseurl + '/</BaseURL>' + content[pos:]
@@ -107,6 +110,10 @@ class RequestHandler(BaseHTTPRequestHandler):
                     for track in tracks[track_type]:
                       content = content.replace(track['orig'], track['mod'])
 
+                if True:
+                  pattern = r'(mimeType="text/vtt".*?)presentationTimeOffset="\d+"'
+                  content = re.sub(pattern, r'\1', content, flags=re.DOTALL)
+
                 #LOG('content: {}'.format(content))
                 self.send_response(200)
                 self.send_header('Content-type', 'application/xml')
@@ -133,7 +140,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
             return
         try:
-            global previous_licenses, sky
+            global previous_licenses
             pos = path.find('?')
             path = path[pos+1:]
             params = dict(parse_qsl(path))
@@ -163,10 +170,9 @@ class RequestHandler(BaseHTTPRequestHandler):
                   url = previous_licenses[url]['url']
                 else:
                   LOG('reused license url, requesting another one')
-                  if sky == None:
-                    from .sky import SkyShowtime
-                    territory = addon.getSetting('territory').upper()
-                    sky = SkyShowtime(profile_dir, platform_id, territory)
+                  from .sky import SkyShowtime
+                  territory = addon.getSetting('territory').upper()
+                  sky = SkyShowtime(profile_dir, platform_id, territory)
                   preferred_server = addon.getSetting('preferred_server')
                   enable_uhd = addon.getSettingBool('uhd')
                   dolbyvision = addon.getSettingBool('dolbyvision')

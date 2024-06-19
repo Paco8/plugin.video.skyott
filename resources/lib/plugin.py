@@ -614,8 +614,9 @@ def router(paramstring):
       add_menu_option(addon.getLocalizedString(30180), get_url(action='profiles'), icon='profiles.png') # Profiles
       #add_menu_option(addon.getLocalizedString(30108), get_url(action='devices')) # Devices
 
-    #add_menu_option(addon.getLocalizedString(30160), get_url(action='user')) # Accounts
+    #add_menu_option(addon.getLocalizedString(30160), get_url(action='user')) # User
     add_menu_option(addon.getLocalizedString(30160), get_url(action='platforms'), icon='account.png') # Accounts
+    add_menu_option(addon.getLocalizedString(30450), get_url(action='show_donation_dialog'), icon='qr.png') # Donation
     close_folder(cacheToDisc=False)
 
 

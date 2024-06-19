@@ -53,6 +53,9 @@ def extract_tracks(manifest):
       period_start_match = re.search(r'start="(.*?)"', period, re.DOTALL)
       period_start = period_start_match.group(1) if period_start_match else ''
 
+      base_url_match = re.search(r'<BaseURL>(.*?)</BaseURL>\s*(?=<AdaptationSet)', period, re.DOTALL)
+      base_url = base_url_match.group(1) if base_url_match else ''
+
       adaptation_set_pattern = re.compile(r'<AdaptationSet.*?</AdaptationSet>', re.DOTALL)
       matches = re.findall(adaptation_set_pattern, period)
 
@@ -79,6 +82,7 @@ def extract_tracks(manifest):
           t['mod'] = track.replace('lang="{}"'.format(t['lang']), 'lang="{}"'.format(new_lang))
         if t['contentType'] == 'text':
           t['period_start'] = parse_duration(period_start)
+          t['base_url'] = base_url
           tracks['subs'].append(t)
         elif t['contentType'] == 'audio':
           tracks['audios'].append(t)

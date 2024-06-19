@@ -11,8 +11,10 @@
         <setting id="only_subscribed" type="bool" label="30017" default="false"/>
         <setting id="ads" type="bool" label="Commercial breaks" default="false"/>
         <setting label="30019" type="action" id="is_settings" action="Addon.OpenSettings(inputstream.adaptive)" enable="System.HasAddon(inputstream.adaptive)" option="close"/>
+        <!--
         <setting type="sep"/>
         <setting label="30450" type="action" id="donation" action="RunPlugin(plugin://plugin.video.skyott?action=show_donation_dialog)" option="close"/>
+        -->
     </category>
     <category label="30005">
         <setting id="send_progress" type="bool" label="30025" default="false"/>
