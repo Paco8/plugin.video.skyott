@@ -799,7 +799,14 @@ class SkyShowtime(object):
               icon = rel['images']['data'][0]['attributes']['url']
             except:
               icon = None
-            t = {'id': att['alias'], 'title': att['title'], 'slug': att['uri'].replace('/watch',''), 'icon': icon}
+
+            if 'uri' in att:
+              slug = att['uri'].replace('/watch','')
+            else:
+              slug = i['relationships']['items']['data'][0]['attributes']['slug']
+            t = {'id': att['alias'], 'title': att['title'], 'slug': slug, 'icon': icon}
+
+
             res.append(t)
       return res
 
