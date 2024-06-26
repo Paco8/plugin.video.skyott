@@ -46,11 +46,6 @@ def play(params):
 
   LOG('play - slug: {} service_key: {}'.format(slug, service_key))
 
-  #if sky.platform['name'] == 'SkyShowtime':
-  #  if 'NO_ADS' not in sky.account['account_type']:
-  #    show_notification(addon.getLocalizedString(30209))
-  #    return
-
   if slug:
     info = sky.get_video_info(slug)
     LOG('video info: {}'.format(info))
@@ -91,8 +86,8 @@ def play(params):
     return
 
   url = data['manifest_url']
-  #if 'NO_ADS' not in sky.account['account_type'] and slug:
-  if addon.getSettingBool('ads') and slug:
+  if 'NO_ADS' not in sky.account['account_type'] and slug:
+  #if addon.getSettingBool('ads') and slug:
     try:
       new_url = sky.get_manifest_with_ads(data)
       if new_url:

@@ -114,6 +114,11 @@ class RequestHandler(BaseHTTPRequestHandler):
                   pattern = r'(mimeType="text/vtt".*?)presentationTimeOffset="\d+"'
                   content = re.sub(pattern, r'\1', content, flags=re.DOTALL)
 
+                if addon.getSetting('platform_id') == 'PeacockTV': # and addon.getSettingBool('ads'):
+                   # Due to Kodi bugs, ads are moved to the beginning of the video
+                   from .mpd import move_unprotected_periods
+                   content = move_unprotected_periods(content)
+
                 #LOG('content: {}'.format(content))
                 self.send_response(200)
                 self.send_header('Content-type', 'application/xml')
