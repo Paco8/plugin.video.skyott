@@ -7,7 +7,13 @@ from __future__ import unicode_literals, absolute_import, division
 
 import json
 import requests
-from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
+try:
+    # Python 3
+    from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
+except ImportError:
+    # Python 2
+    from urlparse import urlparse, urlunparse, parse_qs
+    from urllib import urlencode
 
 def get_fw_data(profile_id, playback_info, account, territory, headers, platform):
   freewheel = playback_info['response']['thirdParties']['FREEWHEEL']
@@ -91,6 +97,9 @@ def get_ad_url(video_url, fw_data, headers, platform):
     url = parsed_url.scheme + '://mt.ssai.peacocktv.com' + parsed_url.path
   #print(url)
 
+  ads_params = fw_data['globalParameters'].copy()
+  ads_params.update(fw_data['keyValues'])
+
   post_data = {
     "reportingMode":"client",
     "availSuppression":{
@@ -100,7 +109,7 @@ def get_ad_url(video_url, fw_data, headers, platform):
     "playerParams":{
       "origin_domain": original_host
     },
-    "adsParams": {**fw_data['globalParameters'], **fw_data['keyValues']}
+    "adsParams": ads_params
   }
   #print(json.dumps(post_data, indent=4))
   #print(json.dumps(query_params, indent=4))
