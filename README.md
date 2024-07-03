@@ -13,7 +13,7 @@
 
 ## Installation
 You can download the package from the [Releases page](https://github.com/Paco8/plugin.video.skyott/releases)
-or better, you can install it from [this repository](https://github.com/Paco8/kodi-repo/raw/master/mini-repo/repository.addons.paco8/repository.addons.paco8-1.0.0.zip).
+or better, you can install it from [this repository](https://github.com/Paco8/kodi-repo/raw/master/mini-repo/repository.spain/repository.spain-1.0.1.zip).
 
 <!--
 ## Select the streaming service
