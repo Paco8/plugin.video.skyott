@@ -12,8 +12,13 @@
 <!-- - SkyShowtime subscribers must select SkyShowtime as the `Streaming service` in the addon settings. -->
 
 ## Installation
-You can download the package from the [Releases page](https://github.com/Paco8/plugin.video.skyott/releases)
-or better, you can install it from [this repository](https://github.com/Paco8/kodi-repo/raw/master/mini-repo/repository.spain/repository.spain-1.0.1.zip).
+### Manual installation
+You can download the package from the [Releases page](https://github.com/Paco8/plugin.video.skyott/releases).
+
+### Installation via Repository
+- Add this URL as a source in Kodi: `https://paco8.github.io/kodi-repo/`
+- In Add-ons, select the option _Install from zip file_ and install the package **repository.spain** from the source you just added.
+- Now, in _Install from repository_, go to _Spain OTT repository_, Video Add-ons, and install **SkyOtt**.
 
 <!--
 ## Select the streaming service
@@ -46,7 +51,7 @@ If the above tools don't work for you, you can try to get it manually:
 ### Main
 <!-- - **Streaming service**: Select PeacockTV or SkyShowtime. -->
 - **Remember username and password**: if this option is enabled the addon will save your login credentials in the disk.
-- **Subscription country**: two-letter code (such as `ES` `PT` `NL`) of the subscription country (optional).
+- **Subscription country**: (**optional**) two-letter code (such as `ES` `PT` `NL`) of the subscription country.
 - **Preferred server**: Videos are hosted in different servers. You can choose the one which works better for you.
 - **Enable 4K**: Enables 4K content. Playback may not work on non 4K devices.
 - **Enable HDCP**: Users of Android devices with Widevine L3 may need to turn it off.
