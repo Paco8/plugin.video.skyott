@@ -86,8 +86,8 @@ def play(params):
     return
 
   url = data['manifest_url']
-  if 'NO_ADS' not in sky.account['account_type'] and slug:
-  #if addon.getSettingBool('ads') and slug:
+  ads_account = 'NO_ADS' not in sky.account['account_type']
+  if ads_account and slug:
     try:
       new_url = sky.get_manifest_with_ads(data)
       if new_url:
@@ -219,8 +219,15 @@ def play(params):
 
   # Control player
   send_progress = addon.getSettingBool('send_progress')
-  skip_recap = addon.getSettingBool('skip_recap')
-  skip_intro = addon.getSettingBool('skip_intro')
+
+  if ads_account:
+    # The timestamps won't match if there are ads,
+    # so the skip options will be disabled
+    skip_recap = skip_intro = False
+  else:
+    skip_recap = addon.getSettingBool('skip_recap')
+    skip_intro = addon.getSettingBool('skip_intro')
+
   if (send_progress or skip_recap or skip_intro) and slug:
     LOG('markers: {}'.format(info.get('markers')))
     from .player import SkyPlayer
@@ -257,8 +264,8 @@ def play(params):
             LOG('**** {} {}'.format(info['provider_variant_id'], info['bookmark_metadata']))
             sky.set_bookmark(info['provider_variant_id'], info['bookmark_metadata'], last_pos)
         if 'markers' in info:
-          if skip_recap: check_marker('SOR', 'EOR', last_pos)
-          if skip_intro: check_marker('SOI', 'EOI', last_pos)
+          if skip_recap: check_marker('SOR', 'SPR', last_pos)
+          if skip_intro: check_marker('SOI', 'SPI', last_pos)
     LOG('**** playback finished')
     if send_progress:
       LOG('**** last_pos: {} total_time: {}'.format(last_pos, total_time))
