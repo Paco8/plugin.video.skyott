@@ -220,13 +220,17 @@ def play(params):
   # Control player
   send_progress = addon.getSettingBool('send_progress')
 
-  if ads_account:
-    # The timestamps won't match if there are ads,
-    # so the skip options will be disabled
-    skip_recap = skip_intro = False
+  skip_recap = addon.getSettingBool('skip_recap')
+  skip_intro = addon.getSettingBool('skip_intro')
+  fix_skip_timestamps = ads_account and (skip_recap or skip_intro)
+  if fix_skip_timestamps and slug:
+    from .mpd import get_content_start
+    response = sky.net.session.get(url, allow_redirects=True)
+    content = response.content.decode('utf-8')
+    time_offset = get_content_start(content)
   else:
-    skip_recap = addon.getSettingBool('skip_recap')
-    skip_intro = addon.getSettingBool('skip_intro')
+    time_offset = 0
+  LOG('time_offset: {}'.format(time_offset))
 
   if (send_progress or skip_recap or skip_intro) and slug:
     LOG('markers: {}'.format(info.get('markers')))
@@ -238,6 +242,8 @@ def play(params):
       if l_start in info['markers'] and l_end in info['markers']:
         s_start = int(info['markers'][l_start] / 1000)
         s_end = int(info['markers'][l_end] / 1000) - 2
+        s_start += time_offset
+        s_end += time_offset
         #LOG('s_start: {} s_end: {}'.format(s_start, s_end))
         if last_pos > s_start:
           if s_end - s_start > 10:

@@ -83,3 +83,16 @@ def move_unprotected_periods(content):
     set_period_start_times(all_periods)
 
     return doc.toprettyxml()
+
+def get_content_start(content):
+    doc = minidom.parseString(content)
+    periods = doc.getElementsByTagNameNS("urn:mpeg:dash:schema:mpd:2011", "Period")
+
+    for period in periods:
+        content_protection = period.getElementsByTagNameNS("urn:mpeg:dash:schema:mpd:2011", "ContentProtection")
+        if content_protection:
+            start = period.getAttribute("start")
+            if start:
+                return parse_duration(start).total_seconds()
+
+    return 0
