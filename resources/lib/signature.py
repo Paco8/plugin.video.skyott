@@ -22,12 +22,12 @@ class Signature(object):
   platforms = {
       'peacocktv': {
           'app_id': 'NBCU-ANDROID-v3',
-          'signature_key': bytearray('JuLQgyFz9n89D9pxcN6ZWZXKWfgj2PNBUb32zybj', 'utf-8'),
+          'signature_key': bytearray('SnVMUWd5Rno5bjg5RDlweGNONlpXWlhLV2ZnajJQTkJVYjMyenliag==', 'utf-8'),
           'version': '1.0'
       },
       'skyshowtime': {
           'app_id': 'SKYSHOWTIME-ANDROID-v1',
-          'signature_key': bytearray('jfj9qGg6aDHaBbFpH6wNEvN6cHuHtZVppHRvBgZs', 'utf-8'),
+          'signature_key': bytearray('amZqOXFHZzZhREhhQmJGcEg2d05Fdk42Y0h1SHRaVnBwSFJ2Qmdacw==', 'utf-8'),
           'version': '1.0'
       }
   }
@@ -68,7 +68,7 @@ class Signature(object):
                 headers_md5=headers_md5, timestamp=timestamp, payload_md5=payload_md5)
     #print(to_hash)
 
-    hashed = hmac.new(self.signature_key, to_hash.encode('utf8'), hashlib.sha1).digest()
+    hashed = hmac.new(base64.b64decode(self.signature_key), to_hash.encode('utf8'), hashlib.sha1).digest()
     signature = base64.b64encode(hashed).decode('utf8')
 
     return {'x-sky-signature': 'SkyOTT client="{}",signature="{}",timestamp="{}",version="{}"'.format(
