@@ -20,6 +20,9 @@ You can download the package from the [Releases page](https://github.com/Paco8/p
 - In Add-ons, select the option _Install from zip file_ and install the package **repository.spain** from the source you just added.
 - Now, in _Install from repository_, go to _Spain OTT repository_, Video Add-ons, and install **SkyOtt**.
 
+## Important note about login: ##
+The addon has an option to log in using a username and password, however it seems this method is occasionally flagged as suspicious by the server and after a few days it will close your session and ask you to reset your password. For that reason I suggest to use this application for Android to get the login cookie instead: https://github.com/Paco8/SkyExtractCookieAndroid
+
 <!--
 ## Select the streaming service
 Open the settings of the addon and select whether to use PeacockTV or SkyShowtime.
