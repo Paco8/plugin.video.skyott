@@ -37,6 +37,10 @@ msgctxt "#30005"
 msgid "Playback"
 msgstr ""
 
+msgctxt "#30006"
+msgid "Advanced"
+msgstr ""
+
 # For Orange and Movistar only
 msgctxt "#30010"
 msgid "DRM type"
@@ -172,6 +176,10 @@ msgstr ""
 # For SkyOTT only
 msgctxt "#30041"
 msgid "Subscription country (two letter code):"
+msgstr ""
+
+msgctxt "#30042"
+msgid "Warn when a title is removed in less than these days:"
 msgstr ""
 
 msgctxt "#30050"
@@ -576,6 +584,10 @@ msgstr ""
 # For Orange and Movistar only
 msgctxt "#30324"
 msgid "IPTV Simple is not found"
+msgstr ""
+
+msgctxt "#30325"
+msgid "Downloading subtitle '{}'"
 msgstr ""
 
 msgctxt "#30400"

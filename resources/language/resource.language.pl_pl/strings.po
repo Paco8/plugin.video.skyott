@@ -37,6 +37,10 @@ msgctxt "#30005"
 msgid "Playback"
 msgstr "Odtwarzanie"
 
+msgctxt "#30006"
+msgid "Advanced"
+msgstr ""
+
 # For Orange and Movistar only
 msgctxt "#30010"
 msgid "DRM type"
@@ -175,10 +179,18 @@ msgctxt "#30041"
 msgid "Subscription country (two letter code):"
 msgstr "Kraj subskrypcji (kod dwuliterowy):"
 
+msgctxt "#30042"
+msgid "Warn when a title is removed in less than these days:"
+msgstr ""
+
 # For SkyOTT only
 msgctxt "#30050"
 msgid "Remember username and password"
 msgstr "Zapamiętaj nazwę użytkownika i hasło"
+
+msgctxt "#30051"
+msgid "Process subtitles"
+msgstr ""
 
 msgctxt "#30101"
 msgid "Menu"
@@ -574,6 +586,10 @@ msgstr ""
 # For Orange and Movistar only
 msgctxt "#30324"
 msgid "IPTV Simple is not found"
+msgstr ""
+
+msgctxt "#30325"
+msgid "Downloading subtitle '{}'"
 msgstr ""
 
 msgctxt "#30400"

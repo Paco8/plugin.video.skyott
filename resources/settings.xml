@@ -9,6 +9,7 @@
         <setting id="hdr10" type="bool" label="HDR10" default="false" visible="eq(-2,true)" subsetting="true"/>
         <setting id="hdcp_enabled" type="bool" label="30037" default="false"/>
         <setting id="only_subscribed" type="bool" label="30017" default="false"/>
+        <setting label="30042" type="number" id="expdays" default="30"/>
         <!-- <setting id="ads" type="bool" label="Commercial breaks" default="false"/> -->
         <setting label="30019" type="action" id="is_settings" action="Addon.OpenSettings(inputstream.adaptive)" enable="System.HasAddon(inputstream.adaptive)" option="close"/>
         <!--

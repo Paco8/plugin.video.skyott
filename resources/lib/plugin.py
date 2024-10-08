@@ -154,7 +154,7 @@ def play(params):
     ttml = Ttml2SsaAddon()
     subtype = ttml.subtitle_type()
 
-    subfolder = profile_dir + 'subtitles/'
+    subfolder = os.path.join(profile_dir, 'subtitles')
     if not os.path.exists(subfolder):
       os.makedirs(subfolder)
 
@@ -173,7 +173,7 @@ def play(params):
     if len(filter_list) > 0:
       subtracks = [t for t in tracks['subs'] if t['lang'][:2] in filter_list]
     for t in subtracks:
-      filename = subfolder + t['lang'][:2]
+      filename = os.path.join(subfolder, t['lang'][:2])
       if t['value'] == 'caption': filename += ' [CC]'
       elif t['value'] == 'forced-subtitle': filename += '.forced'
       LOG('filename: {}'.format(filename))
@@ -308,7 +308,7 @@ def add_videos(category, ctype, videos, from_watchlist=False, from_continue=Fals
         now = int(time.time()*1000)
         n_hours = int((ends - now) / (1000 * 60 * 60))
         n_days = int(n_hours / 24)
-        if (n_days <= 30):
+        if (n_days <= addon.getSettingInt('expdays')):
           if n_days < 1:
             t['info']['title'] += ' [COLOR red](' + addon.getLocalizedString(30401).format(n_hours) + ')[/COLOR]'
           else:

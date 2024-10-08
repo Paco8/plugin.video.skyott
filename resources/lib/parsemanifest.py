@@ -19,7 +19,7 @@ def download_split_subtitle(base_url, filename_template, start_number=0):
   res = []
   while True:
     if 'http' not in filename_template:
-      url = os.path.join(base_url, filename_template.format(i))
+      url = base_url +'/' + filename_template.format(i)
     else:
       url = filename_template.format(i)
     LOG('Downloading {}'.format(url))
