@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: XBMC-Addons\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-28 16:47+0100\n"
-"PO-Revision-Date: 2023-12-08 HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2024-11-03 05:15+0100\n"
+"Last-Translator: zuzia-dev <zuzia-dev@proton.me>\n"
 "Language-Team: LANGUAGE\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -39,7 +39,7 @@ msgstr "Odtwarzanie"
 
 msgctxt "#30006"
 msgid "Advanced"
-msgstr ""
+msgstr "Zaawansowane"
 
 # For Orange and Movistar only
 msgctxt "#30010"
@@ -63,7 +63,7 @@ msgstr "Naprawia zamrożenia w zawartości VOD"
 # For Orange only
 msgctxt "#30014"
 msgid "Try to fix freezes"
-msgstr ""
+msgstr "Spróbuj naprawić zawieszanie się"
 
 # For Orange only
 msgctxt "#30016"
@@ -181,7 +181,7 @@ msgstr "Kraj subskrypcji (kod dwuliterowy):"
 
 msgctxt "#30042"
 msgid "Warn when a title is removed in less than these days:"
-msgstr ""
+msgstr "Ostrzegaj, gdy tytuł zostanie usunięty w czasie krótszym niż te dni:"
 
 # For SkyOTT only
 msgctxt "#30050"
@@ -190,7 +190,7 @@ msgstr "Zapamiętaj nazwę użytkownika i hasło"
 
 msgctxt "#30051"
 msgid "Process subtitles"
-msgstr ""
+msgstr "Przetwarzanie napisów"
 
 msgctxt "#30101"
 msgid "Menu"
@@ -333,7 +333,7 @@ msgstr "Logowanie zakończyło się sukcesem"
 # For Orange and Movistar only
 msgctxt "#30169"
 msgid "Record season"
-msgstr ""
+msgstr "Nagraj sezon"
 
 # For Orange and Movistar only
 msgctxt "#30170"
@@ -546,22 +546,22 @@ msgstr "Liczba dni"
 # For Orange and Movistar only
 msgctxt "#30316"
 msgid "Create settings for IPTV Simple"
-msgstr ""
+msgstr "Tworzenie ustawień dla usługi IPTV Simple"
 
 # For Orange and Movistar only
 msgctxt "#30317"
 msgid "Use external EPG"
-msgstr ""
+msgstr "Użycie zewnętrznego EPG"
 
 # For Orange and Movistar only
 msgctxt "#30318"
 msgid "URL:"
-msgstr ""
+msgstr "URL:"
 
 # For Orange and Movistar only
 msgctxt "#30319"
 msgid "Creating settings"
-msgstr ""
+msgstr "Tworzenie ustawień"
 
 msgctxt "#30320"
 msgid "Rating: {}"
@@ -574,7 +574,7 @@ msgstr "Pokaż ocenę wieku przed odtwarzaniem"
 # For Orange and Movistar only
 msgctxt "#30322"
 msgid "Confirm overwrite"
-msgstr ""
+msgstr "Potwierdzenie nadpisanie"
 
 # For Orange and Movistar only
 msgctxt "#30323"
@@ -582,15 +582,17 @@ msgid ""
 "There are already settings for IPTV Simple.\n"
 "Do you want to overwrite them?"
 msgstr ""
+"Istnieją już ustawienia dla IPTV Simple.\n"
+"Czy chcesz je nadpisać?"
 
 # For Orange and Movistar only
 msgctxt "#30324"
 msgid "IPTV Simple is not found"
-msgstr ""
+msgstr "Nie znaleziono IPTV Simple"
 
 msgctxt "#30325"
 msgid "Downloading subtitle '{}'"
-msgstr ""
+msgstr "Pobieranie napisów"
 
 msgctxt "#30400"
 msgid "{} days remaining"
