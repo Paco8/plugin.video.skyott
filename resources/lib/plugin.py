@@ -121,14 +121,29 @@ def play(params):
 
   play_item = xbmcgui.ListItem(path=url)
   play_item.setProperty('inputstream.adaptive.manifest_type', 'mpd')
-  play_item.setProperty('inputstream.adaptive.license_type', 'com.widevine.alpha')
   if 'license_url' in data:
     extra_params = ''
     if slug:
       extra_params = '&content_id={}&provider_variant_id={}'.format(info['content_id'], info['provider_variant_id'])
     license_url = '{}/license?url={}{}||R{{SSM}}|'.format(proxy, quote_plus(data['license_url']), extra_params)
     LOG('license_url: {}'.format(license_url))
-    play_item.setProperty('inputstream.adaptive.license_key', license_url)
+
+    key = None
+    if not xbmc.getCondVisibility('system.platform.android'):
+      from resources.lib.cdm import get_cdm_keys
+      try:
+        d = get_cdm_keys(manifest_url, license_url.split('|')[0])
+        key = d.get('key')
+        if key:
+          LOG('cdm kid: {}'.format(key.split(':')[0]))
+      except Exception as e:
+        LOG('error: {}'.format(str(e)))
+    if key:
+      play_item.setProperty('inputstream.adaptive.drm_legacy', 'org.w3.clearkey|{}'.format(key))
+    else:
+      play_item.setProperty('inputstream.adaptive.license_key', license_url)
+      play_item.setProperty('inputstream.adaptive.license_type', 'com.widevine.alpha')
+
   play_item.setProperty('inputstream.adaptive.stream_headers', 'User-Agent=' + chrome_user_agent)
   play_item.setProperty('inputstream.adaptive.server_certificate', certificate)
   #play_item.setProperty('inputstream.adaptive.license_flags', 'persistent_storage')

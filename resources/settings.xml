@@ -3,19 +3,12 @@
         <setting id="platform_id" type="labelenum" label="30031" values="SkyShowtime|PeacockTV" default="SkyShowtime" visible="false"/>
         <setting id="store_credentials" type="bool" label="30050" default="false"/>
         <setting id="territory" type="text" label="30041" default=""/>
-        <setting id="preferred_server" type="labelenum" label="30032" values="Auto|Limelight|Cloudfront|Akamai|Level3|Fastly" default='Auto'/>
         <setting id="uhd" type="bool" label="30033" default="false"/>
         <setting id="dolbyvision" type="bool" label="DolbyVision" default="false" visible="eq(-1,true)" subsetting="true"/>
         <setting id="hdr10" type="bool" label="HDR10" default="false" visible="eq(-2,true)" subsetting="true"/>
         <setting id="hdcp_enabled" type="bool" label="30037" default="false"/>
         <setting id="only_subscribed" type="bool" label="30017" default="false"/>
-        <setting label="30042" type="number" id="expdays" default="30"/>
-        <!-- <setting id="ads" type="bool" label="Commercial breaks" default="false"/> -->
         <setting label="30019" type="action" id="is_settings" action="Addon.OpenSettings(inputstream.adaptive)" enable="System.HasAddon(inputstream.adaptive)" option="close"/>
-        <!--
-        <setting type="sep"/>
-        <setting label="30450" type="action" id="donation" action="RunPlugin(plugin://plugin.video.skyott?action=show_donation_dialog)" option="close"/>
-        -->
     </category>
     <category label="30005">
         <setting id="send_progress" type="bool" label="30025" default="false"/>
@@ -29,6 +22,11 @@
         <setting id="ttml2ssa_filter" label="30040" type="text" default="" enable="eq(-2,true)" subsetting="true"/>
         <setting label="30038" type="bool" id="include_forced_subs" default="true" enable="eq(-3,true)" subsetting="true"/>
         <setting label="30039" type="bool" id="include_non_forced_subs" default="true" enable="eq(-4,true)" subsetting="true"/>
+    </category>
+    <category label="30006">
+        <setting id="preferred_server" type="labelenum" label="30032" values="Auto|Limelight|Cloudfront|Akamai|Level3|Fastly" default='Auto'/>
+        <setting id="expdays" type="number" label="30042" default="30"/>
+        <!-- <setting id="ads" type="bool" label="Commercial breaks" default="false"/> -->
     </category>
     <category label="30002">
         <setting label="30011" type="bool" id="manifest_modification" default="true"/>
