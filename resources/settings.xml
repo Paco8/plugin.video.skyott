@@ -33,5 +33,6 @@
         <setting label="30034" type="bool" id="fix_languages" default="true" enable="eq(-1,true)" subsetting="true"/>
         <setting label="30035" type="bool" id="delete_ec3_audio" default="false" enable="eq(-2,true)" subsetting="true"/>
         <setting label="30036" type="bool" id="delete_mp4a_audio" default="false" enable="eq(-3,true)" subsetting="true"/>
+        <setting label="30012" type="bool" id="use_proxy_for_license" default="true"/>
     </category>
 </settings>

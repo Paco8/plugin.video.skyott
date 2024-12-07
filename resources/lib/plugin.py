@@ -119,13 +119,21 @@ def play(params):
     '/hw8CTCX0hhNaWOMp38Tiuj+mSsUmwkq/71R9VsY0EN+k+BDXpaJHIJO9Dk+mm08P0ILWT7/sMJy'
     '225r81jyLmvsth4Kw47T4NqkJlP0/Tvs')
 
+
+  platform_id = addon.getSetting('platform_id').lower()
+  headers = 'User-Agent='+ user_agent(platform_id)
+  license_headers = headers + '&Content-Type=application/octet-stream'
+
   play_item = xbmcgui.ListItem(path=url)
   play_item.setProperty('inputstream.adaptive.manifest_type', 'mpd')
   if 'license_url' in data:
-    extra_params = ''
-    if slug:
-      extra_params = '&content_id={}&provider_variant_id={}'.format(info['content_id'], info['provider_variant_id'])
-    license_url = '{}/license?url={}{}||R{{SSM}}|'.format(proxy, quote_plus(data['license_url']), extra_params)
+    if addon.getSettingBool('use_proxy_for_license'):
+      extra_params = ''
+      if slug:
+        extra_params = '&content_id={}&provider_variant_id={}'.format(info['content_id'], info['provider_variant_id'])
+      license_url = '{}/license?url={}{}||R{{SSM}}|'.format(proxy, quote_plus(data['license_url']), extra_params)
+    else:
+      license_url = '{}|{}|R{{SSM}}|'.format(data['license_url'], license_headers)
     LOG('license_url: {}'.format(license_url))
 
     key = None
@@ -144,7 +152,7 @@ def play(params):
       play_item.setProperty('inputstream.adaptive.license_key', license_url)
       play_item.setProperty('inputstream.adaptive.license_type', 'com.widevine.alpha')
 
-  play_item.setProperty('inputstream.adaptive.stream_headers', 'User-Agent=' + chrome_user_agent)
+  play_item.setProperty('inputstream.adaptive.stream_headers', headers)
   play_item.setProperty('inputstream.adaptive.server_certificate', certificate)
   #play_item.setProperty('inputstream.adaptive.license_flags', 'persistent_storage')
   #play_item.setProperty('inputstream.adaptive.license_flags', 'force_secure_decoder')
@@ -155,6 +163,8 @@ def play(params):
     play_item.setProperty('inputstream', 'inputstream.adaptive')
 
   play_item.setMimeType('application/dash+xml')
+  play_item.setContentLookup(False)
+
   try:
     play_item.setInfo('video', info['info'])
     play_item.setArt(info['art'])
@@ -229,7 +239,6 @@ def play(params):
         subpaths.append(filename_srt)
     play_item.setSubtitles(subpaths)
 
-  play_item.setContentLookup(False)
   xbmcplugin.setResolvedUrl(_handle, True, listitem=play_item)
 
   # Control player

@@ -22,11 +22,11 @@ def get_pssh_from_manifest(url):
     return pssh.group(1)
   return None
 
-def get_pssh_key(pssh, license_url, platform_id=None):
+def get_pssh_key(pssh, license_url):
   api_base_url = "https://cdm.drmtalks.com/"
   api_cdm_device = "01JCP8Y4W3PHM7DRQ5HGTME2CQ"
-  api_headers = {'user-agent': user_agent, 'accept': '*/*'}
-  session.headers.update(api_headers)
+  headers = {'user-agent': user_agent, 'accept': '*/*'}
+  session.headers.update(headers)
 
   open_session = session.get(api_base_url + api_cdm_device + '/open').json()
   #LOG(open_session.content)
@@ -41,43 +41,33 @@ def get_pssh_key(pssh, license_url, platform_id=None):
   #LOG(challenge_b64)
   challenge_raw = base64.b64decode(challenge_b64)
 
-  license_headers = api_headers
-  if platform_id:
-    from .signature import Signature
-    path="/" + license_url.split("://", 1)[1].split("/", 1)[1]
-    #LOG(path)
-    sig = Signature(platform_id)
-    sig_header = sig.calculate_signature('POST', path, {}, challenge_raw)
-    license_headers.update(sig_header)
-    #LOG(headers)
-
-  license = requests.post(license_url, data=challenge_raw, headers=license_headers)
+  license = session.post(license_url, data=challenge_raw)
   license.raise_for_status()
   #LOG(license.content)
 
   license_b64 = base64.b64encode(license.content).decode()
   #LOG('license_b64: {}'.format(license_b64))
   parse_license_data = {'session_id': session_id , 'license_message': license_b64}
-  license_api_request = session.post(api_base_url + api_cdm_device + '/parse_license', json=parse_license_data, headers=api_headers).json()
+  license_api_request = session.post(api_base_url + api_cdm_device + '/parse_license', json=parse_license_data).json()
 
   keys_api_data = {'session_id': session_id}
-  keys_api_request = session.post(api_base_url + api_cdm_device + '/get_keys/CONTENT', json=keys_api_data, headers=api_headers).json()
+  keys_api_request = session.post(api_base_url + api_cdm_device + '/get_keys/CONTENT', json=keys_api_data).json()
   keys = keys_api_request['data']['keys']
   #LOG('keys: {}'.format(keys))
   res = []
   for key in keys:
     res.append('{}:{}'.format(key['key_id'], key['key']))
 
-  close_session = session.get(api_base_url + api_cdm_device + '/close/' + session_id, headers=api_headers).text
+  close_session = session.get(api_base_url + api_cdm_device + '/close/' + session_id).text
   return ",".join(res)
 
-def get_cdm_keys(manifest_url, license_url, platform_id=None):
+def get_cdm_keys(manifest_url, license_url):
   pssh = get_pssh_from_manifest(manifest_url)
   #LOG('pssh: {}'.format(pssh))
   d = {}
   if pssh:
     try:
-      key = get_pssh_key(pssh, license_url, platform_id)
+      key = get_pssh_key(pssh, license_url)
       d['key'] = key
     except Exception as e:
       d['error'] = str(e)
