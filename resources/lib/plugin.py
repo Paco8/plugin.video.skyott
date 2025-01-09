@@ -140,7 +140,7 @@ def play(params):
     if not xbmc.getCondVisibility('system.platform.android'):
       from resources.lib.cdm import get_cdm_keys
       try:
-        d = get_cdm_keys(manifest_url, license_url.split('|')[0])
+        d = get_cdm_keys(manifest_url, data['license_url'].split('|')[0])
         key = d.get('key')
         if key:
           LOG('cdm kid: {}'.format(key.split(':')[0]))

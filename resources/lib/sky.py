@@ -560,22 +560,31 @@ class SkyShowtime(object):
       s = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(20))
       return s
 
-    def get_tokens(self):
+    def get_tokens(self, access_token=None):
       url = self.endpoints['tokens']
       #headers = self.net.headers.copy()
       headers = {}
       headers['Accept'] = 'application/vnd.tokens.v1+json'
       headers['Content-Type'] = 'application/vnd.tokens.v1+json'
-      headers['cookie'] = self.account['cookie']
+      if not access_token:
+        headers['cookie'] = self.account['cookie']
+        auth = {
+          "authScheme": "MESSO",
+          "authIssuer": "NOWTV",
+          "personaId": self.account['profile_id']
+        }
+      else:
+        auth = {
+          "authScheme": "OAUTH",
+          "authToken": access_token
+        }
+      auth.update({
+        "provider": self.platform['headers']['x-skyott-provider'],
+        "providerTerritory": self.platform['headers']['x-skyott-territory'],
+        "proposition": self.platform['headers']['x-skyott-proposition']
+      })
       post_data = {
-        "auth": {
-            "authScheme": "MESSO",
-            "authIssuer": "NOWTV",
-            "provider": self.platform['headers']['x-skyott-provider'],
-            "providerTerritory": self.platform['headers']['x-skyott-territory'],
-            "proposition": self.platform['headers']['x-skyott-proposition'],
-            "personaId": self.account['profile_id']
-        },
+        "auth": auth,
         "device": {
            "type": "MOBILE",
            "platform": "ANDROID",
