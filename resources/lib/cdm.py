@@ -22,7 +22,7 @@ def get_pssh_from_manifest(url):
     return pssh.group(1)
   return None
 
-def get_pssh_key(pssh, license_url, platform_id=None):
+def get_pssh_key(pssh, license_url):
   headers = {'User-Agent': user_agent}
   data = {"license_url": license_url, "pssh": pssh}
   json_str = json.dumps(data)
@@ -39,13 +39,13 @@ def get_pssh_key(pssh, license_url, platform_id=None):
 
   return data.get('keys')
 
-def get_cdm_keys(manifest_url, license_url, platform_id=None):
+def get_cdm_keys(manifest_url, license_url):
   pssh = get_pssh_from_manifest(manifest_url)
   LOG('pssh: {}'.format(pssh))
   d = {}
   if pssh:
     try:
-      key = get_pssh_key(pssh, license_url, platform_id)
+      key = get_pssh_key(pssh, license_url)
       d['key'] = key
     except Exception as e:
       d['error'] = str(e)

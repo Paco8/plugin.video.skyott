@@ -459,11 +459,14 @@ class SkyShowtime(object):
       headers['content-type'] = 'application/json'
       headers['cookie'] = self.account['cookie']
       data = self.net.post_data(url, '', headers)
+      #LOG('data: {}'.format(data))
       res = []
       if 'personas' in data:
         for d in data['personas']:
           p = {'id': d['id'], 'name': d['displayName'], 'type': d['type'], 
-               'avatar': d['avatar']['links']['AvatarWithBackgroundTransparency']['href']}
+               'avatar': ''}
+          if 'avatar' in d:
+            p['avatar'] = d['avatar']['links']['AvatarWithBackgroundTransparency']['href']
           p['avatar'] = p['avatar'].replace('{width}/{height}', '400')
           res.append(p)
       return res
