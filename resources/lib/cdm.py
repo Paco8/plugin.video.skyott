@@ -32,16 +32,16 @@ def get_pssh_key(pssh, license_url):
   url = 'https://www.deliciasoft.com/sky.php?q=' + base64_str;
 
   response = session.get(url, headers=headers)
-  LOG(response.content)
+  #LOG(response.content)
 
   data = response.json()
-  LOG(data)
+  #LOG(data)
 
   return data.get('keys')
 
 def get_cdm_keys(manifest_url, license_url):
   pssh = get_pssh_from_manifest(manifest_url)
-  LOG('pssh: {}'.format(pssh))
+  #LOG('pssh: {}'.format(pssh))
   d = {}
   if pssh:
     try:

@@ -17,6 +17,9 @@ class Endpoints(object):
     cybertron = 'https://cybertron.id.'+ self.host
     if host == 'skyshowtime.com':
       mytv = 'https://mytv.clients.skyshowtime.com'
+    elif host == 'nowtv.com':
+      mytv = 'https://mytv.clients.nowtv.com'
+      atom = 'https://eu.api.atom.nowtv.com'
     else:
       mytv = 'https://sas.peacocktv.com/mytv'
     self.endpoints = {
@@ -27,7 +30,7 @@ class Endpoints(object):
       'login': rango +'/signin/service/international',
       'profiles': webclients +'/bff/personas/v2',
       'get-profile-info': webclients + '/bff/personas/v2/{profile_id}?skipPinValidation=true',
-      'my-stuff': webclients + '/bff/sections/v1?partition_id=no-partition&template=sections&segment=all_premium_users&slug=%2Fmy-stuff',
+      'my-stuff': webclients + '/bff/sections/v1?partition_id=no-partition&template=sections&segment=all_premium_users&slug={slug}',
       'my-section': webclients + '/bff/sections/v1/personalised?partition_id=no-partition&template=sections&segment=all_premium_users&slug={slug}&filter=byw&filter=pg&filter=wl&filter=cw',
       'localisation': ovp + '/ls/localisation',
       'me': ovp + '/auth/users/me',
@@ -43,4 +46,6 @@ class Endpoints(object):
       'set-bookmark': ovp + '/bookmarking/bookmarks/{content_id}',
       'get-devices': cybertron +'/sessions/me/devices',
       'get-public-profile': cybertron +'/public/profile',
+      'get-rails': webclients + '/bff/browse/v1/rails/{id}?full_top_tiles=100&mode=GRID&segment=all_premium_users',
+      'browse-page': webclients + '/bff/browse/v1/pages/{id}?segment=only_ge&full_top_rails=6&full_top_tiles=10'
     }

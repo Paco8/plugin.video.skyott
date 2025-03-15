@@ -28,6 +28,7 @@ class SkyShowtime(object):
          'name': 'SkyShowtime',
          'host': 'skyshowtime.com',
          'config_dir': 'skyshowtime',
+         'appnamespace': None,
          'headers': {
            'x-skyott-activeterritory': 'ES',
            'x-skyott-client-version': '4.3.12',
@@ -43,6 +44,7 @@ class SkyShowtime(object):
          'name': 'PeacockTV',
          'host': 'peacocktv.com',
          'config_dir': 'peacocktv',
+         'appnamespace': None,
          'headers': {
            'x-skyott-activeterritory': 'US',
            'x-skyott-client-version': '4.3.12',
@@ -53,13 +55,30 @@ class SkyShowtime(object):
            'x-skyott-provider': 'NBCU',
            'x-skyott-territory': 'US'
          }
+      },
+      'nowtv': {
+         'name': 'NowTV',
+         'host': 'nowtv.com',
+         'config_dir': 'nowtv',
+         'appnamespace': 'NOWUK',
+         'headers': {
+           'x-skyott-activeterritory': 'GB',
+           'x-skyott-client-version': '4.3.12',
+           'x-skyott-device': 'MOBILE',
+           'x-skyott-language': 'en-US',
+           'x-skyott-platform': 'ANDROID',
+           'x-skyott-proposition': 'NOWOTT',
+           'x-skyott-provider': 'NOWTV',
+           'x-skyott-territory': 'GB'
+         },
       }
     }
 
     account = {'username': None, 'password': None,
                'device_id': None,
                'profile_id': None, 'profile_type': None,
-               'my_segments': [], 'account_type': [],
+               'my_segments': [], 'my_discovery': [],
+               'account_type': [],
                'cookie': None, 'user_token': None}
     get_token_error = ''
 
@@ -191,10 +210,15 @@ class SkyShowtime(object):
           self.cache.save_json(me_filename, data)
         for s in data.get('segmentation', []).get('content', []):
           self.account['my_segments'].append(s['name'])
+        for s in data.get('segmentation', []).get('discovery', []):
+          self.account['my_discovery'].append(s['name'])
         for s in data.get('segmentation', []).get('account', []):
           self.account['account_type'].append(s['name'])
+        self.account['content'] = ','.join(self.account['my_segments'])
+        self.account['discovery'] = ','.join(self.account['my_discovery'])
 
     def is_subscribed(self, segments):
+      if not segments: return True
       for s in self.account['my_segments']:
         if s in segments: return True
       return False
@@ -357,13 +381,20 @@ class SkyShowtime(object):
 
     def get_catalog(self, slug):
       url = self.endpoints['section'].format(slug=slug)
-      LOG(url)
+      #LOG(url)
       data = self.net.load_data(url)
-      #self.cache.save_json('catalog.json', data)
+      #LOG(data)
+      #SkyShowtime.save_file('/tmp/catalog.json', data)
       if 'rail' in data['data']:
-        items = data['data']['rail']['items']
-      else:
-        items = data['data']['group']['rails']
+        items = data['data']['rail'].get('items', [])
+        if self.platform['name'] == 'NowTV':
+            rail_id = data['data']['rail']['id']
+            items = self.get_rails(rail_id)
+      elif 'group' in data['data']:
+        items = data['data']['group'].get('rails', [])
+        if self.platform['name'] == 'NowTV':
+          group_id = data['data']['group']['id']
+          items = self.get_browse_page(group_id)
       return self.parse_catalog(items)
 
     def get_movie_catalog(self):
@@ -378,9 +409,12 @@ class SkyShowtime(object):
 
     def get_series_info(self, slug):
       url = self.endpoints['get-series'].format(slug=slug)
+      if self.platform['name'] == 'NowTV':
+        url += '&contentSegments={}'.format(self.account['content'])
       #LOG(url)
       data = self.net.load_data(url)
-      #self.cache.save_json('series.json', data)
+      #print_json(data)
+      #SkyShowtime.save_file('/tmp/series.json', data)
       return self.parse_items(data['relationships']['items']['data'])
 
     def get_seasons(self, slug):
@@ -391,16 +425,18 @@ class SkyShowtime(object):
 
     def get_video_info(self, slug):
       url = self.endpoints['get-video-info'].format(slug=slug)
-      #print(url)
+      if self.platform['name'] == 'NowTV':
+        url += '&contentSegments={}'.format(self.account['content'])
+      #LOG(url)
       data = self.net.load_data(url)
       #print_json(data)
-      #self.cache.save_json('movie.json', data)
+      #SkyShowtime.save_file('/tmp/movies.json', data)
       return self.parse_item(data)
 
     def get_video_info_uuid(self, uuid):
       url = self.endpoints['get-video-info-uuid'].format(uuid=uuid)
       data = self.net.load_data(url)
-      #self.cache.save_json('uuid_data.json', data)
+      #SkyShowtime.save_file('/tmp/uuid_data.json', data)
       if len(data) > 0:
         return self.parse_item(data[0])
       else:
@@ -493,15 +529,23 @@ class SkyShowtime(object):
 
     def get_my_stuff_slug(self):
       url = self.endpoints['my-stuff'].format(slug='/my-stuff')
+      #LOG(url)
       data = self.net.load_data(url)
+      #LOG(data)
       slug = data['data']['group']['slug']
       return slug
 
     def get_my_list(self):
-      return self.get_my_section(self.get_my_stuff_slug())
+      if self.platform['name'] == 'NowTV':
+        return self.get_my_section2('/home/watchlist', 'WATCHLIST')
+      else:
+        return self.get_my_section(self.get_my_stuff_slug())
 
     def get_continue_watching(self):
-     return self.get_my_section('/home/continue-watching')
+      if self.platform['name'] == 'NowTV':
+        return self.get_my_section2('/home/continue-watching', 'CONTINUE_WATCHING')
+      else:
+        return self.get_my_section('/home/continue-watching')
 
     def get_my_section(self, slug):
       url = self.endpoints['my-section'].format(slug=slug)
@@ -513,11 +557,71 @@ class SkyShowtime(object):
       headers.update(sig_header)
       data = self.net.load_data(url, headers)
       #print_json(data)
-      #self.cache.save_json('my-section.json', data)
+      #SkyShowtime.save_file('/tmp/my-section.json', data)
       if 'rails' in data and len(data['rails']) > 0:
         rails = list(data["rails"].items())
         return self.parse_catalog(rails[0][1]['items'])
       return []
+
+    def get_my_section2(self, slug, rtype):
+      url = self.endpoints['my-stuff'].format(slug=slug)
+      #LOG(url)
+      data = self.net.load_data(url)
+      #LOG(data)
+      id = data['data']['rail']['id']
+      #LOG('rail id:{}'.format(id))
+      res = self.get_rails(id, rtype=rtype)
+      return self.parse_catalog(res)
+
+    def get_rails(self, id, rtype=None):
+      url = self.endpoints['get-rails'].format(id=id)
+      if self.platform['name'] == 'NowTV':
+        url += '&discovery_content_segments={0}&playout_content_segments={0}'.format(self.account['discovery'])
+      if rtype:
+          url += '&type=' + rtype
+      #LOG(url)
+      headers = self.net.headers.copy()
+      if self.account['user_token']:
+        headers['x-skyott-usertoken'] = self.account['user_token']
+      sig_header = self.sig.calculate_signature('GET', url, headers)
+      headers.update(sig_header)
+      #print_json(headers)
+      data = self.net.load_data(url, headers)
+      #print_json(data)
+      #SkyShowtime.save_file('/tmp/rails.json', data)
+      #print(data)
+      res = []
+      try:
+        for tile in data['data']['tiles']:
+          res.append(tile['tileInfo'])
+      except (KeyError, TypeError):
+        pass
+      #print_json(res)
+      return res
+
+    def get_browse_page(self, id):
+      url = self.endpoints['browse-page'].format(id=id)
+      if self.platform['name'] == 'NowTV':
+        url += '&discovery_content_segments={}'.format(self.account['discovery'])
+      #LOG(url)
+      headers = self.net.headers.copy()
+      if self.account['user_token']:
+        headers['x-skyott-usertoken'] = self.account['user_token']
+      sig_header = self.sig.calculate_signature('GET', url, headers)
+      headers.update(sig_header)
+      #print_json(headers)
+      data = self.net.load_data(url, headers)
+      #SkyShowtime.save_file('/tmp/browse.json', data)
+      #LOG(data)
+      res = []
+      try:
+        for rail in data['data']['rails']:
+          res.append(rail['railInfo'])
+        for tile in data['data']['tiles']:
+          res.append(tile['tileInfo'])
+      except (KeyError, TypeError):
+        pass
+      return res
 
     def get_localisation(self):
       url = self.endpoints['localisation']
@@ -526,6 +630,8 @@ class SkyShowtime(object):
       #headers['cookie'] = self.account['cookie']
       headers['x-skyott-provider'] = self.platform['headers']['x-skyott-provider']
       headers['x-skyott-proposition'] = self.platform['headers']['x-skyott-proposition']
+      if self.platform['appnamespace']:
+        headers['x-skyott-appnamespace'] = self.platform['appnamespace']
       sig_header = self.sig.calculate_signature('GET', url, headers)
       headers.update(sig_header)
       #print_json(headers)
@@ -544,7 +650,7 @@ class SkyShowtime(object):
       sig_header = self.sig.calculate_signature('GET', url, headers)
       headers.update(sig_header)
       data = self.net.load_data(url, headers)
-      #self.cache.save_json('me.json', data)
+      #SkyShowtime.save_file('/tmp/me.json', data)
       return data
 
     def get_profile_info(self, profile_id):
@@ -622,7 +728,7 @@ class SkyShowtime(object):
       #LOG(content)
       data = json.loads(content)
       #print_json(data)
-      #self.cache.save_json('playback.json', data)
+      #SkyShowtime.save_file('/tmp/playback.json', data)
 
       res = {'response': data}
       if 'asset' in data:
@@ -746,7 +852,7 @@ class SkyShowtime(object):
       url = self.endpoints['search-vod'].format(search_term=search_term)
       data = self.net.load_data(url)
       #print_json(data)
-      #self.cache.save_json('search_result.json', data)
+      #SkyShowtime.save_file('/tmp/search_result.json', data)
       if not 'results' in data: return None
       res = []
       for i in data['results']:
@@ -758,9 +864,12 @@ class SkyShowtime(object):
 
     def search(self, search_term):
       url = self.endpoints['search'].format(search_term=search_term)
+      if self.platform['name'] == 'NowTV':
+        url += '&contentSegment={}&discovery_content_segments={}'.format(self.account['content'], self.account['discovery'])
+      #LOG(url)
       data = self.net.load_data(url)
       #print_json(data)
-      self.cache.save_json('search_result.json', data)
+      #SkyShowtime.save_file('/tmp/search_result.json', data)
       return self.parse_catalog(data['data']['search']['results'])
 
     def download_menu(self):
@@ -771,7 +880,9 @@ class SkyShowtime(object):
       headers['User-Agent'] = chrome_user_agent
       #print_json(headers)
       url = self.endpoints['menu']
+      #LOG(url)
       data = self.net.load_data(url, headers=headers)
+      #SkyShowtime.save_file('/tmp/menu.json', data)
       return data
 
     def get_main_menu(self):
@@ -799,7 +910,7 @@ class SkyShowtime(object):
         main_label = 'Main'
       topnav = find_item(top_label, data['relationships']['items']['data'])
       #print_json(topnav)
-      #self.cache.save_json('topnav.json', topnav)
+      #SkyShowtime.save_file('/tmp/topnav.json', data)
       if topnav:
         main = find_item(main_label, topnav['relationships']['items']['data'])
         if main:
@@ -816,8 +927,15 @@ class SkyShowtime(object):
               slug = att['uri'].replace('/watch','')
             else:
               slug = i['relationships']['items']['data'][0]['attributes']['slug']
+            #try:
+            #  item_type = i['relationships']['items']['data'][0]['type']
+            #  item_id = i['relationships']['items']['data'][0]['id']
+            #except:
+            #  item_type = None
+            #  item_id = None
             t = {'id': att['alias'], 'title': att['title'], 'slug': slug, 'icon': icon}
-
+            #t['type'] = item_type
+            #t['item_id'] = item_id
 
             res.append(t)
       return res
@@ -913,7 +1031,10 @@ class SkyShowtime(object):
       return data
 
     def download_epg(self):
-      cache_filename = 'cache/epg.json'
+      if self.account['profile_type'] == 'Kid':
+        cache_filename = 'cache/epg_kids.json'
+      else:
+        cache_filename = 'cache/epg.json'
       content = self.cache.load(cache_filename, 60)
       if content:
         data = json.loads(content)
@@ -929,7 +1050,11 @@ class SkyShowtime(object):
       date = now.strftime('%Y-%m-%dT%H:%M%z')
       date = date[:-2] + ':' + date[-2:]
       url = self.endpoints['epg'].format(start_time=quote(date))
-      #print(url)
+      if self.platform['name'] == 'NowTV':
+        url += '&playout_content_segments={0}&discovery_content_segments={0}'.format(self.account['discovery'])
+        if self.account['profile_type'] == 'Kid':
+          url += '&channelSection=KIDS'
+      #LOG(url)
       data = self.net.load_data(url)
       self.cache.save_json(cache_filename, data)
       return data
@@ -1019,7 +1144,12 @@ class SkyShowtime(object):
         filename = bytes(filename, 'utf-8')
       with io.open(filename, 'r', encoding='utf-8') as f:
         data = json.load(f)
-        output_dir = 'peacocktv' if 'peacocktv' in data['host'] else 'skyshowtime'
+        if 'peacocktv' in data['host']:
+          output_dir = 'peacocktv'
+        elif 'nowtv' in data['host']:
+          output_dir = 'nowtv'
+        else:
+          output_dir = 'skyshowtime'
         self.cache.save_file(output_dir + '/cookie.conf', data['data'])
         if 'device_id' in data:
           self.cache.save_file(output_dir + '/device_id.conf', data['device_id'])
@@ -1078,3 +1208,13 @@ class SkyShowtime(object):
         return data['manifestUrl'] #, data['trackingUrl']
       else:
         return None #, None
+
+    @staticmethod
+    def save_file(filename, content):
+      if isinstance(content, (dict, list)):
+        content = json.dumps(content, ensure_ascii=False, indent=4)
+      if sys.version_info[0] < 3:
+        if not isinstance(content, unicode):
+          content = unicode(content, 'utf-8')
+      with io.open(filename, 'w', encoding='utf-8') as handle:
+        handle.write(content)

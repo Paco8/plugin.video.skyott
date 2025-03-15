@@ -29,6 +29,11 @@ class Signature(object):
           'app_id': 'SKYSHOWTIME-ANDROID-v1',
           'signature_key': bytearray('amZqOXFHZzZhREhhQmJGcEg2d05Fdk42Y0h1SHRaVnBwSFJ2Qmdacw==', 'utf-8'),
           'version': '1.0'
+      },
+      'nowtv': {
+          'app_id': 'IE-NOWTV-ANDROID-v1',
+          'signature_key': bytearray('NWY4UkxCcHBhcUtHTzhid0t3Tmlmalo2Yk04elhDVndrQUs3aGtocTNQUzRwZg==', 'utf-8'),
+          'version': '1.0'
       }
   }
 

@@ -86,7 +86,8 @@ def play(params):
     return
 
   url = data['manifest_url']
-  ads_account = 'NO_ADS' not in sky.account['account_type']
+  #ads_account = 'NO_ADS' not in sky.account['account_type']
+  ads_account = addon.getSettingBool('ads')
   if ads_account and slug:
     try:
       new_url = sky.get_manifest_with_ads(data)
@@ -137,7 +138,7 @@ def play(params):
     LOG('license_url: {}'.format(license_url))
 
     key = None
-    if not xbmc.getCondVisibility('system.platform.android'):
+    if not xbmc.getCondVisibility('system.platform.android') and platform_id != 'nowtv':
       from resources.lib.cdm import get_cdm_keys
       try:
         d = get_cdm_keys(manifest_url, data['license_url'].split('|')[0])
@@ -506,7 +507,7 @@ def export_key():
 def list_users():
   platform_name = addon.getSetting('platform_id')
   open_folder(addon.getLocalizedString(30160)) # Accounts
-  add_menu_option(addon.getLocalizedString(30191).format(platform_name), get_url(action='login', method='credentials')) # Login with username
+  #add_menu_option(addon.getLocalizedString(30191).format(platform_name), get_url(action='login', method='credentials')) # Login with username
   add_menu_option(addon.getLocalizedString(30190).format(platform_name), get_url(action='login', method='key')) # Login with key
   #add_menu_option(addon.getLocalizedString(30186), get_url(action='login', method='cookie')) # Login with cookie
   if sky.account['cookie']:
@@ -515,7 +516,7 @@ def list_users():
   close_folder()
 
 def list_platforms():
-  platforms = ['SkyShowtime', 'PeacockTV']
+  platforms = ['SkyShowtime', 'PeacockTV', 'NowTV']
   open_folder(addon.getLocalizedString(30160)) # Accounts
   for platform in platforms:
     name = addon.getLocalizedString(30192).format(platform)
