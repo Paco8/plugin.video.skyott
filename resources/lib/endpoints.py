@@ -44,6 +44,7 @@ class Endpoints(object):
       'to-watchlist': mytv + '/watchlist/{uuid}',
       'get-bookmarks': ovp + '/bookmarking/bookmarks',
       'set-bookmark': ovp + '/bookmarking/bookmarks/{content_id}',
+      'set-bookmark2': ovp + '/bookmarking-services/bookmarks/{content_id}',
       'get-devices': cybertron +'/sessions/me/devices',
       'get-public-profile': cybertron +'/public/profile',
       'get-rails': webclients + '/bff/browse/v1/rails/{id}?full_top_tiles=100&mode=GRID&segment=all_premium_users',

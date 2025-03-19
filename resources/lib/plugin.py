@@ -293,7 +293,7 @@ def play(params):
           if time.time() > (start_time + interval):
             start_time = time.time()
             LOG('**** {} {}'.format(info['provider_variant_id'], info['bookmark_metadata']))
-            sky.set_bookmark(info['provider_variant_id'], info['bookmark_metadata'], last_pos)
+            sky.set_bookmark(info['provider_variant_id'], last_pos)
         if 'markers' in info:
           if skip_recap: check_marker('SOR', 'SPR', last_pos)
           if skip_intro: check_marker('SOI', 'SPI', last_pos)
@@ -302,7 +302,7 @@ def play(params):
       LOG('**** last_pos: {} total_time: {}'.format(last_pos, total_time))
       if (total_time - last_pos) < 20: last_pos = total_time
       if last_pos > interval:
-        sky.set_bookmark(info['provider_variant_id'], info['bookmark_metadata'], last_pos)
+        sky.set_bookmark(info['provider_variant_id'], last_pos)
 
 
 def add_videos(category, ctype, videos, from_watchlist=False, from_continue=False, updateListing=False, cacheToDisc=True):
@@ -538,7 +538,7 @@ def to_watchlist(params):
 def remove_from_continue(params):
   info = sky.get_video_info(params['slug'])
   LOG('remove_from_continue: info: {}'.format(info))
-  status_code = sky.set_bookmark(info['provider_variant_id'], info['bookmark_metadata'], info['info']['duration'])
+  status_code = sky.set_bookmark(info['provider_variant_id'], info['info']['duration'])
   LOG('status_code: {}'.format(status_code))
   xbmc.executebuiltin("Container.Refresh")
 

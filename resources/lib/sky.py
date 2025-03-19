@@ -969,6 +969,7 @@ class SkyShowtime(object):
 
     def get_bookmarks(self):
       url = self.endpoints['get-bookmarks']
+      #LOG(url)
       headers = self.net.headers.copy()
       headers['Accept'] = 'application/vnd.bookmarking.v1+json'
       headers['Content-Type'] = 'application/vnd.bookmarking.v1+json'
@@ -979,21 +980,33 @@ class SkyShowtime(object):
       data = self.net.load_data(url, headers)
       return data
 
-    def set_bookmark(self, content_id, metadata, position):
-      url = self.endpoints['set-bookmark'].format(content_id=content_id)
+    def get_bookmark(self, content_id):
+      url = self.endpoints['set-bookmark2'].format(content_id=content_id)
+      #LOG(url)
       headers = self.net.headers.copy()
-      headers['Accept'] = 'application/vnd.bookmarking.v1+json'
-      headers['Content-Type'] = 'application/vnd.bookmarking.v1+json'
       if self.account['user_token']:
         headers['x-skyott-usertoken'] = self.account['user_token']
+      headers['Accept'] = 'application/vnd.bookmarks.v1+json'
+      headers['Content-Type'] = 'application/vnd.bookmarks.v1+json'
+      sig_header = self.sig.calculate_signature('GET', url, headers)
+      headers.update(sig_header)
+      data = self.net.load_data(url, headers)
+      return data
 
-      now = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
-      data = {"streamPosition": position, "timestamp": now, "metadata": metadata}
+    def set_bookmark(self, content_id, position):
+      url = self.endpoints['set-bookmark2'].format(content_id=content_id)
+      #LOG(url)
+      headers = self.net.headers.copy()
+      if self.account['user_token']:
+        headers['x-skyott-usertoken'] = self.account['user_token']
+      headers['Accept'] = 'application/vnd.bookmarks.v1+json'
+      headers['Content-Type'] = 'application/vnd.bookmarks.v1+json'
+      data = {"streamPositionSeconds": position}
       post_data = json.dumps(data)
-      LOG(post_data)
-
       sig_header = self.sig.calculate_signature('PUT', url, headers, post_data)
       headers.update(sig_header)
+      #print_json(headers)
+      #LOG(post_data)
       response = self.net.session.put(url, headers=headers, data=post_data)
       content = response.content.decode('utf-8')
       LOG('set_bookmark: result: {} {}'.format(response.status_code, content))
