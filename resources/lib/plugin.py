@@ -64,7 +64,7 @@ def play(params):
     if params.get('content_id') and params.get('provider_variant_id'):
       data = sky.get_playback_info(params['content_id'], params['provider_variant_id'], preferred_server, hdcpEnabled=enable_hdcp)
     else:
-      data = sky.get_live_playback_info(service_key, preferred_server, hdcpEnabled=enable_hdcp)
+      data = sky.get_live_playback_info(service_key, preferred_server, uhd=enable_uhd, hdcpEnabled=enable_hdcp, dolbyvision=dolbyvision, hdr10=hdr10)
 
   LOG('playback info: {}'.format(data))
   if not 'manifest_url' in data:
@@ -80,7 +80,7 @@ def play(params):
     show_notification(addon.getLocalizedString(30202))
     return
 
-  proxy = sky.cache.load_file('proxy.conf')
+  proxy = addon.getSetting('proxy_address')
   if not proxy:
     show_notification(addon.getLocalizedString(30206)) # Proxy is not running
     return

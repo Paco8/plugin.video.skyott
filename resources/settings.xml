@@ -9,6 +9,7 @@
         <setting id="hdcp_enabled" type="bool" label="30037" default="false"/>
         <setting id="only_subscribed" type="bool" label="30017" default="false"/>
         <setting label="30019" type="action" id="is_settings" action="Addon.OpenSettings(inputstream.adaptive)" enable="System.HasAddon(inputstream.adaptive)" option="close"/>
+        <setting id="proxy_address" type="text" label="" value="" default="" visible="false"/>
     </category>
     <category label="30005">
         <setting id="send_progress" type="bool" label="30025" default="false"/>

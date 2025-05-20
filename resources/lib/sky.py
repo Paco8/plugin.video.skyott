@@ -125,7 +125,7 @@ class SkyShowtime(object):
 
       # Get the territory from the cookie
       if not territory and self.account['cookie']:
-        m = re.search(b'hterr=([A-Z]{2})', self.account['cookie'])
+        m = re.search(b'(?:hterr|userTerritory|activeTerritory)=([A-Z]{2})', self.account['cookie'])
         if m: territory = m.group(1).decode('utf-8')
       LOG('territory: {}'.format(territory))
 
@@ -145,6 +145,10 @@ class SkyShowtime(object):
              'x-skyott-language': h.get('x-skyott-language'),
              'x-skyott-territory': h.get('x-skyott-territory'),
         })
+        for key in ['x-skyott-bouquetId', 'x-skyott-subBouquetId', 'x-skyott-broadcastRegions']:
+          if key in h:
+            self.platform['headers'][key] = h[key]
+
       # Override data from localisation if the user set a territory
       if territory:
         self.platform['headers']['x-skyott-territory'] = territory
@@ -415,7 +419,10 @@ class SkyShowtime(object):
       data = self.net.load_data(url)
       #print_json(data)
       #SkyShowtime.save_file('/tmp/series.json', data)
-      return self.parse_items(data['relationships']['items']['data'])
+      if 'relationships' in data:
+        return self.parse_items(data['relationships']['items']['data'])
+      else:
+        return []
 
     def get_seasons(self, slug):
       return self.get_series_info(slug)
@@ -752,8 +759,7 @@ class SkyShowtime(object):
         res['cdn'] = cdn
       return res
 
-    def get_playback_info(self, content_id, provider_variant_id, preferred_server='', uhd=False, hdcpEnabled=False, hdr10=False, dolbyvision=False):
-      url = self.endpoints['playouts']
+    def create_playback_request(self, uhd, hdcpEnabled, hdr10, dolbyvision):
       post_data = {
         "device": {
            "capabilities": [
@@ -782,8 +788,6 @@ class SkyShowtime(object):
             "FREEWHEEL"
           ]
         },
-        "contentId": content_id,
-        "providerVariantId": provider_variant_id,
         "parentalControlPin": "null",
         "personaParentalControlRating": "9"
       }
@@ -802,41 +806,21 @@ class SkyShowtime(object):
           post_data['device']['supportedColourSpaces'].append('HDR10')
         post_data['device']['supportedColourSpaces'].append('SDR')
 
-      #print_json(post_data)
+      return post_data
+
+    def get_playback_info(self, content_id, provider_variant_id, preferred_server='', uhd=False, hdcpEnabled=False, hdr10=False, dolbyvision=False):
+      url = self.endpoints['playouts']
+      post_data = self.create_playback_request(uhd=uhd, hdcpEnabled=hdcpEnabled, hdr10=hdr10, dolbyvision=dolbyvision)
+      post_data.update({"contentId": content_id, "providerVariantId": provider_variant_id})
+      print_json(post_data)
       return self.request_playback_tokens(url, post_data, 'application/vnd.playvod.v1+json', preferred_server)
 
-    def get_live_playback_info(self, service_key, preferred_server='', hdcpEnabled=False):
+    def get_live_playback_info(self, service_key, preferred_server='', uhd=False, hdcpEnabled=False, hdr10=False, dolbyvision=False):
       url = self.endpoints['playouts-live']
-      post_data = {
-        "serviceKey": service_key,
-        "device": {
-          "capabilities": [
-            {
-                "protection": "WIDEVINE",
-                "container": "ISOBMFF",
-                "transport": "DASH",
-                "acodec": "AAC",
-                "vcodec": "H264"
-            },
-            {
-                "protection": "NONE",
-                "container": "ISOBMFF",
-                "transport": "DASH",
-                "acodec": "AAC",
-                "vcodec": "H264"
-            }
-          ],
-          "maxVideoFormat": "HD",
-          "model": "Pixel",
-          "hdcpEnabled": hdcpEnabled
-        },
-        "client": {
-          "thirdParties": ["FREEWHEEL"],
-          "timeShiftEnabled": "false"
-        },
-        "parentalControlPin": "null",
-        "personaParentalControlRating": "9"
-      }
+      post_data = self.create_playback_request(uhd=uhd, hdcpEnabled=hdcpEnabled, hdr10=hdr10, dolbyvision=dolbyvision)
+      post_data["serviceKey"] = service_key
+      post_data["client"]["timeShiftEnabled"] = "false"
+      print_json(post_data)
       return self.request_playback_tokens(url, post_data, 'application/vnd.playlive.v1+json', preferred_server)
 
     def add_search(self, search_term):
@@ -908,6 +892,9 @@ class SkyShowtime(object):
       else:
         top_label = 'topNavWithIcons'
         main_label = 'Main'
+
+      if not 'relationships' in data: return res
+
       topnav = find_item(top_label, data['relationships']['items']['data'])
       #print_json(topnav)
       #SkyShowtime.save_file('/tmp/topnav.json', data)
@@ -1007,10 +994,13 @@ class SkyShowtime(object):
       headers.update(sig_header)
       #print_json(headers)
       #LOG(post_data)
-      response = self.net.session.put(url, headers=headers, data=post_data)
-      content = response.content.decode('utf-8')
-      LOG('set_bookmark: result: {} {}'.format(response.status_code, content))
-      return response.status_code
+      try:
+        response = self.net.session.put(url, headers=headers, data=post_data)
+        content = response.content.decode('utf-8')
+        LOG('set_bookmark: result: {} {}'.format(response.status_code, content))
+        return response.status_code
+      except:
+        return 0
 
     def get_devices(self):
       url = self.endpoints['get-devices']
@@ -1045,9 +1035,9 @@ class SkyShowtime(object):
 
     def download_epg(self):
       if self.account['profile_type'] == 'Kid':
-        cache_filename = 'cache/epg_kids.json'
+        cache_filename = self.pldir + '/epg_kids.json'
       else:
-        cache_filename = 'cache/epg.json'
+        cache_filename = self.pldir + '/epg.json'
       content = self.cache.load(cache_filename, 60)
       if content:
         data = json.loads(content)
@@ -1063,12 +1053,18 @@ class SkyShowtime(object):
       date = now.strftime('%Y-%m-%dT%H:%M%z')
       date = date[:-2] + ':' + date[-2:]
       url = self.endpoints['epg'].format(start_time=quote(date))
-      if self.platform['name'] == 'NowTV':
-        url += '&playout_content_segments={0}&discovery_content_segments={0}'.format(self.account['discovery'])
+      if True:
+        #url += '&playout_content_segments={0}&discovery_content_segments={0}'.format(self.account['discovery'])
+        url += '&playout_content_segments={0}&discovery_content_segments={0}'.format(self.account['content'])
+        #url += '&playout_content_segments={}'.format(self.account['content'])
+        #url += '&playout_content_segments={}'.format(self.account['discovery'])
         if self.account['profile_type'] == 'Kid':
           url += '&channelSection=KIDS'
       #LOG(url)
-      data = self.net.load_data(url)
+      headers = self.net.headers.copy()
+      if self.platform['name'] == 'NowTV':
+        headers['x-skyott-endorsements'] = 'videoFormat; caps="UHD",colorSpace; caps="HDR",audioFormat; caps="Stereo"'
+      data = self.net.load_data(url, headers)
       self.cache.save_json(cache_filename, data)
       return data
 
@@ -1084,12 +1080,15 @@ class SkyShowtime(object):
         t['dial'] = str(c['rank'])
         t['info']['title'] = t['dial'] +'. ' + c['name']
         t['channel_name'] = c['name']
+        t['channel_title'] = c.get('channelTitle')
         t['id'] = c['id']
         t['service_key'] = c['serviceKey']
         t['info']['playcount'] = 1 # Set as watched
         if 'images' in c:
           t['art'] = self.get_art(c['images'])
         t['channel_type'] = c['type']
+        if 'contentSegments' in c:
+          t['subscribed'] = self.is_subscribed(c['contentSegments'])
         res.append(t)
       return res
 

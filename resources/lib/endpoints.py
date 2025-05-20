@@ -39,7 +39,7 @@ class Endpoints(object):
       'search-vod': 'https://suggest.disco.' + self.host + '/suggest/v1/stb/home/0/0/0?term={search_term}&limit=40&entitytype=programme&entitytype=series&contentFormat=longform',
       'search': webclients + '/bff/search/v2?term={search_term}&limit=40&entityType=programme%2Cseries&contentFormat=longform',
       'menu': atom + '/adapter-calypso/v3/query/menu',
-      'epg': webclients + '/bff/channel_guide?startTime={start_time}&contentSegments=Free',
+      'epg': webclients + '/bff/channel_guide?startTime={start_time}',
       'playouts-live': ovp + '/video/playouts/live',
       'to-watchlist': mytv + '/watchlist/{uuid}',
       'get-bookmarks': ovp + '/bookmarking/bookmarks',

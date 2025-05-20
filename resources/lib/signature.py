@@ -58,7 +58,7 @@ class Signature(object):
     text_headers = ''
     for key in sorted(headers.keys()):
       if key.lower().startswith('x-skyott'):
-        text_headers += key + ': ' + headers[key] + '\n'
+        text_headers += key.lower() + ': ' + headers[key] + '\n'
     #print(text_headers)
     headers_md5 = hashlib.md5(text_headers.encode()).hexdigest()
     #print(headers_md5)
