@@ -39,9 +39,14 @@ class Signature(object):
 
   def __init__(self, platform='skyshowtime'):
     self.platform = platform
-    self.app_id = self.platforms[platform]['app_id']
-    self.signature_key = self.platforms[platform]['signature_key']
-    self.sig_version = self.platforms[platform]['version']
+    if platform == 'wowtv':
+      self.app_id = self.platforms['nowtv']['app_id']
+      self.signature_key = self.platforms['nowtv']['signature_key']
+      self.sig_version = self.platforms['nowtv']['version']
+    else:
+      self.app_id = self.platforms[platform]['app_id']
+      self.signature_key = self.platforms[platform]['signature_key']
+      self.sig_version = self.platforms[platform]['version']
 
   def calculate_signature(self, method, url, headers, payload='', timestamp=None):
     if not timestamp:
