@@ -76,7 +76,7 @@ class SkyShowtime(object):
          'name': 'WowTV',
          'host': 'wowtv.de',
          'config_dir': 'wowtv',
-         'appnamespace': 'WOWDE',
+         'appnamespace': 'NOWDEUTSCHLAND',
          'headers': {
            'x-skyott-activeterritory': 'DE',
            'x-skyott-client-version': '4.3.12',
@@ -407,12 +407,12 @@ class SkyShowtime(object):
       #SkyShowtime.save_file('/tmp/catalog.json', data)
       if 'rail' in data['data']:
         items = data['data']['rail'].get('items', [])
-        if self.platform['name'] == 'NowTV':
+        if self.platform['name'] in ['NowTV', "WowTV"]:
             rail_id = data['data']['rail']['id']
             items = self.get_rails(rail_id)
       elif 'group' in data['data']:
         items = data['data']['group'].get('rails', [])
-        if self.platform['name'] == 'NowTV':
+        if self.platform['name'] in ['NowTV', "WowTV"]:
           group_id = data['data']['group']['id']
           items = self.get_browse_page(group_id)
       return self.parse_catalog(items)
@@ -429,7 +429,7 @@ class SkyShowtime(object):
 
     def get_series_info(self, slug):
       url = self.endpoints['get-series'].format(slug=slug)
-      if self.platform['name'] == 'NowTV':
+      if self.platform['name'] in ['NowTV', 'WowTv']:
         url += '&contentSegments={}'.format(self.account['content'])
       #LOG(url)
       data = self.net.load_data(url)
@@ -448,7 +448,7 @@ class SkyShowtime(object):
 
     def get_video_info(self, slug):
       url = self.endpoints['get-video-info'].format(slug=slug)
-      if self.platform['name'] == 'NowTV':
+      if self.platform['name'] in ['NowTV', 'WowTV']:
         url += '&contentSegments={}'.format(self.account['content'])
       #LOG(url)
       data = self.net.load_data(url)
@@ -559,13 +559,13 @@ class SkyShowtime(object):
       return slug
 
     def get_my_list(self):
-      if self.platform['name'] == 'NowTV':
+      if self.platform['name'] in ['NowTV', 'WowTV']:
         return self.get_my_section2('/home/watchlist', 'WATCHLIST')
       else:
         return self.get_my_section(self.get_my_stuff_slug())
 
     def get_continue_watching(self):
-      if self.platform['name'] == 'NowTV':
+      if self.platform['name'] in ['NowTV', 'WowTV']:
         return self.get_my_section2('/home/continue-watching', 'CONTINUE_WATCHING')
       else:
         return self.get_my_section('/home/continue-watching')
@@ -598,7 +598,7 @@ class SkyShowtime(object):
 
     def get_rails(self, id, rtype=None):
       url = self.endpoints['get-rails'].format(id=id)
-      if self.platform['name'] == 'NowTV':
+      if self.platform['name'] in ['NowTV', 'WowTV']:
         url += '&discovery_content_segments={0}&playout_content_segments={0}'.format(self.account['discovery'])
       if rtype:
           url += '&type=' + rtype
@@ -624,7 +624,7 @@ class SkyShowtime(object):
 
     def get_browse_page(self, id):
       url = self.endpoints['browse-page'].format(id=id)
-      if self.platform['name'] == 'NowTV':
+      if self.platform['name'] in ['NowTV', 'WowTV']:
         url += '&discovery_content_segments={}'.format(self.account['discovery'])
       #LOG(url)
       headers = self.net.headers.copy()
@@ -864,7 +864,7 @@ class SkyShowtime(object):
 
     def search(self, search_term):
       url = self.endpoints['search'].format(search_term=search_term)
-      if self.platform['name'] == 'NowTV':
+      if self.platform['name'] in ['NowTV', 'WowTV']:
         url += '&contentSegment={}&discovery_content_segments={}'.format(self.account['content'], self.account['discovery'])
       #LOG(url)
       data = self.net.load_data(url)
@@ -1078,7 +1078,7 @@ class SkyShowtime(object):
           url += '&channelSection=KIDS'
       #LOG(url)
       headers = self.net.headers.copy()
-      if self.platform['name'] == 'NowTV':
+      if self.platform['name'] in ['NowTV', 'WowTV']:
         headers['x-skyott-endorsements'] = 'videoFormat; caps="UHD",colorSpace; caps="HDR",audioFormat; caps="Stereo"'
       data = self.net.load_data(url, headers)
       self.cache.save_json(cache_filename, data)
