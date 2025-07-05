@@ -11,6 +11,7 @@ import io
 import os
 import time
 import re
+import xbmc
 from datetime import datetime
 
 from .log import LOG, print_json
@@ -805,7 +806,7 @@ class SkyShowtime(object):
           ]
         },
         "parentalControlPin": "null",
-        "personaParentalControlRating": "9"
+        "personaParentalControlRating": "19"
       }
 
       if uhd:
