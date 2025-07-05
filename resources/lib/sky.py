@@ -80,9 +80,9 @@ class SkyShowtime(object):
          'headers': {
            'x-skyott-activeterritory': 'DE',
            'x-skyott-client-version': '4.3.12',
-           'x-skyott-device': 'MOBILE',
+           'x-skyott-device': 'TV',
            'x-skyott-language': 'de-DE',
-           'x-skyott-platform': 'ANDROID',
+           'x-skyott-platform': 'ANDROIDTV',
            'x-skyott-proposition': 'NOWOTT',
            'x-skyott-provider': 'NOWTV',
            'x-skyott-territory': 'DE'
@@ -718,8 +718,8 @@ class SkyShowtime(object):
       post_data = {
         "auth": auth,
         "device": {
-           "type": "MOBILE",
-           "platform": "ANDROID",
+           "type": "TV",
+           "platform": "ANDROIDTV",
            "id": self.platform['device_id'],
            "drmDeviceId": "UNKNOWN"
         }
