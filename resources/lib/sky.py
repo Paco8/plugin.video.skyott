@@ -70,6 +70,22 @@ class SkyShowtime(object):
            'x-skyott-proposition': 'NOWOTT',
            'x-skyott-provider': 'NOWTV',
            'x-skyott-territory': 'GB'
+         }
+      },
+      'wowtv': {
+         'name': 'WowTV',
+         'host': 'wowtv.de',
+         'config_dir': 'wowtv',
+         'appnamespace': 'WOWDE',
+         'headers': {
+           'x-skyott-activeterritory': 'DE',
+           'x-skyott-client-version': '4.3.12',
+           'x-skyott-device': 'MOBILE',
+           'x-skyott-language': 'de-DE',
+           'x-skyott-platform': 'ANDROID',
+           'x-skyott-proposition': 'NOWOTT',
+           'x-skyott-provider': 'NOWTV',
+           'x-skyott-territory': 'DE'
          },
       }
     }
@@ -789,7 +805,7 @@ class SkyShowtime(object):
           ]
         },
         "parentalControlPin": "null",
-        "personaParentalControlRating": "9"
+        "personaParentalControlRating": "19"
       }
 
       if uhd:
@@ -1160,6 +1176,8 @@ class SkyShowtime(object):
           output_dir = 'peacocktv'
         elif 'nowtv' in data['host']:
           output_dir = 'nowtv'
+        elif 'wowtv' in data['host']:
+          output_dir = 'wowtv'
         else:
           output_dir = 'skyshowtime'
         self.cache.save_file(output_dir + '/cookie.conf', data['data'])
