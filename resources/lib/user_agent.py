@@ -34,7 +34,7 @@ chrome_user_agent = random.choice(useragents)
 def user_agent(platform='skyshowtime'):
   if platform == 'skyshowtime':
     return 'SkyShowtimeAndroid-GLOBAL/4.2.12-121040212'
-  elif platform == 'nowtv':
+  elif platform in ['nowtv', 'wowtv']:
     return chrome_user_agent
   else:
     return 'PeacockAndroid-US/4.3.22-121040322'
