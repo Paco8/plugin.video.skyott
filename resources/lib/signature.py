@@ -39,7 +39,7 @@ class Signature(object):
 
   def __init__(self, platform='skyshowtime'):
     self.platform = platform
-    if platform == 'wowtv':
+    if platform in ['wowtv', 'nowtv', 'nowtv-it']:
       self.app_id = self.platforms['nowtv']['app_id']
       self.signature_key = self.platforms['nowtv']['signature_key']
       self.sig_version = self.platforms['nowtv']['version']

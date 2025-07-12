@@ -1,6 +1,6 @@
 <settings>
     <category label="30001">
-        <setting id="platform_id" type="labelenum" label="30031" values="SkyShowtime|PeacockTV|NowTV|WowTV" default="SkyShowtime" visible="false"/>
+        <setting id="platform_id" type="labelenum" label="30031" values="SkyShowtime|PeacockTV|NowTV|WowTV|NowTV-IT" default="SkyShowtime" visible="false"/>
         <setting id="store_credentials" type="bool" label="30050" default="false"/>
         <setting id="territory" type="text" label="30041" default=""/>
         <setting id="uhd" type="bool" label="30033" default="false"/>

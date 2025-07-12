@@ -516,7 +516,7 @@ def list_users():
   close_folder()
 
 def list_platforms():
-  platforms = ['SkyShowtime', 'PeacockTV', 'NowTV', 'WowTV']
+  platforms = ['SkyShowtime', 'PeacockTV', 'NowTV', 'WowTV', 'NowTV-IT']
   open_folder(addon.getLocalizedString(30160)) # Accounts
   for platform in platforms:
     name = addon.getLocalizedString(30192).format(platform)
