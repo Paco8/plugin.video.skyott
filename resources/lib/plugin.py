@@ -140,13 +140,12 @@ def play(params):
     key = None
     if not xbmc.getCondVisibility('system.platform.android') and platform_id != 'nowtv':
       from resources.lib.cdm import get_cdm_keys
-      try:
-        d = get_cdm_keys(manifest_url, data['license_url'].split('|')[0])
-        key = d.get('key')
-        if key:
-          LOG('cdm kid: {}'.format(key.split(':')[0]))
-      except Exception as e:
-        LOG('error: {}'.format(str(e)))
+      d = get_cdm_keys(manifest_url, data['license_url'].split('|')[0])
+      if 'error' in d:
+        LOG('cdm error: {}'.format(d['error']))
+      key = d.get('key')
+      if key:
+        LOG('cdm kid: {}'.format(key.split(':')[0]))
     if key:
       play_item.setProperty('inputstream.adaptive.drm_legacy', 'org.w3.clearkey|{}'.format(key))
     else:

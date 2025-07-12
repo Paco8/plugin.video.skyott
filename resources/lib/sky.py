@@ -29,6 +29,7 @@ class SkyShowtime(object):
          'host': 'skyshowtime.com',
          'config_dir': 'skyshowtime',
          'appnamespace': None,
+         'use_nowtv_api': False,
          'headers': {
            'x-skyott-activeterritory': 'ES',
            'x-skyott-client-version': '4.3.12',
@@ -45,6 +46,7 @@ class SkyShowtime(object):
          'host': 'peacocktv.com',
          'config_dir': 'peacocktv',
          'appnamespace': None,
+         'use_nowtv_api': False,
          'headers': {
            'x-skyott-activeterritory': 'US',
            'x-skyott-client-version': '4.3.12',
@@ -61,6 +63,7 @@ class SkyShowtime(object):
          'host': 'nowtv.com',
          'config_dir': 'nowtv',
          'appnamespace': 'NOWUK',
+         'use_nowtv_api': True,
          'headers': {
            'x-skyott-activeterritory': 'GB',
            'x-skyott-client-version': '4.3.12',
@@ -77,6 +80,7 @@ class SkyShowtime(object):
          'host': 'wowtv.de',
          'config_dir': 'wowtv',
          'appnamespace': 'NOWDEUTSCHLAND',
+         'use_nowtv_api': True,
          'headers': {
            'x-skyott-activeterritory': 'DE',
            'x-skyott-client-version': '4.3.12',
@@ -407,12 +411,12 @@ class SkyShowtime(object):
       #SkyShowtime.save_file('/tmp/catalog.json', data)
       if 'rail' in data['data']:
         items = data['data']['rail'].get('items', [])
-        if self.platform['name'] in ['NowTV', "WowTV"]:
+        if self.platform['use_nowtv_api']:
             rail_id = data['data']['rail']['id']
             items = self.get_rails(rail_id)
       elif 'group' in data['data']:
         items = data['data']['group'].get('rails', [])
-        if self.platform['name'] in ['NowTV', "WowTV"]:
+        if self.platform['use_nowtv_api']:
           group_id = data['data']['group']['id']
           items = self.get_browse_page(group_id)
       return self.parse_catalog(items)
@@ -429,7 +433,7 @@ class SkyShowtime(object):
 
     def get_series_info(self, slug):
       url = self.endpoints['get-series'].format(slug=slug)
-      if self.platform['name'] in ['NowTV', 'WowTv']:
+      if self.platform['use_nowtv_api']:
         url += '&contentSegments={}'.format(self.account['content'])
       #LOG(url)
       data = self.net.load_data(url)
@@ -448,7 +452,7 @@ class SkyShowtime(object):
 
     def get_video_info(self, slug):
       url = self.endpoints['get-video-info'].format(slug=slug)
-      if self.platform['name'] in ['NowTV', 'WowTV']:
+      if self.platform['use_nowtv_api']:
         url += '&contentSegments={}'.format(self.account['content'])
       #LOG(url)
       data = self.net.load_data(url)
@@ -559,13 +563,13 @@ class SkyShowtime(object):
       return slug
 
     def get_my_list(self):
-      if self.platform['name'] in ['NowTV', 'WowTV']:
+      if self.platform['use_nowtv_api']:
         return self.get_my_section2('/home/watchlist', 'WATCHLIST')
       else:
         return self.get_my_section(self.get_my_stuff_slug())
 
     def get_continue_watching(self):
-      if self.platform['name'] in ['NowTV', 'WowTV']:
+      if self.platform['use_nowtv_api']:
         return self.get_my_section2('/home/continue-watching', 'CONTINUE_WATCHING')
       else:
         return self.get_my_section('/home/continue-watching')
@@ -598,7 +602,7 @@ class SkyShowtime(object):
 
     def get_rails(self, id, rtype=None):
       url = self.endpoints['get-rails'].format(id=id)
-      if self.platform['name'] in ['NowTV', 'WowTV']:
+      if self.platform['use_nowtv_api']:
         url += '&discovery_content_segments={0}&playout_content_segments={0}'.format(self.account['discovery'])
       if rtype:
           url += '&type=' + rtype
@@ -624,7 +628,7 @@ class SkyShowtime(object):
 
     def get_browse_page(self, id):
       url = self.endpoints['browse-page'].format(id=id)
-      if self.platform['name'] in ['NowTV', 'WowTV']:
+      if self.platform['use_nowtv_api']:
         url += '&discovery_content_segments={}'.format(self.account['discovery'])
       #LOG(url)
       headers = self.net.headers.copy()
@@ -718,12 +722,15 @@ class SkyShowtime(object):
       post_data = {
         "auth": auth,
         "device": {
-           "type": "TV",
-           "platform": "ANDROIDTV",
+           "type": "MOBILE",
+           "platform": "ANDROID",
            "id": self.platform['device_id'],
            "drmDeviceId": "UNKNOWN"
         }
       }
+      if self.platform['name'] == 'WowTV':
+         post_data['device']['type'] = 'TV'
+         post_data['device']['platform'] = 'ANDROIDTV'
       LOG('get_tokens: post_data: {}'.format(post_data))
       post_data = json.dumps(post_data)
       sig_header = self.sig.calculate_signature('POST', url, headers, post_data)
@@ -864,7 +871,7 @@ class SkyShowtime(object):
 
     def search(self, search_term):
       url = self.endpoints['search'].format(search_term=search_term)
-      if self.platform['name'] in ['NowTV', 'WowTV']:
+      if self.platform['use_nowtv_api']:
         url += '&contentSegment={}&discovery_content_segments={}'.format(self.account['content'], self.account['discovery'])
       #LOG(url)
       data = self.net.load_data(url)
@@ -1078,7 +1085,7 @@ class SkyShowtime(object):
           url += '&channelSection=KIDS'
       #LOG(url)
       headers = self.net.headers.copy()
-      if self.platform['name'] in ['NowTV', 'WowTV']:
+      if self.platform['use_nowtv_api']:
         headers['x-skyott-endorsements'] = 'videoFormat; caps="UHD",colorSpace; caps="HDR",audioFormat; caps="Stereo"'
       data = self.net.load_data(url, headers)
       self.cache.save_json(cache_filename, data)
