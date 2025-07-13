@@ -322,7 +322,7 @@ msgstr "Login fehlgeschlagen"
 
 msgctxt "#30167"
 msgid "Edit account"
-msgstr "Account editiern"
+msgstr "Account editieren"
 
 msgctxt "#30168"
 msgid "Login successful"
