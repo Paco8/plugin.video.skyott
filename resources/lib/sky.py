@@ -744,7 +744,7 @@ class SkyShowtime(object):
            "drmDeviceId": "UNKNOWN"
         }
       }
-      if self.platform['name'] == 'WowTV':
+      if self.platform['name'] in ['WowTV', 'NowTV-IT']:
          post_data['device']['type'] = 'TV'
          post_data['device']['platform'] = 'ANDROIDTV'
       LOG('get_tokens: post_data: {}'.format(post_data))
