@@ -427,7 +427,7 @@ class SkyShowtime(object):
       #SkyShowtime.save_file('/tmp/catalog.json', data)
       if 'rail' in data['data']:
         items = data['data']['rail'].get('items', [])
-      if self.platform['use_nowtv_api']:
+        if self.platform['use_nowtv_api']:
             rail_id = data['data']['rail']['id']
             items = self.get_rails(rail_id)
       elif 'group' in data['data']:
