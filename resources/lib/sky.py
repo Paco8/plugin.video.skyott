@@ -97,6 +97,7 @@ class SkyShowtime(object):
          'host': 'nowtv.it',
          'config_dir': 'nowtv-it',
          'appnamespace': 'NOWITALIA',
+         'use_nowtv_api': True,
          'headers': {
            'x-skyott-activeterritory': 'IT',
            'x-skyott-client-version': '4.3.12',

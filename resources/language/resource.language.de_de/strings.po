@@ -18,7 +18,7 @@ msgstr ""
 
 msgctxt "#30001"
 msgid "Main"
-msgstr "Haupt"
+msgstr "Allgemein"
 
 msgctxt "#30002"
 msgid "Proxy"
@@ -110,7 +110,7 @@ msgstr "Versuche, den Fehler 4027 zu beheben"
 
 msgctxt "#30025"
 msgid "Send video progress to provider's server"
-msgstr "Videofortschritt an den Server des Anbieters senden"
+msgstr "Wiedergabefortschritt an den Server des Anbieters senden"
 
 msgctxt "#30026"
 msgid "Update interval (in seconds)"
@@ -176,7 +176,7 @@ msgstr "Für diese Sprachen verwenden (z.B.: es en pt):"
 # For SkyOTT only
 msgctxt "#30041"
 msgid "Subscription country (two letter code):"
-msgstr "Abonnement-Land (Code bestehend aus zwei Buchstaben)"
+msgstr "Abonnement-Land (Code bestehend aus zwei Buchstaben):"
 
 msgctxt "#30042"
 msgid "Warn when a title is removed in less than these days:"
@@ -184,7 +184,7 @@ msgstr "Warnung ausgeben, wenn ein Titel in weniger als x Tagen entfernt wird:"
 
 msgctxt "#30050"
 msgid "Remember username and password"
-msgstr "Benutzername und Passwort merken"
+msgstr "Benutzername und Passwort speichern"
 
 msgctxt "#30051"
 msgid "Process subtitles"
@@ -322,7 +322,7 @@ msgstr "Login fehlgeschlagen"
 
 msgctxt "#30167"
 msgid "Edit account"
-msgstr "Account editieren"
+msgstr "Account verwalten"
 
 msgctxt "#30168"
 msgid "Login successful"
@@ -388,7 +388,7 @@ msgstr "Anmeldung mit Schlüsseldatei"
 
 msgctxt "#30182"
 msgid "Select the key file"
-msgstr "Auswahl der Schlüsseldatei"
+msgstr "Schlüsseldatei auswählen"
 
 msgctxt "#30183"
 msgid "Login with username"
@@ -396,7 +396,7 @@ msgstr "Anmeldung mit Benutzernamen"
 
 msgctxt "#30184"
 msgid "Export access token to key file"
-msgstr "Exportiere Zugangstoken in Schlüsseldatei"
+msgstr "Zugangstoken als Schlüsseldatei exportieren"
 
 msgctxt "#30185"
 msgid "Select a folder to save the key file"
