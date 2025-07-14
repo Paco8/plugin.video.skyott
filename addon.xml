@@ -20,9 +20,11 @@
     <description lang="en_GB">Watch SkyShowtime or Peacock TV in Kodi. Requires a subscription.</description>
     <description lang="es_ES">Vea SkyShowtime o Peacock TV en Kodi. Se necesita estar abonado.</description>
     <description lang="pl_PL">Oglądaj Peacock TV i SkyShowtime w Kodi. Wymaga subskrypcji.</description>
+    <description lang="de_DE">Schauen Sie SkyShowtime oder Peacock TV in Kodi. Erfordert ein Abonnement.</description>
     <disclaimer lang="en_GB">This addon is not officially authorized or supported by SkyShowtime nor Peacock TV. Any product names, logos, and trademarks mentioned in this project are the property of their respective owners.</disclaimer>
     <disclaimer lang="es_ES">Este addon no está oficialmente autorizado ni respaldado por SkyShowtime ni Peacock TV. Cualquier nombre de producto, logotipo y marca comercial mencionados en este proyecto son propiedad de sus respectivos propietarios.</disclaimer>
     <disclaimer lang="pl_PL">Ten dodatek nie jest oficjalnie autoryzowany ani wspierany przez Peacock TV lub SkyShowtime. Wszelkie nazwy produktów, loga i znaki handlowe wymienione w tym projekcie należą ich właścicieli.</disclaimer>
+    <disclaimer lang="de_DE">Dieses Addon wird weder von SkyShowtime noch von Peacock TV offiziell autorisiert oder unterstützt. Alle in diesem Projekt genannten Produktnamen, Logos und Handelsmarken sind Eigentum der entsprechenden Inhaber.</disclaimer>
     <platform>all</platform>
     <license>LGPL-2.1-or-later</license>
     <website></website>

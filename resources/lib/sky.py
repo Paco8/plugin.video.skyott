@@ -91,6 +91,23 @@ class SkyShowtime(object):
            'x-skyott-provider': 'NOWTV',
            'x-skyott-territory': 'DE'
          },
+      },
+      'nowtv-it': {
+         'name': 'NowTV-IT',
+         'host': 'nowtv.it',
+         'config_dir': 'nowtv-it',
+         'appnamespace': 'NOWITALIA',
+         'use_nowtv_api': True,
+         'headers': {
+           'x-skyott-activeterritory': 'IT',
+           'x-skyott-client-version': '4.3.12',
+           'x-skyott-device': 'TV',
+           'x-skyott-language': 'it-IT',
+           'x-skyott-platform': 'ANDROIDTV',
+           'x-skyott-proposition': 'NOWOTT',
+           'x-skyott-provider': 'NOWTV',
+           'x-skyott-territory': 'IT'
+         },
       }
     }
 
@@ -728,7 +745,7 @@ class SkyShowtime(object):
            "drmDeviceId": "UNKNOWN"
         }
       }
-      if self.platform['name'] == 'WowTV':
+      if self.platform['name'] in ['WowTV', 'NowTV-IT']:
          post_data['device']['type'] = 'TV'
          post_data['device']['platform'] = 'ANDROIDTV'
       LOG('get_tokens: post_data: {}'.format(post_data))
@@ -1181,6 +1198,8 @@ class SkyShowtime(object):
         data = json.load(f)
         if 'peacocktv' in data['host']:
           output_dir = 'peacocktv'
+        elif 'nowtv.it' in data['host']:
+          output_dir = 'nowtv-it'
         elif 'nowtv' in data['host']:
           output_dir = 'nowtv'
         elif 'wowtv' in data['host']:
