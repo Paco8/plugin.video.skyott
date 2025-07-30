@@ -138,7 +138,8 @@ def play(params):
     LOG('license_url: {}'.format(license_url))
 
     key = None
-    if not xbmc.getCondVisibility('system.platform.android') and platform_id != 'nowtv':
+    if not xbmc.getCondVisibility('system.platform.android'):
+      return
       from resources.lib.cdm import get_cdm_keys
       d = get_cdm_keys(manifest_url, data['license_url'].split('|')[0])
       if 'error' in d:
