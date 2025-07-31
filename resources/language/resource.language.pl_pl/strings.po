@@ -424,6 +424,22 @@ msgctxt "#30192"
 msgid "Use a {} account"
 msgstr "Użyj konta {}"
 
+msgctxt "#30193"
+msgid "Select the credentials file"
+msgstr ""
+
+msgctxt "#30194"
+msgid "Select a folder to save the credentials file"
+msgstr ""
+
+msgctxt "#30195"
+msgid "Export credentials"
+msgstr ""
+
+msgctxt "#30196"
+msgid "Import credentials"
+msgstr ""
+
 msgctxt "#30200"
 msgid "Error"
 msgstr "Błąd"
@@ -611,12 +627,8 @@ msgid "If you find this addon useful you can buy the developer a coffee:"
 msgstr ""
 "Jeśli uważasz ten dodatek za przydatny, możesz kupić deweloperowi kawę:"
 
-# For Orange and Movistar only
-#~ msgctxt "#30306"
-#~ msgid "Save to this folder (requires restart)"
-#~ msgstr "Zapisz w tym folderze (wymaga ponownego uruchomienia)"
-
-# For SkyOTT only
-#~ msgctxt "#30040"
-#~ msgid "Use only for these languages (e.g.: es en pt):"
-#~ msgstr "Użycie tylko dla tych języków (np. es en pt):"
+msgctxt "#30455"
+msgid ""
+"In order to play this stream on this device, the file device.wvd must be "
+"installed in {}. You can find more information at {}."
+msgstr ""

@@ -218,7 +218,7 @@ msgstr "TV-Shows"
 # For Orange and Movistar only
 msgctxt "#30107"
 msgid "EPG"
-msgstr "EPG
+msgstr "EPG"
 
 msgctxt "#30108"
 msgid "Manage devices"
@@ -290,7 +290,7 @@ msgstr "Neues Gerät"
 
 msgctxt "#30154"
 msgid "Device name"
-msgstr "Gerätename
+msgstr "Gerätename"
 
 msgctxt "#30160"
 msgid "Accounts"
@@ -594,8 +594,12 @@ msgstr "Überschreiben bestätigen"
 
 # For Orange and Movistar only
 msgctxt "#30323"
-msgid "There are already settings for IPTV Simple.\nDo you want to overwrite them?"
-msgstr "Es gibt bereits Einstellungen für IPTV Simple.\nMöchten Sie diese überschreiben?"
+msgid ""
+"There are already settings for IPTV Simple.\n"
+"Do you want to overwrite them?"
+msgstr ""
+"Es gibt bereits Einstellungen für IPTV Simple.\n"
+"Möchten Sie diese überschreiben?"
 
 # For Orange and Movistar only
 msgctxt "#30324"
@@ -620,4 +624,12 @@ msgstr "Kaufen Sie dem Entwickler einen Kaffee"
 
 msgctxt "#30451"
 msgid "If you find this addon useful you can buy the developer a coffee:"
-msgstr "Wenn Sie das Addon nützlich finden, können Sie dem Entwickler einen Kaffee kaufen:"
+msgstr ""
+"Wenn Sie das Addon nützlich finden, können Sie dem Entwickler einen Kaffee "
+"kaufen:"
+
+msgctxt "#30455"
+msgid ""
+"In order to play this stream on this device, the file device.wvd must be "
+"installed in {}. You can find more information at {}."
+msgstr ""

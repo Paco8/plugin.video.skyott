@@ -557,8 +557,12 @@ msgstr "Confirmar"
 
 # For Orange and Movistar only
 msgctxt "#30323"
-msgid "There are already settings for IPTV Simple.\nDo you want to overwrite them?"
-msgstr "Ya existe una configuración para IPTV Simple.\n¿Quieres sobreescribirla?"
+msgid ""
+"There are already settings for IPTV Simple.\n"
+"Do you want to overwrite them?"
+msgstr ""
+"Ya existe una configuración para IPTV Simple.\n"
+"¿Quieres sobreescribirla?"
 
 # For Orange and Movistar only
 msgctxt "#30324"
@@ -585,6 +589,10 @@ msgctxt "#30451"
 msgid "If you find this addon useful you can buy the developer a coffee:"
 msgstr "Si este addon es útil para ti puedes invitar al programador a un café:"
 
-#~ msgctxt "#30040"
-#~ msgid "Use only for these languages (e.g.: es en pt):"
-#~ msgstr "Usar solo para estos idiomas (ej: es en pt):"
+msgctxt "#30455"
+msgid ""
+"In order to play this stream on this device, the file device.wvd must be "
+"installed in {}. You can find more information at {}."
+msgstr ""
+"Para reproducir este vídeo en este dispositivo, el archivo device.wvd debe estar instalado en {}. "
+"Puedes encontrar más información en {}."

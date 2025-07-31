@@ -424,6 +424,22 @@ msgctxt "#30192"
 msgid "Use a {} account"
 msgstr "Használd a {} fiókot"
 
+msgctxt "#30193"
+msgid "Select the credentials file"
+msgstr ""
+
+msgctxt "#30194"
+msgid "Select a folder to save the credentials file"
+msgstr ""
+
+msgctxt "#30195"
+msgid "Export credentials"
+msgstr ""
+
+msgctxt "#30196"
+msgid "Import credentials"
+msgstr ""
+
 msgctxt "#30200"
 msgid "Error"
 msgstr "Hiba"
@@ -609,12 +625,8 @@ msgid "If you find this addon useful you can buy the developer a coffee:"
 msgstr ""
 "Ha hasznosnak találod ezt a kiegészítőt, fizess a fejlesztőnek egy kávét:"
 
-# For Orange and Movistar only
-#~ msgctxt "#30306"
-#~ msgid "Save to this folder (requires restart)"
-#~ msgstr "Mentés ebbe a mappába (újraindítás szükséges)"
-
-# For SkyOTT only
-#~ msgctxt "#30040"
-#~ msgid "Use only for these languages (e.g.: es en pt):"
-#~ msgstr "Csak ezekhez a nyelvekhez használja (pl.: es en pt):"
+msgctxt "#30455"
+msgid ""
+"In order to play this stream on this device, the file device.wvd must be "
+"installed in {}. You can find more information at {}."
+msgstr ""

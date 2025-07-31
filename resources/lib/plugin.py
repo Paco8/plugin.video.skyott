@@ -139,8 +139,12 @@ def play(params):
 
     key = None
     if not xbmc.getCondVisibility('system.platform.android'):
-      return
-      from resources.lib.cdm import get_cdm_keys
+      from resources.lib.cdm import get_cdm_keys,installed_device
+      if not installed_device():
+        dialog = xbmcgui.Dialog()
+        dialog.textviewer(addon.getLocalizedString(30200),
+                          addon.getLocalizedString(30455).format(profile_dir, 'https://github.com/Paco8/plugin.video.skyott'))
+        return
       d = get_cdm_keys(manifest_url, data['license_url'].split('|')[0])
       if 'error' in d:
         LOG('cdm error: {}'.format(d['error']))
