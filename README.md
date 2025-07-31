@@ -1,15 +1,11 @@
-![Kodi version](https://img.shields.io/badge/kodi%20versions-18--21-blue)
+![Kodi version](https://img.shields.io/badge/kodi%20versions-19--21-blue)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Paco8/plugin.video.skyott)
 ![GitHub all releases](https://img.shields.io/github/downloads/Paco8/plugin.video.skyott/total)
 
 # Skyshowtime addon for Kodi
 
-<!--
 ## Important note: ##
--  ~~Logging in by entering a username and password is not possible yet. For the moment it's necessary to get a cookie from a web browser. You'll find below some methods to do it~~.
-- **Playback only works on Android devices** (including firesticks) due to DRM restrictions.
-- SkyShowtime subscribers must select SkyShowtime as the `Streaming service` in the addon settings.
--->
+**Playback only works on Android devices (including firesticks) due to DRM restrictions.**
 
 ## Installation
 ### Manual installation
