@@ -837,6 +837,7 @@ class SkyShowtime(object):
           {"protection": "WIDEVINE", "container": "ISOBMFF", "transport": "DASH","acodec": "AAC", "vcodec": "H265"}
         )
         post_data['device']['maxVideoFormat'] = 'UHD'
+        post_data['device']['robustness'] = 'HW_SECURE_ALL'
 
         # Order is important
         post_data['device']['supportedColourSpaces'] = []
