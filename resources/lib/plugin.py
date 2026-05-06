@@ -29,6 +29,8 @@ from .addon import *
 from .gui import *
 from .user_agent import chrome_user_agent
 
+kodi_version= int(xbmc.getInfoLabel('System.BuildVersion')[:2])
+
 # Get the plugin url in plugin:// notation.
 _url = sys.argv[0]
 # Get the plugin handle as an integer number.
@@ -126,16 +128,24 @@ def play(params):
   license_headers = headers + '&Content-Type=application/octet-stream'
 
   play_item = xbmcgui.ListItem(path=url)
-  play_item.setProperty('inputstream.adaptive.manifest_type', 'mpd')
+  license_key = ''
+
   if 'license_url' in data:
     if addon.getSettingBool('use_proxy_for_license'):
       extra_params = ''
       if slug:
         extra_params = '&content_id={}&provider_variant_id={}'.format(info['content_id'], info['provider_variant_id'])
-      license_url = '{}/license?url={}{}||R{{SSM}}|'.format(proxy, quote_plus(data['license_url']), extra_params)
+      license_key = '{}/license?url={}{}'.format(proxy, quote_plus(data['license_url']), extra_params)
     else:
-      license_url = '{}|{}|R{{SSM}}|'.format(data['license_url'], license_headers)
-    LOG('license_url: {}'.format(license_url))
+      license_key = data['license_url']
+    LOG('license_key: {}'.format(license_key))
+
+    if kodi_version > 20:
+      play_item.setProperty('inputstream.adaptive.drm_legacy', 'com.widevine.alpha|{}|{}'.format(license_key, license_headers))
+    else:
+      play_item.setProperty('inputstream.adaptive.manifest_type', 'mpd')
+      play_item.setProperty('inputstream.adaptive.license_key', '{}|{}|R{{SSM}}|'.format(license_key, license_headers))
+      play_item.setProperty('inputstream.adaptive.license_type', 'com.widevine.alpha')
 
     key = None
     if not xbmc.getCondVisibility('system.platform.android'):
@@ -153,9 +163,6 @@ def play(params):
         LOG('cdm kid: {}'.format(key.split(':')[0]))
     if key:
       play_item.setProperty('inputstream.adaptive.drm_legacy', 'org.w3.clearkey|{}'.format(key))
-    else:
-      play_item.setProperty('inputstream.adaptive.license_key', license_url)
-      play_item.setProperty('inputstream.adaptive.license_type', 'com.widevine.alpha')
 
   play_item.setProperty('inputstream.adaptive.stream_headers', headers)
   play_item.setProperty('inputstream.adaptive.server_certificate', certificate)
