@@ -426,19 +426,19 @@ msgstr "Użyj konta {}"
 
 msgctxt "#30193"
 msgid "Select the credentials file"
-msgstr ""
+msgstr "Wybierz plik danych uwierzytelniających"
 
 msgctxt "#30194"
 msgid "Select a folder to save the credentials file"
-msgstr ""
+msgstr "Wybierz folder, w którym chcesz zapisać plik danych uwierzytelniających"
 
 msgctxt "#30195"
 msgid "Export credentials"
-msgstr ""
+msgstr "Eksportuj dane uwierzytelniające"
 
 msgctxt "#30196"
 msgid "Import credentials"
-msgstr ""
+msgstr "Importuj dane uwierzytelniające"
 
 msgctxt "#30200"
 msgid "Error"
